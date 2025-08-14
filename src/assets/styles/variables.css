@@ -1,8 +1,9 @@
 :root {
-  --primary-color: #6c63ff;
-  --secondary-color: #ffffff;
+  --link-color: #A2B3B9;
+  --button-color: #ffffff;
   --accent-color: #ff6f61;
-  --text-color: #222;
+  --text-color: rgb(29, 34, 38); /* #1d2226 */
+  --text-color-two:rgba(29, 34, 38, 0.80);
   --font-family: "Inter", sans-serif;
   --border-radius: 8px;
   --spacing: 1rem;

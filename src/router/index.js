@@ -6,7 +6,7 @@ import Tags from '@/views/Tags.vue'
 const routes = [
   { path: '/', name: 'AllNotes', component: AllNotes },
   { path: '/archived', name: 'ArchivedNotes', component: ArchivedNotes },
-  { path: '/tags', name: 'Tags', component: Tags },
+  { path: '/tags/:tag', name: 'Tags', component: Tags },
 ]
 
 const router = createRouter({
