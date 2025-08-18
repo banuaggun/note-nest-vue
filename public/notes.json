@@ -1,0 +1,25 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "title": "Vue 3 is awesome",
+      "content": "Let’s build something cool.",
+      "timestamp": "2025-08-18T10:00:00Z",
+      "tags": ["Vue.js", "Development"]
+    },
+    {
+      "id": 2,
+      "title": "NoteNest",
+      "content": "A clean note-taking app.",
+      "timestamp": "2025-08-17T14:15:00",
+      "tags": ["design", "UX Design"]
+    },
+    {
+      "id": 3,
+      "title": "Design System",
+      "content": "Build reusable components.",
+      "timestamp": "2025-08-16T11:00:00",
+      "tags": ["ui", "components"]
+    }
+  ]
+}
