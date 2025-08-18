@@ -4,7 +4,7 @@
   --accent-color: #ff6f61;
   --text-color: rgb(29, 34, 38); /* #1d2226 */
   --text-color-two:rgba(29, 34, 38, 0.80);
-  --font-family: "Inter", sans-serif;
+  --font-family: "Open Sans", sans-serif;
   --border-radius: 8px;
   --spacing: 1rem;
 }
