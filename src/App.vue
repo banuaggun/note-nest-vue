@@ -4,17 +4,16 @@
     <div class="main-layout">
       <Sidebar />
       <div class="content-area">
-     
-      area
+        <NoteList />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import Footer from './components/Footer.vue';
-import Header from './components/Header.vue'
-import Sidebar from './components/Sidebar.vue'
+import Header from "./components/Header.vue";
+import Sidebar from "./components/Sidebar.vue";
+import NoteList from "./components/NoteList.vue";
 </script>
 
 <style>
@@ -22,6 +21,7 @@ import Sidebar from './components/Sidebar.vue'
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #f5f5f5;
 }
 .main-layout {
   display: flex;
@@ -29,12 +29,8 @@ import Sidebar from './components/Sidebar.vue'
 }
 .content-area {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   padding: 1rem;
-  background-color: #fafafa;
-  margin-top:100px;
-  margin-left:284px;
+  margin-top: 100px;
+  margin-left: 284px;
 }
 </style>
