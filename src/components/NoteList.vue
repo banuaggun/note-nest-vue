@@ -1,7 +1,10 @@
 <template>
-  <section class="note-list">
+  <div class="note-list-area">
+<section class="note-list">
     <NoteItem v-for="note in allNotes" :key="note.id" :note="note" />
   </section>
+  </div>
+  
 </template>
 
 <script setup>
@@ -17,9 +20,26 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.note-list-area{
+  display:flex;
+  flex:1;
+  width:320px;
+  height:100vh;
+  margin-right:24px;
+  margin-top:12px;
+  border:1px solid red;
+}
 .note-list {
-  flex: 1;
-  padding: 1rem;
   overflow-y: auto;
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (min-width:1200px){
+  .note-list{
+    max-width: 800px;
+    border:1px solid green;
+  }
 }
 </style>

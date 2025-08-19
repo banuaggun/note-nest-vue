@@ -71,15 +71,31 @@ const date = computed(() => {
 <style scoped>
 .note-item {
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #dcdcdc;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
 }
+
+.note-item h3{
+  margin:0 0 6px 0;
+  font-size:18px;
+}
+
+.note-item p{
+  font-size:14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 3 satırda keser */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .timestamp {
-  display: block;
+  display: flex;
+  justify-content: flex-end;
   margin-top: 0.5rem;
-  color: #666;
+  color: var(--text-color-two);
   font-size: 0.85rem;
 }
 .tags {
@@ -87,11 +103,20 @@ const date = computed(() => {
 }
 .tag {
   display: inline-block;
-  background-color: #eef;
-  color: #336;
+  background-color: var(--link-color-two);
+  color: var(--text-color);
   padding: 0.25rem 0.5rem;
   margin-right: 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
 }
+
+@media (min-width: 1200px) {
+  .note-item {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 </style>
