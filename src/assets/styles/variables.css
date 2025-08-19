@@ -1,5 +1,6 @@
 :root {
   --link-color: #A2B3B9;
+  --link-color-two:rgba(162, 179, 185, 0.5);
   --button-color: #ffffff;
   --accent-color: #ff6f61;
   --text-color: rgb(29, 34, 38); /* #1d2226 */

@@ -4,7 +4,13 @@
     <div class="main-layout">
       <Sidebar />
       <div class="content-area">
-        <NoteList />
+        <div class="content-area-list">
+<NoteList />
+        </div>
+        <div class="content-area-editor">
+<NoteEditor/>
+        </div>
+        
       </div>
     </div>
   </div>
@@ -14,6 +20,7 @@
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
 import NoteList from "./components/NoteList.vue";
+import NoteEditor from "./components/NoteEditor.vue";
 </script>
 
 <style>
@@ -28,9 +35,11 @@ import NoteList from "./components/NoteList.vue";
   flex: 1;
 }
 .content-area {
+  display:flex;
   flex: 1;
+  flex-direction: row;
   padding: 1rem;
   margin-top: 100px;
-  margin-left: 284px;
+  margin-left: 260px;
 }
 </style>

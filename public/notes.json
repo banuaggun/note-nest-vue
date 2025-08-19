@@ -3,21 +3,21 @@
     {
       "id": 1,
       "title": "Vue 3 is awesome",
-      "content": "Let’s build something cool.",
+      "content": "Let’s build something cool with Vue 3. Its Composition API and reactivity system make frontend development more intuitive and powerful than ever.",
       "timestamp": "2025-08-18T10:00:00Z",
       "tags": ["Vue.js", "Development"]
     },
     {
       "id": 2,
       "title": "NoteNest",
-      "content": "A clean note-taking app.",
+      "content": "A clean note-taking app designed for simplicity and focus. It helps users organize thoughts, ideas, and tasks without unnecessary distractions.",
       "timestamp": "2025-08-17T14:15:00",
       "tags": ["design", "UX Design"]
     },
     {
       "id": 3,
       "title": "Design System",
-      "content": "Build reusable components.",
+      "content": "Build reusable components that ensure consistency across your product. A well-structured design system improves scalability and team collaboration.",
       "timestamp": "2025-08-16T11:00:00",
       "tags": ["ui", "components"]
     }
