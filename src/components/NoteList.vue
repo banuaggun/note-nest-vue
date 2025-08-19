@@ -1,6 +1,7 @@
 <template>
   <div class="note-list-area">
 <section class="note-list">
+  <SearchBar/>
     <NoteItem v-for="note in allNotes" :key="note.id" :note="note" />
   </section>
   </div>
@@ -9,6 +10,7 @@
 
 <script setup>
 import NoteItem from './NoteItem.vue'
+import SearchBar from './SearchBar.vue'
 import useNotes from '../composables/useNotes.js'
 import { onMounted } from 'vue'
 
