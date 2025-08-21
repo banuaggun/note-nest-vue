@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="button-group">
-            <button :disabled="disabled" class="btn" @click="emit('new-note')">
+            <button class="btn" @click="emit('new-note')">
                 <IconPencil/>
             </button>
-            <button :disabled="disabled" class="btn" @click="emit('new-note')">
+            <button class="btn" @click="emit('new-note')">
                 <IconBold />
             </button>
         </div>
 
         <div class="divider">
             <div>
-                <button class="btn btn-remove" @click="emit('remove-note')">
+                <button class="btn btn-remove" :disabled="disabled" @click="emit('remove-note')">
                     <i class="ph-fill ph-trash"></i>
                 </button>
             </div>

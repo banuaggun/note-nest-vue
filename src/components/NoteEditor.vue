@@ -20,6 +20,9 @@
       />
 
       <button @click="saveNote">Save</button>
+
+      <p v-if="!activeNote">Note saved. Select a note to continue.</p>
+
     </div>
   </section>
 </template>
@@ -41,6 +44,7 @@ const removeActiveNote = () => {
   }
 };
 
+
 function saveNote() {
   if (activeNote.value) {
     updateNote("title", activeNote.value.title);
@@ -54,6 +58,8 @@ function saveNote() {
     setActiveNoteId(null);
   }
 }
+
+
 </script>
 
 <style scoped>
