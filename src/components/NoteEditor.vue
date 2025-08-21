@@ -1,46 +1,58 @@
 <template>
   <section class="note-editor">
-    <ToolBar @new-note="createNote" @remove-note="removeActiveNote" :disabled="!activeNote" />
-    <div class="note-editor-content" v-if="activeNote">
-
-      <input type="text" @keyup="updateNote" v-model="activeNote.title" placeholder="Note title" />
-
-      <textarea @keyup="updateNote" v-model="activeNote.content" placeholder="Write your note..."></textarea>
-
-      <!-- 
-        <input type="text" v-debounce:500ms="updateNote" />
-        <textarea v-debounce=500ms="updateNote"></textarea>
-      -->
+    <ToolBar
+      @new-note="createNote"
+      @remove-note="removeActiveNote"
+      :disabled="!activeNote"
+    />
+    <div
+      class="note-editor-content"
+      v-if="activeNote && activeNote.title !== undefined"
+    >
+      <input
+        type="text"
+        @input="updateNote('title', $event.target.value)"
+        v-model="activeNote.title"
+      />
+      <textarea
+        @input="updateNote('content', $event.target.value)"
+        v-model="activeNote.content"
+      />
 
       <button @click="saveNote">Save</button>
-
     </div>
-
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-//import {vueDebounce} from 'vue-debounce';
-import useNotes from '../composables/useNotes';
-import ToolBar from './ToolBar.vue';
+//import { ref } from 'vue'
+import useNotes from "../composables/useNotes";
+import ToolBar from "./ToolBar.vue";
 
+const { createNote, activeNote, setActiveNoteId, updateNote, removeNote } =
+  useNotes();
 
-const { createNote, activeNote, updateNote, removeNote } = useNotes()
-
-//const vDebounce = vueDebounce({lock:true})
-
-const title = ref('')
-const content = ref('')
+//const title = ref('')
+//const content = ref('')
 
 const removeActiveNote = () => {
-  if(confirm("Are you sure?")){
-    removeNote()
+  if (confirm("Are you sure?")) {
+    removeNote();
   }
-}
+};
 
 function saveNote() {
-  console.log('Note saved:', title.value, content.value)
+  if (activeNote.value) {
+    updateNote("title", activeNote.value.title);
+    updateNote("content", activeNote.value.content);
+    console.log(
+      "Note saved:",
+      activeNote.value.title,
+      activeNote.value.content
+    );
+
+    setActiveNoteId(null);
+  }
 }
 </script>
 

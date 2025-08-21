@@ -3,12 +3,7 @@
     <h3>{{ title }}</h3>
     <p>{{ content }}</p>
 
-    <!--
-    <small class="timestamp">{{
-      new Date(props.note.timestamp).toLocaleString()
-    }}</small>
-
-  -->
+    
       <small :datetime="date">{{ date }}</small>
 
     <div class="tags">
@@ -56,42 +51,24 @@ const isToday = (date) => {
 };
 
 const date = computed(() => {
-  const date = new Date(props.note.updated)
-
-  if(isToday(date)){
-
-    const hours = date.getHours().toString().padStart(2, 0);
-    const minutes = date.getMinutes().toString().padStart(2, 0);
-
-    return `${hours}:${minutes}`
-  }else{
-
-    const year = date.getFullYear().toString().substring(2)
-    const month = date.getMonth()
-    const day = date.getDay()
-
-    return `${day}/${month}/${year}`
-  }
-})
-
-/*
-const date = computed(() => {
-  const rawDate = props.note.updated || props.note.timestamp;
-  const date = new Date(rawDate);
+  const rawDate = props.note.timestamp || props.note.updated
+  const date = new Date(rawDate)
 
   if (isNaN(date.getTime())) {
-    return "Invalid date";
+    return "Invalid date"
   }
 
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear().toString().substring(2);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0")
+  const month = (date.getMonth() + 1).toString().padStart(2, "0")
+  const year = date.getFullYear().toString().substring(2)
+  const hours = date.getHours().toString().padStart(2, "0")
+  const minutes = date.getMinutes().toString().padStart(2, "0")
 
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
-});
-*/
+  return `${day}/${month}/${year} ${hours}:${minutes}`
+})
+
+
+
 </script>
 
 <style scoped>
