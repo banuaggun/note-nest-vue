@@ -66,6 +66,7 @@ export default function useNotes() {
     activeNoteId.value = null;
   };
 
+  /*
   const removeNote = () => {
     const index = notes.value.findIndex(
       (note) => note.id === activeNote.value?.id
@@ -85,6 +86,19 @@ export default function useNotes() {
       updateStorage();
     }
   };
+
+  */
+
+  const removeNote = () => {
+  notes.value = notes.value.filter(
+    (note) => note.id !== activeNote.value?.id
+  );
+
+  updateStorage();
+
+  // Hiçbir not seçili olmasın
+  activeNoteId.value = null;
+};
 
   return {
     createNote,
