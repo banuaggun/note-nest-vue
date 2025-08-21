@@ -1,15 +1,16 @@
 <template>
-  <div class="note-item">
+  <div class="note-item" :class="{'active':active}" @click="setActiveNoteId(note.id)">
     <h3>{{ title }}</h3>
     <p>{{ content }}</p>
 
+    <!--
     <small class="timestamp">{{
       new Date(props.note.timestamp).toLocaleString()
     }}</small>
 
-    <!--
+  -->
       <small :datetime="date">{{ date }}</small>
-    -->
+
     <div class="tags">
       <span class="tag" v-for="tag in props.note.tags" :key="tag">{{
         tag
@@ -20,10 +21,14 @@
 
 <script setup>
 import { computed } from "vue";
+import useNotes from "../composables/useNotes";
 
 const props = defineProps({
-  note: Object,
+  note: Object, 
+  active: Boolean
 });
+
+const {setActiveNoteId} = useNotes()
 
 const title = computed(() =>
   props.note.title.substring(0, Math.min(120, props.note.title.length))
@@ -51,6 +56,26 @@ const isToday = (date) => {
 };
 
 const date = computed(() => {
+  const date = new Date(props.note.updated)
+
+  if(isToday(date)){
+
+    const hours = date.getHours().toString().padStart(2, 0);
+    const minutes = date.getMinutes().toString().padStart(2, 0);
+
+    return `${hours}:${minutes}`
+  }else{
+
+    const year = date.getFullYear().toString().substring(2)
+    const month = date.getMonth()
+    const day = date.getDay()
+
+    return `${day}/${month}/${year}`
+  }
+})
+
+/*
+const date = computed(() => {
   const rawDate = props.note.updated || props.note.timestamp;
   const date = new Date(rawDate);
 
@@ -66,6 +91,7 @@ const date = computed(() => {
 
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 });
+*/
 </script>
 
 <style scoped>
