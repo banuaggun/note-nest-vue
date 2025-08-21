@@ -9,3 +9,20 @@
   --border-radius: 8px;
   --spacing: 1rem;
 }
+
+
+button.btn:disabled, button.btn[disabled]{
+  color:var(--text-color-two);
+}
+
+.btn:hover:not([disabled]){
+  background-color: var(--link-color);
+}
+
+.no-notes-message{
+  height:calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:green;
+}
