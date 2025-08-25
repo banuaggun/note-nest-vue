@@ -1,7 +1,7 @@
 <template>
   <div class="note-list-area" v-if="allNotes.length">
     <section class="note-list">
-      <SearchBar />
+      <CreateNote @new-note="handleNewNote" />
       <NoteItem
         v-for="note in allNotes"
         :key="note.id"
@@ -10,6 +10,7 @@
       />
     </section>
 
+    
     <!--
     <div class="no-notes-message">
       no notes
@@ -20,15 +21,20 @@
 
 <script setup>
 import NoteItem from "./NoteItem.vue";
-import SearchBar from "./SearchBar.vue";
 import useNotes from "../composables/useNotes.js";
 import { onMounted } from "vue";
+import CreateNote from "./CreateNote.vue";
 
-const { allNotes, activeNote, loadNotesFromJson } = useNotes();
+const { allNotes, activeNote, loadNotesFromJson, createNote } = useNotes();
 
 onMounted(() => {
   loadNotesFromJson();
 });
+
+function handleNewNote() {
+   createNote();
+}
+
 </script>
 
 <style scoped>
@@ -54,4 +60,7 @@ onMounted(() => {
     border: 1px solid green;
   }
 }
+
+
+
 </style>
