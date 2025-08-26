@@ -107,8 +107,8 @@ const tagGroups = ref({
   display: flex;
   flex-direction: column;
   padding: 20px 0 20px 0;
-  gap: 12px;
-  font-size: 18px;
+  gap: 8px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -120,7 +120,7 @@ const tagGroups = ref({
   display: flex;
   align-items: center;
   width: 200px;
-  padding: 4px 0 4px 12px;
+  padding: 4px 0 4px 8px;
   color: #1d2226;
   text-decoration: none;
   font-weight: 500;
@@ -129,7 +129,7 @@ const tagGroups = ref({
 
 .nav-item i {
   font-size: 28px;
-  margin-right: 12px;
+  margin-right: 8px;
 }
 
 .nav-item:hover {
@@ -138,13 +138,13 @@ const tagGroups = ref({
 }
 
 .nav-item.active {
-  background-color: var(--link-color);
+  background-color: var(--link-color-two);
   width: 200px;
 }
 
 .tags-title {
   padding: 0 0 0 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   margin-left: 0px;
   font-size: 18px;
   font-weight: 500;
