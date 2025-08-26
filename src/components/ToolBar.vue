@@ -12,7 +12,7 @@
         <div class="divider">
             <div>
                 <button class="btn btn-remove" :disabled="disabled" @click="emit('remove-note')">
-                    <i class="ph-fill ph-trash"></i>
+                    <IconTrash/>
                 </button>
             </div>
         </div>
@@ -22,6 +22,7 @@
 <script setup>
 import IconBold from "./icons/editor/IconBold.vue"
 import IconPencil from "./icons/editor/IconPencil.vue"
+import IconTrash from "./icons/editor/IconTrash.vue";
 
 const emit = defineEmits(['new-note', 'remove-note']);
 
