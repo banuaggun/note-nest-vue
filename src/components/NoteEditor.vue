@@ -1,9 +1,13 @@
 <template>
   <section class="note-editor">
     <ToolBar
-      @new-note="createNote"
+      @new-note="handleCreateNote"
       @remove-note="removeActiveNote"
+      @edit-note="startEditing" 
+      @format-bold="applyBold"
       :disabled="!activeNote"
+      :selectedNote="activeNote" 
+      :isBoldActive="isBoldActive"
     />
 
     <div v-if="activeNote && activeNote.title !== undefined" class="note-editor-content">
@@ -12,25 +16,26 @@
         class="note-title"
         placeholder="Note title..."
         v-model="activeNote.title"
+        :disabled="!isEditing"
       />
 
       <div
         class="note-body"
-        contenteditable="true"
+        :contenteditable="isEditing"
         ref="noteBody"
         @input="onContentInput"
       ></div>
 
       <div class="note-tags">
         <label>Tags:</label>
-        <input type="text" placeholder="e.g. work, idea, personal" />
+        <input type="text" placeholder="e.g. work, idea, personal" :disabled="!isEditing" />
       </div>
 
       <div class="note-meta">
         <span>Last updated: 25 Aug 2025, 14:30</span>
       </div>
 
-      <button class="save-btn" @click="saveNote">Save Note</button>
+      <button class="save-btn" v-if="isEditing" @click="saveNote">Save Note</button>
     </div>
 
     <p v-else class="note-empty">Note saved. Select a note to continue.</p>
@@ -41,40 +46,100 @@
 import ToolBar from "./ToolBar.vue";
 import useNotes from "../composables/useNotes";
 import { ref, watch, nextTick } from "vue";
+import { onMounted, onUnmounted } from "vue";
 
-const { createNote, activeNote, setActiveNoteId, updateNote, removeNote } = useNotes();
+onMounted(() => {
+  document.addEventListener("selectionchange", updateBoldState);
+});
 
+onUnmounted(() => {
+  document.removeEventListener("selectionchange", updateBoldState);
+});
+
+function updateBoldState() {
+  if (isEditing.value) {
+    isBoldActive.value = document.queryCommandState("bold");
+  }
+}
+
+
+const {
+  createNote: createNewNote,
+  activeNote,
+  setActiveNoteId,
+  updateNote,
+  removeNote
+} = useNotes();
+
+const editingNote = ref(null);
+const isEditing = ref(false);
 const noteBody = ref(null);
+const isBoldActive = ref(false);
 
+
+// Yeni not oluşturulunca edit modu kapatılır
+function handleCreateNote() {
+  isEditing.value = false;
+  editingNote.value = null;
+  createNewNote();
+}
+
+// Var olan not için edit modu başlatılır
+function startEditing(note) {
+  editingNote.value = note;
+  isEditing.value = true;
+}
+
+// İçerik düzenlenince güncelle
 function onContentInput() {
-  if (noteBody.value) {
+  if (noteBody.value && isEditing.value) {
     updateNote("content", noteBody.value.innerHTML);
   }
 }
 
+// Aktif not değiştiğinde içeriği DOM'a yaz
 watch(activeNote, async (newNote) => {
   if (newNote?.content !== undefined) {
-    await nextTick(); // DOM hazır olduğunda yaz
+    await nextTick();
     if (noteBody.value) {
       noteBody.value.innerHTML = newNote.content;
     }
+    isEditing.value = false; // yeni not seçildiğinde edit modu kapanır
+    editingNote.value = null;
   }
 });
 
+// Notu sil
 function removeActiveNote() {
   if (confirm("Are you sure?")) {
     removeNote();
+    isEditing.value = false;
+    editingNote.value = null;
   }
 }
 
+// Notu kaydet
 function saveNote() {
   if (activeNote.value) {
     updateNote("title", activeNote.value.title);
     updateNote("content", noteBody.value?.innerHTML || "");
     console.log("Note saved:", activeNote.value.title, activeNote.value.content);
     setActiveNoteId(null);
+    isEditing.value = false;
+    editingNote.value = null;
   }
 }
+
+// Notu bold yaz
+function applyBold() {
+  if (noteBody.value && isEditing.value) {
+    document.execCommand("bold", false, null);
+    isBoldActive.value = document.queryCommandState("bold");
+  }
+}
+
+
+
 </script>
 
 <style scoped>
@@ -100,7 +165,7 @@ function saveNote() {
 }
 
 .note-body {
-  width:600px;
+  width: 600px;
   min-height: 300px;
   padding: 0.75rem;
   border: 1px solid #ccc;
