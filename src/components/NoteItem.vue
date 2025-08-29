@@ -32,13 +32,15 @@ const title = computed(() =>
 const content = computed(() => {
   if (!props.note.content) {
     return "No additional text";
-  } else {
-    return props.note.content.substring(
-      0,
-      Math.min(150, props.note.content.length)
-    );
   }
+
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = props.note.content;
+  const plainText = tempDiv.textContent || tempDiv.innerText || "";
+
+  return plainText.substring(0, 150);
 });
+
 
 const isToday = (date) => {
   const today = new Date();
