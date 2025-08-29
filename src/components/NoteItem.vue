@@ -29,16 +29,20 @@ const title = computed(() =>
   props.note.title.substring(0, Math.min(120, props.note.title.length))
 );
 
+function stripHtml(html) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  return tempDiv.textContent || tempDiv.innerText || "";
+}
+
+
 const content = computed(() => {
   if (!props.note.content) {
     return "No additional text";
+  } else {
+    const plainText = stripHtml(props.note.content);
+    return plainText.substring(0, Math.min(150, plainText.length));
   }
-
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = props.note.content;
-  const plainText = tempDiv.textContent || tempDiv.innerText || "";
-
-  return plainText.substring(0, 150);
 });
 
 
