@@ -7,7 +7,7 @@
       @format="applyFormat"
       :disabled="!activeNote"
       :selectedNote="activeNote"
-      :isFormatActive="isFormatActiveState"
+      :isFormatActive="isFormatActive"
     />
 
     <div v-if="activeNote && activeNote.title !== undefined" class="note-editor-content">
@@ -21,9 +21,10 @@
 
       <div
         class="note-body"
-        :contenteditable="isEditing"
-        ref="noteBody"
-        @input="onContentInput"
+  :contenteditable="isEditing"
+  ref="noteBody"
+  @input="onContentInput"
+  @keydown="handleKeyDown"
       ></div>
 
       <div class="note-tags">
@@ -45,17 +46,23 @@
 <script setup>
 import ToolBar from "./toolbar/ToolBar.vue";
 import useNotes from "../composables/useNotes";
-import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
-
-const isFormatActiveState = ref({
-  bold: false,
-  italic: false,
-  underline: false
-});
+import { ref, reactive, watch, nextTick, onMounted, onUnmounted } from "vue";
 
 const isEditing = ref(false);
 const noteBody = ref(null);
 const editingNote = ref(null);
+
+const isFormatActive = reactive({
+  bold: false,
+  italic: false,
+  underline: false,
+  h1: false,
+  h2: false,
+  h3: false,
+  h4: false,
+  h5: false,
+  h6: false
+});
 
 const {
   createNote: createNewNote,
@@ -67,9 +74,14 @@ const {
 
 function updateFormatState() {
   if (isEditing.value) {
-    isFormatActiveState.value.bold = document.queryCommandState("bold");
-    isFormatActiveState.value.italic = document.queryCommandState("italic");
-    isFormatActiveState.value.underline = document.queryCommandState("underline");
+    isFormatActive.bold = document.queryCommandState("bold");
+    isFormatActive.italic = document.queryCommandState("italic");
+    isFormatActive.underline = document.queryCommandState("underline");
+
+    // Başlıklar için özel kontrol yok, elle sıfırlanmalı
+    for (let i = 1; i <= 6; i++) {
+      isFormatActive[`h${i}`] = false;
+    }
   }
 }
 
@@ -120,7 +132,6 @@ function saveNote() {
   if (activeNote.value) {
     updateNote("title", activeNote.value.title);
     updateNote("content", noteBody.value?.innerHTML || "");
-    console.log("Note saved:", activeNote.value.title, activeNote.value.content);
     setActiveNoteId(null);
     isEditing.value = false;
     editingNote.value = null;
@@ -128,11 +139,41 @@ function saveNote() {
 }
 
 function applyFormat(command) {
-  if (noteBody.value && isEditing.value) {
+  if (!noteBody.value || !isEditing.value) return;
+
+  if (command.startsWith("h")) {
+    // Yeni blok başlatmak için boş bir paragraf ekle
+    document.execCommand("insertParagraph");
+
+    // Ardından başlık formatını uygula
+    document.execCommand("formatBlock", false, command);
+
+    // Format durumlarını güncelle
+    for (let i = 1; i <= 6; i++) {
+      isFormatActive[`h${i}`] = false;
+    }
+    isFormatActive[command] = true;
+  } else {
     document.execCommand(command, false, null);
-    isFormatActiveState.value[command] = !isFormatActiveState.value[command];
+    isFormatActive[command] = !isFormatActive[command];
+
+    for (let i = 1; i <= 6; i++) {
+      isFormatActive[`h${i}`] = false;
+    }
   }
 }
+
+
+function handleKeyDown(event) {
+  if (!isEditing.value) return;
+
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.execCommand("insertParagraph");
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -173,6 +214,43 @@ function applyFormat(command) {
   unicode-bidi: normal;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* Başlık stilleri */
+.note-body h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-body h2 {
+  font-size: 1.75em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-body h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-body h4 {
+  font-size: 1.25em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-body h5 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-body h6 {
+  font-size: 0.875em;
+  font-weight: bold;
+  margin: 0.5em 0;
 }
 
 .note-tags input {
