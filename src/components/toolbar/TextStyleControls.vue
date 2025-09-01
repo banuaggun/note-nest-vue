@@ -9,13 +9,13 @@
       <IconBold />
     </button>
 
-    <button
+    <button class="btn"
       @click="emit('format', 'italic')"
       :class="{ active: isFormatActive.italic }"
     >
       <IconItalic />
     </button>
-    <button
+    <button class="btn"
       @click="emit('format', 'underline')"
       :class="{ active: isFormatActive.underline }"
     >
@@ -51,14 +51,15 @@ const isFormatActive = ref({
 
 <style scoped>
 .btn {
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: ivory;
+  border: 1px solid #dcdcdc;
   color: black;
+  margin-right:8px;
 }
 
 .active {
-  background-color: purple;
-  color: red;
+  background-color: limegreen;
+  color: black;
 }
 
 </style>

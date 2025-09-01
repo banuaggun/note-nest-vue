@@ -1,7 +1,7 @@
 <template>
   <div v-if="selectedNote && selectedNote.id">
     <TextStyleControls :isFormatActive="isFormatActive" @format="emit('format', $event)" />
-    <HeadingControls @format="emit('format', $event)" />
+    <HeadingControls :isFormatActive="isFormatActive" @format="emit('format', $event)" />
     <ListControls @format="emit('format', $event)" />
     <NoteActions :disabled="disabled" :selectedNote="selectedNote" @edit-note="emit('edit-note', $event)" @remove-note="emit('remove-note')" />
     
