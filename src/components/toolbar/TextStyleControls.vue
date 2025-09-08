@@ -1,65 +1,35 @@
-<template>
-  <div class="button-group">
-    <button
-      class="btn"
-      @click="emit('format', 'bold')"
-      :class="{ active: isFormatActive.bold }"
-      aria-label="Bold"
-    >
-      <IconBold />
-    </button>
+<script setup>
+import { useTextFormatting } from '../../composables/useTextFormatting.js'
 
-    <button class="btn"
-      @click="emit('format', 'italic')"
-      :class="{ active: isFormatActive.italic }"
-    >
-      <IconItalic />
-    </button>
-    <button class="btn"
-      @click="emit('format', 'underline')"
-      :class="{ active: isFormatActive.underline }"
-    >
-      <IconUnderline />
-    </button>
+const {
+  isBold,
+  isItalic,
+  isUnderline,
+  toggleBold,
+  toggleItalic,
+  toggleUnderline
+} = useTextFormatting()
+</script>
+
+<template>
+  <div class="text-style-controls">
+    <button :class="{ active: isBold }" @click="toggleBold"><strong>B</strong></button>
+    <button :class="{ active: isItalic }" @click="toggleItalic"><em>I</em></button>
+    <button :class="{ active: isUnderline }" @click="toggleUnderline"><u>U</u></button>
   </div>
 </template>
 
-<script setup>
-//import { ref } from "vue";
-import IconBold from "../icons/editor/IconBold.vue";
-import IconItalic from "../icons/editor/IconItalic.vue";
-import IconUnderline from "../icons/editor/IconUnderline.vue";
-
-const emit = defineEmits(["format"]);
-
-defineProps({
-  isFormatActive: {
-    type: Object,
-    required: true
-  }
-});
-
-/*
-const isFormatActive = ref({
-  bold: false,
-  italic: false,
-  underline: false,
-});
-*/
-
-</script>
-
 <style scoped>
-.btn {
-  background-color: ivory;
-  border: 1px solid #dcdcdc;
-  color: black;
-  margin-right:8px;
+.text-style-controls button {
+  margin-right: 6px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
 }
 
-.active {
-  background-color: limegreen;
-  color: black;
+button.active {
+  background-color: #cce;
+  font-weight: bold;
 }
-
 </style>
