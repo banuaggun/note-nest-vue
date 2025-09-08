@@ -5,10 +5,10 @@
       <Sidebar />
       <div class="content-area">
         <div class="content-area-list">
-<NoteList />
+<NoteList v-model="selectedNote" />
         </div>
         <div class="content-area-editor">
-<NoteEditor/>
+<NoteEditor v-model="selectedNote" />
         </div>
         
       </div>
@@ -17,10 +17,13 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
-import NoteList from "./components/NoteList.vue";
-import NoteEditor from "./components/NoteEditor.vue";
+import NoteList from "./components/notes/NoteList.vue";
+import NoteEditor from "./components/note-editor/NoteEditor.vue";
+
+const selectedNote = ref(null)
 </script>
 
 <style>
@@ -41,5 +44,16 @@ import NoteEditor from "./components/NoteEditor.vue";
   padding: 1rem;
   margin-top: 100px;
   margin-left: 260px;
+}
+
+.content-area-list{
+  width: 40%;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+}
+
+.content-area-editor{
+  width: 60%;
+  padding: 20px;
 }
 </style>

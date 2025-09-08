@@ -1,15 +1,14 @@
 <template>
   <div v-if="selectedNote" class="note-editor">
     <Toolbar :note="selectedNote" @update="updateNote" />
-
     <div
-      ref="editable"
-      contenteditable="true"
-      class="editable"
-      @input="onContentInput"
-      @beforeinput="onBeforeInput"
-      @focus="setCaretToEnd"
-    ></div>
+  ref="editable"
+  contenteditable="true"
+  class="editable"
+  @input="onContentInput"
+  @beforeinput="onBeforeInput"
+  @focus="setCaretToEnd"
+/>
 
     <button @click="saveNote">Kaydet</button>
   </div>
@@ -20,16 +19,62 @@
 
 <script setup>
 import { ref, watch, onMounted, nextTick } from 'vue'
-import { useNotes } from '../../composables/useNotes.js'
+import { useNotes } from '../../composables/useNotes'
 import Toolbar from '../toolbar/Toolbar.vue'
-import { useHeadingMode } from '../../composables/useHeadingMode.js'
-
+import { useHeadingMode } from '../../composables/useHeadingMode'
 const { activeHeading } = useHeadingMode()
+
 const currentHeadingElement = ref(null)
+
+function onBeforeInput(event) {
+  if (!activeHeading.value || event.inputType !== 'insertText') return
+
+  const text = event.data
+  const selection = window.getSelection()
+  const range = selection.getRangeAt(0)
+
+  if (currentHeadingElement.value && currentHeadingElement.value.tagName.toLowerCase() === activeHeading.value) {
+    currentHeadingElement.value.textContent += text
+
+    const newRange = document.createRange()
+    newRange.selectNodeContents(currentHeadingElement.value)
+    newRange.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(newRange)
+
+    event.preventDefault()
+
+    // 🔥 İçeriği elle güncelle
+    onContentInput({ target: editable.value })
+    return
+  }
+
+  const headingEl = document.createElement(activeHeading.value)
+  headingEl.textContent = text
+  currentHeadingElement.value = headingEl
+
+  range.deleteContents()
+  range.insertNode(headingEl)
+
+  const newRange = document.createRange()
+  newRange.selectNodeContents(headingEl)
+  newRange.collapse(false)
+  selection.removeAllRanges()
+  selection.addRange(newRange)
+
+  event.preventDefault()
+
+  // 🔥 İçeriği elle güncelle
+  onContentInput({ target: editable.value })
+}
+
+
+
 
 const { notes } = useNotes()
 const selectedNote = defineModel()
 const editorContent = ref('')
+
 const editable = ref(null)
 
 function updateNote(updatedNote) {
@@ -56,46 +101,7 @@ function onContentInput(event) {
   }
 }
 
-function onBeforeInput(event) {
-  if (!activeHeading.value || event.inputType !== 'insertText') return
 
-  const text = event.data
-  const selection = window.getSelection()
-  const range = selection.getRangeAt(0)
-
-  if (
-    currentHeadingElement.value &&
-    currentHeadingElement.value.tagName.toLowerCase() === activeHeading.value
-  ) {
-    currentHeadingElement.value.textContent += text
-
-    const newRange = document.createRange()
-    newRange.selectNodeContents(currentHeadingElement.value)
-    newRange.collapse(false)
-    selection.removeAllRanges()
-    selection.addRange(newRange)
-
-    event.preventDefault()
-    onContentInput({ target: editable.value })
-    return
-  }
-
-  const headingEl = document.createElement(activeHeading.value)
-  headingEl.textContent = text
-  currentHeadingElement.value = headingEl
-
-  range.deleteContents()
-  range.insertNode(headingEl)
-
-  const newRange = document.createRange()
-  newRange.selectNodeContents(headingEl)
-  newRange.collapse(false)
-  selection.removeAllRanges()
-  selection.addRange(newRange)
-
-  event.preventDefault()
-  onContentInput({ target: editable.value })
-}
 
 function setCaretToEnd() {
   const el = editable.value
@@ -109,30 +115,25 @@ function setCaretToEnd() {
 }
 
 function formatContent(note) {
-  const titleHTML = `<h1>${note.title || ''}</h1>`
+  const titleHTML = `<h1>${note.title}</h1>`
   const contentHTML = note.content?.replace(/\n/g, '<br/>') || ''
   return `${titleHTML}\n${contentHTML}`
 }
 
 onMounted(() => {
-  nextTick(() => {
-    if (selectedNote.value && editable.value) {
-      editable.value.innerHTML = formatContent(selectedNote.value)
-    }
-  })
+  if (selectedNote.value && editable.value) {
+    editable.value.innerHTML = formatContent(selectedNote.value)
+  }
 })
 
-watch(
-  () => selectedNote.value,
-  (newNote) => {
-    nextTick(() => {
-      if (editable.value && newNote) {
-        editable.value.innerHTML = formatContent(newNote)
-      }
-    })
-  },
-  { immediate: true }
-)
+watch(() => selectedNote.value, (newNote) => {
+  if (editable.value && newNote) {
+    editable.value.innerHTML = formatContent(newNote)
+  }
+}, { immediate: true })
+
+
+
 </script>
 
 <style scoped>
@@ -155,4 +156,5 @@ watch(
   padding: 0;
   font-weight: bold;
 }
+
 </style>
