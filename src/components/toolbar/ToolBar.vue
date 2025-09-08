@@ -1,12 +1,13 @@
 <template>
   <div class="toolbar">
      <HeadingControls :note="note" @update="handleUpdate" />
- 
+     <TextStyleControls />
   </div>
 </template>
 
 <script setup>
 import HeadingControls from "./HeadingControls.vue";
+import TextStyleControls from "./TextStyleControls.vue";
 
 defineProps({ note: Object })
 const emit = defineEmits(['update'])
