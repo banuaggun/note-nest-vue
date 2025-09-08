@@ -23,14 +23,20 @@ import { ref, watch, onMounted, nextTick } from 'vue'
 import { useNotes } from '../../composables/useNotes'
 import Toolbar from '../toolbar/Toolbar.vue'
 import { useHeadingMode } from '../../composables/useHeadingMode'
+import { useTextFormatting } from '../../composables/useTextFormatting'
 
 const { activeHeading } = useHeadingMode()
-const currentHeadingElement = ref(null)
+const {
+  isBold,
+  isItalic,
+  isUnderline
+} = useTextFormatting()
 
-const { notes } = useNotes()
-const selectedNote = defineModel()
-const editorContent = ref('')
+const currentHeadingElement = ref(null)
 const editable = ref(null)
+const editorContent = ref('')
+const selectedNote = defineModel()
+const { notes } = useNotes()
 
 function updateNote(updatedNote) {
   selectedNote.value = updatedNote
@@ -57,12 +63,13 @@ function onContentInput(event) {
 }
 
 function onBeforeInput(event) {
-  if (!activeHeading.value || event.inputType !== 'insertText') return
+  if (event.inputType !== 'insertText') return
 
   const text = event.data
   const selection = window.getSelection()
   const range = selection.getRangeAt(0)
 
+  // Eğer heading zaten varsa, içine metin ekle
   if (
     currentHeadingElement.value &&
     currentHeadingElement.value.tagName.toLowerCase() === activeHeading.value
@@ -80,15 +87,28 @@ function onBeforeInput(event) {
     return
   }
 
-  const headingEl = document.createElement(activeHeading.value)
-  headingEl.textContent = text
-  currentHeadingElement.value = headingEl
+  // Heading yoksa, yeni bir heading oluştur
+  let newEl
+
+  if (activeHeading.value) {
+    newEl = document.createElement(activeHeading.value)
+    currentHeadingElement.value = newEl
+  } else {
+    newEl = document.createElement('span')
+  }
+
+  newEl.textContent = text
+
+  // Stil uygula (sadece ilk seferde)
+  if (isBold.value) newEl.style.fontWeight = 'bold'
+  if (isItalic.value) newEl.style.fontStyle = 'italic'
+  if (isUnderline.value) newEl.style.textDecoration = 'underline'
 
   range.deleteContents()
-  range.insertNode(headingEl)
+  range.insertNode(newEl)
 
   const newRange = document.createRange()
-  newRange.selectNodeContents(headingEl)
+  newRange.selectNodeContents(newEl)
   newRange.collapse(false)
   selection.removeAllRanges()
   selection.addRange(newRange)
