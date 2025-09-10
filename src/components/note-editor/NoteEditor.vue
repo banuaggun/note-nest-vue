@@ -4,7 +4,8 @@
 
     <div
       ref="editable"
-      contenteditable="true"
+      contenteditable="true" 
+      :spellcheck="isSpellcheckEnabled"
       class="editable"
       @input="onContentInput"
       @beforeinput="onBeforeInput"
@@ -24,6 +25,9 @@ import { useNotes } from '../../composables/useNotes'
 import Toolbar from '../toolbar/Toolbar.vue'
 import { useHeadingMode } from '../../composables/useHeadingMode'
 import { useTextFormatting } from '../../composables/useTextFormatting'
+import { useSpellcheck } from '../../composables/useSpellcheck'
+
+const { isSpellcheckEnabled } = useSpellcheck()
 
 const { activeHeading } = useHeadingMode()
 const {
