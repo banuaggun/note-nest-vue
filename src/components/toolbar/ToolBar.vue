@@ -1,28 +1,24 @@
-<template>
-  <div class="toolbar">
-     <HeadingControls :note="note" @update="handleUpdate" />
-     <TextStyleControls />
-     <SpellcheckToggle />
-  </div>
-</template>
-
 <script setup>
-import HeadingControls from "./HeadingControls.vue";
-import SpellcheckToggle from "./SpellcheckToggle.vue";
-import TextStyleControls from "./TextStyleControls.vue";
+import HeadingControls from './HeadingControls.vue'
+import TextStyleControls from './TextStyleControls.vue'
+import SpellcheckToggle from './SpellcheckToggle.vue'
 
 defineProps({ note: Object })
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'applyStyle'])
 
 function handleUpdate(updatedNote) {
   emit('update', updatedNote)
 }
+
+function handleStyle(styleType) {
+  emit('applyStyle', styleType)
+}
 </script>
 
-<style scoped>
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-</style>
+<template>
+  <div class="toolbar">
+    <HeadingControls :note="note" @update="handleUpdate" />
+    <TextStyleControls @applyStyle="handleStyle" />
+    <SpellcheckToggle />
+  </div>
+</template>

@@ -1,24 +1,3 @@
-<template>
-  <div v-if="selectedNote" class="note-editor">
-    <Toolbar :note="selectedNote" @update="updateNote" />
-
-    <div
-      ref="editable"
-      contenteditable="true" 
-      :spellcheck="isSpellcheckEnabled"
-      class="editable"
-      @input="onContentInput"
-      @beforeinput="onBeforeInput"
-      @focus="setCaretToEnd"
-    ></div>
-
-    <button @click="saveNote">Kaydet</button>
-  </div>
-  <div v-else class="note-editor-empty">
-    <p>Bir not seçin...</p>
-  </div>
-</template>
-
 <script setup>
 import { ref, watch, onMounted, nextTick } from 'vue'
 import { useNotes } from '../../composables/useNotes'
@@ -27,14 +6,9 @@ import { useHeadingMode } from '../../composables/useHeadingMode'
 import { useTextFormatting } from '../../composables/useTextFormatting'
 import { useSpellcheck } from '../../composables/useSpellcheck'
 
-const { isSpellcheckEnabled } = useSpellcheck()
-
 const { activeHeading } = useHeadingMode()
-const {
-  isBold,
-  isItalic,
-  isUnderline
-} = useTextFormatting()
+const { isBold, isItalic, isUnderline } = useTextFormatting()
+const { isSpellcheckEnabled } = useSpellcheck()
 
 const currentHeadingElement = ref(null)
 const editable = ref(null)
@@ -91,28 +65,21 @@ function onBeforeInput(event) {
     return
   }
 
-  // Heading yoksa, yeni bir heading oluştur
-  let newEl
+  // Yeni heading oluştur
+  const headingEl = document.createElement(activeHeading.value)
+  headingEl.textContent = text
+  currentHeadingElement.value = headingEl
 
-  if (activeHeading.value) {
-    newEl = document.createElement(activeHeading.value)
-    currentHeadingElement.value = newEl
-  } else {
-    newEl = document.createElement('span')
-  }
-
-  newEl.textContent = text
-
-  // Stil uygula (sadece ilk seferde)
-  if (isBold.value) newEl.style.fontWeight = 'bold'
-  if (isItalic.value) newEl.style.fontStyle = 'italic'
-  if (isUnderline.value) newEl.style.textDecoration = 'underline'
+  // Stil uygula
+  if (isBold.value) headingEl.style.fontWeight = 'bold'
+  if (isItalic.value) headingEl.style.fontStyle = 'italic'
+  if (isUnderline.value) headingEl.style.textDecoration = 'underline'
 
   range.deleteContents()
-  range.insertNode(newEl)
+  range.insertNode(headingEl)
 
   const newRange = document.createRange()
-  newRange.selectNodeContents(newEl)
+  newRange.selectNodeContents(headingEl)
   newRange.collapse(false)
   selection.removeAllRanges()
   selection.addRange(newRange)
@@ -120,6 +87,50 @@ function onBeforeInput(event) {
   event.preventDefault()
   onContentInput({ target: editable.value })
 }
+
+
+function applyStyleToSelection(styleType) {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return
+
+  const range = selection.getRangeAt(0)
+  const selectedContent = range.cloneContents()
+
+  // Eğer sadece metin seçildiyse, yeni bir span oluştur
+  if (selectedContent.childNodes.length === 1 && selectedContent.firstChild.nodeType === Node.TEXT_NODE) {
+    const span = document.createElement('span')
+    span.textContent = selectedContent.textContent
+
+    if (styleType === 'bold') span.style.fontWeight = 'bold'
+    if (styleType === 'italic') span.style.fontStyle = 'italic'
+    if (styleType === 'underline') span.style.textDecoration = 'underline'
+
+    range.deleteContents()
+    range.insertNode(span)
+
+    const newRange = document.createRange()
+    newRange.selectNodeContents(span)
+    newRange.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(newRange)
+  } else {
+    // Eğer zaten bir element seçildiyse, onun stilini güncelle
+    const container = range.startContainer.parentElement
+
+    if (styleType === 'bold') container.style.fontWeight = 'bold'
+    if (styleType === 'italic') container.style.fontStyle = 'italic'
+    if (styleType === 'underline') container.style.textDecoration = 'underline'
+
+    const newRange = document.createRange()
+    newRange.selectNodeContents(container)
+    newRange.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(newRange)
+  }
+
+  onContentInput({ target: editable.value })
+}
+
 
 function setCaretToEnd() {
   const el = editable.value
@@ -159,6 +170,27 @@ watch(
 )
 </script>
 
+<template>
+  <div v-if="selectedNote" class="note-editor">
+    <Toolbar :note="selectedNote" @update="updateNote" @applyStyle="applyStyleToSelection" />
+
+    <div
+      ref="editable"
+      contenteditable="true"
+      :spellcheck="isSpellcheckEnabled"
+      class="editable"
+      @input="onContentInput"
+      @beforeinput="onBeforeInput"
+      @focus="setCaretToEnd"
+    ></div>
+
+    <button @click="saveNote">Kaydet</button>
+  </div>
+  <div v-else class="note-editor-empty">
+    <p>Bir not seçin...</p>
+  </div>
+</template>
+
 <style scoped>
 .editable {
   min-height: 400px;
@@ -174,7 +206,7 @@ watch(
 .editable h4,
 .editable h5,
 .editable h6 {
-  display: inline;
+  display: block;
   margin: 0;
   padding: 0;
   font-weight: bold;

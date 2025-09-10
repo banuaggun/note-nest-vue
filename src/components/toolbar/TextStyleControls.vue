@@ -1,21 +1,16 @@
 <script setup>
-import { useTextFormatting } from '../../composables/useTextFormatting.js'
+const emit = defineEmits(['applyStyle'])
 
-const {
-  isBold,
-  isItalic,
-  isUnderline,
-  toggleBold,
-  toggleItalic,
-  toggleUnderline
-} = useTextFormatting()
+function apply(styleType) {
+  emit('applyStyle', styleType)
+}
 </script>
 
 <template>
   <div class="text-style-controls">
-    <button :class="{ active: isBold }" @click="toggleBold"><strong>B</strong></button>
-    <button :class="{ active: isItalic }" @click="toggleItalic"><em>I</em></button>
-    <button :class="{ active: isUnderline }" @click="toggleUnderline"><u>U</u></button>
+    <button @click="apply('bold')"><strong>B</strong></button>
+    <button @click="apply('italic')"><em>I</em></button>
+    <button @click="apply('underline')"><u>U</u></button>
   </div>
 </template>
 
@@ -26,10 +21,5 @@ const {
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
-}
-
-button.active {
-  background-color: #cce;
-  font-weight: bold;
 }
 </style>
