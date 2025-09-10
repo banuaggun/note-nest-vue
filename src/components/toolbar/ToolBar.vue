@@ -2,11 +2,13 @@
   <div class="toolbar">
      <HeadingControls :note="note" @update="handleUpdate" />
      <TextStyleControls />
+     <SpellcheckToggle />
   </div>
 </template>
 
 <script setup>
 import HeadingControls from "./HeadingControls.vue";
+import SpellcheckToggle from "./SpellcheckToggle.vue";
 import TextStyleControls from "./TextStyleControls.vue";
 
 defineProps({ note: Object })
