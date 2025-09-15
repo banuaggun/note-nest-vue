@@ -47,39 +47,39 @@ function onBeforeInput(event) {
   const selection = window.getSelection()
   const range = selection.getRangeAt(0)
 
-  // Eğer heading zaten varsa, içine metin ekle
+  let targetElement
+
+  // Eğer heading aktifse ve zaten bir heading elementi varsa
   if (
+    activeHeading.value &&
     currentHeadingElement.value &&
     currentHeadingElement.value.tagName.toLowerCase() === activeHeading.value
   ) {
-    currentHeadingElement.value.textContent += text
+    targetElement = currentHeadingElement.value
+    targetElement.textContent += text
+  } else {
+    // Yeni heading veya span oluştur
+    targetElement = document.createElement(activeHeading.value || 'span')
+    targetElement.textContent = text
 
-    const newRange = document.createRange()
-    newRange.selectNodeContents(currentHeadingElement.value)
-    newRange.collapse(false)
-    selection.removeAllRanges()
-    selection.addRange(newRange)
+    // Stil uygula
+    if (isBold.value) targetElement.style.fontWeight = 'bold'
+    if (isItalic.value) targetElement.style.fontStyle = 'italic'
+    if (isUnderline.value) targetElement.style.textDecoration = 'underline'
 
-    event.preventDefault()
-    onContentInput({ target: editable.value })
-    return
+    // DOM'a ekle
+    range.deleteContents()
+    range.insertNode(targetElement)
+
+    // Heading ise referansı sakla
+    if (activeHeading.value) {
+      currentHeadingElement.value = targetElement
+    }
   }
 
-  // Yeni heading oluştur
-  const headingEl = document.createElement(activeHeading.value)
-  headingEl.textContent = text
-  currentHeadingElement.value = headingEl
-
-  // Stil uygula
-  if (isBold.value) headingEl.style.fontWeight = 'bold'
-  if (isItalic.value) headingEl.style.fontStyle = 'italic'
-  if (isUnderline.value) headingEl.style.textDecoration = 'underline'
-
-  range.deleteContents()
-  range.insertNode(headingEl)
-
+  // Caret'i sona taşı
   const newRange = document.createRange()
-  newRange.selectNodeContents(headingEl)
+  newRange.selectNodeContents(targetElement)
   newRange.collapse(false)
   selection.removeAllRanges()
   selection.addRange(newRange)
@@ -89,47 +89,42 @@ function onBeforeInput(event) {
 }
 
 
+
+
 function applyStyleToSelection(styleType) {
   const selection = window.getSelection()
   if (!selection || selection.rangeCount === 0) return
 
   const range = selection.getRangeAt(0)
-  const selectedContent = range.cloneContents()
 
-  // Eğer sadece metin seçildiyse, yeni bir span oluştur
-  if (selectedContent.childNodes.length === 1 && selectedContent.firstChild.nodeType === Node.TEXT_NODE) {
-    const span = document.createElement('span')
-    span.textContent = selectedContent.textContent
-
-    if (styleType === 'bold') span.style.fontWeight = 'bold'
-    if (styleType === 'italic') span.style.fontStyle = 'italic'
-    if (styleType === 'underline') span.style.textDecoration = 'underline'
-
-    range.deleteContents()
-    range.insertNode(span)
-
-    const newRange = document.createRange()
-    newRange.selectNodeContents(span)
-    newRange.collapse(false)
-    selection.removeAllRanges()
-    selection.addRange(newRange)
-  } else {
-    // Eğer zaten bir element seçildiyse, onun stilini güncelle
-    const container = range.startContainer.parentElement
-
-    if (styleType === 'bold') container.style.fontWeight = 'bold'
-    if (styleType === 'italic') container.style.fontStyle = 'italic'
-    if (styleType === 'underline') container.style.textDecoration = 'underline'
-
-    const newRange = document.createRange()
-    newRange.selectNodeContents(container)
-    newRange.collapse(false)
-    selection.removeAllRanges()
-    selection.addRange(newRange)
+  if (selection.isCollapsed) {
+    // Seçim yoksa caret konumuna stil uygulamak için bayrakları güncelle
+    if (styleType === 'bold') isBold.value = !isBold.value
+    if (styleType === 'italic') isItalic.value = !isItalic.value
+    if (styleType === 'underline') isUnderline.value = !isUnderline.value
+    return
   }
+
+  const selectedContent = range.cloneContents()
+  const span = document.createElement('span')
+  span.appendChild(selectedContent)
+
+  if (styleType === 'bold') span.style.fontWeight = 'bold'
+  if (styleType === 'italic') span.style.fontStyle = 'italic'
+  if (styleType === 'underline') span.style.textDecoration = 'underline'
+
+  range.deleteContents()
+  range.insertNode(span)
+
+  const newRange = document.createRange()
+  newRange.selectNodeContents(span)
+  newRange.collapse(false)
+  selection.removeAllRanges()
+  selection.addRange(newRange)
 
   onContentInput({ target: editable.value })
 }
+
 
 
 function setCaretToEnd() {
@@ -172,7 +167,15 @@ watch(
 
 <template>
   <div v-if="selectedNote" class="note-editor">
-    <Toolbar :note="selectedNote" @update="updateNote" @applyStyle="applyStyleToSelection" />
+    <Toolbar
+  :note="selectedNote"
+  :isBold="isBold"
+  :isItalic="isItalic"
+  :isUnderline="isUnderline"
+  @update="updateNote"
+  @applyStyle="applyStyleToSelection"
+/>
+
 
     <div
       ref="editable"
@@ -198,7 +201,11 @@ watch(
   padding: 10px;
   font-size: 16px;
   white-space: pre-wrap;
+  word-break: normal;
+
 }
+
+
 
 .editable h1,
 .editable h2,
@@ -206,9 +213,10 @@ watch(
 .editable h4,
 .editable h5,
 .editable h6 {
-  display: block;
-  margin: 0;
-  padding: 0;
-  font-weight: bold;
+   display: block;
+  width: 100%;
+  white-space: normal;
+  word-break: break-word;
+  margin: 0 0 8px 0;
 }
 </style>
