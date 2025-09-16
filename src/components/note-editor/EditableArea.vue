@@ -1,10 +1,11 @@
 <script setup>
 import { ref, watch, onMounted, nextTick } from 'vue'
-import { useHeadingMode } from '../../composables/useHeadingMode'
-import { useTextFormatting } from '../../composables/useTextFormatting'
-import { useSpellcheck } from '../../composables/useSpellcheck'
-import { useEditorContent } from '../../composables/useEditorContent'
-import { useEditorFormatting } from '../../composables/useEditorFormatting'
+import { useHeadingMode } from '../../composables/functions/useHeadingMode'
+import { useTextFormatting } from '../../composables/functions/useTextFormatting'
+import { useSpellcheck } from '../../composables/functions/useSpellcheck'
+import { useEditorContent } from '../../composables/based/useEditorContent'
+import { useEditorFormatting } from '../../composables/based/useEditorFormatting'
+import { activeColor } from '../../composables/functions/useTextColor'
 
 const editable = ref(null)
 const currentHeadingElement = ref(null)
@@ -26,9 +27,39 @@ const { onBeforeInput, applyStyleToSelection, setCaretToEnd } = useEditorFormatt
   onContentInput
 })
 
+function applyColorToSelection(color) {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return
+
+  const range = selection.getRangeAt(0)
+
+  if (selection.isCollapsed) {
+    // Sadece stil durumu güncellenir, metin yazıldığında uygulanır
+    activeColor.value = color
+    return
+  }
+
+  const selectedContent = range.cloneContents()
+  const span = document.createElement('span')
+  span.appendChild(selectedContent)
+  span.style.color = color
+
+  range.deleteContents()
+  range.insertNode(span)
+
+  const newRange = document.createRange()
+  newRange.selectNodeContents(span)
+  newRange.collapse(false)
+  selection.removeAllRanges()
+  selection.addRange(newRange)
+
+  onContentInput({ target: editable.value })
+}
+
+
 onMounted(() => {
   nextTick(() => {
-    if (selectedNote.value && editable.value) {
+    if (selectedNote.value?.content && editable.value) {
       editable.value.innerHTML = formatContent(selectedNote.value)
     }
   })
@@ -38,7 +69,7 @@ watch(
   () => selectedNote.value,
   (newNote) => {
     nextTick(() => {
-      if (editable.value && newNote) {
+      if (newNote?.content && editable.value) {
         editable.value.innerHTML = formatContent(newNote)
       }
     })
@@ -46,11 +77,13 @@ watch(
   { immediate: true }
 )
 
-defineExpose({
-  applyStyleToSelection
-})
 
+defineExpose({
+  applyStyleToSelection,
+  applyColorToSelection
+})
 </script>
+
 
 <template>
   <div
