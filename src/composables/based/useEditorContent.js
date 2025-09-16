@@ -5,10 +5,8 @@ export function useEditorContent(editable, selectedNote) {
     return `${titleHTML}\n${contentHTML}`
   }
 
-  function onContentInput(event) {
-    const html = event.target.innerHTML
+  function updateFromHTML(html) {
     const titleMatch = html.match(/<h1>(.*?)<\/h1>/)
-
     if (titleMatch) {
       selectedNote.value.title = titleMatch[1]
       selectedNote.value.content = html.replace(titleMatch[0], '').trim()
@@ -17,5 +15,12 @@ export function useEditorContent(editable, selectedNote) {
     }
   }
 
-  return { formatContent, onContentInput }
+  function onContentInput(event) {
+    const target = event?.target || editable.value
+    if (!selectedNote.value || !target) return
+
+    selectedNote.value.content = target.innerHTML
+  }
+
+  return { formatContent, updateFromHTML, onContentInput }
 }
