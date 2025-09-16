@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useHeadingMode } from '../../composables/useHeadingMode'
+import { useHeadingMode } from '../../composables/functions/useHeadingMode'
 
 const { activeHeading, toggleHeading } = useHeadingMode()
 </script>

@@ -1,5 +1,5 @@
 <script setup>
-import { useSpellcheck } from '../../composables/useSpellcheck'
+import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 
 const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck()
 </script>
