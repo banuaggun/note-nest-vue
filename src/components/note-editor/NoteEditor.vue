@@ -26,13 +26,17 @@ function saveNote() {
 }
 
 function handleApplyStyle(styleType) {
+  editableRef.value?.resetCurrentElement(); 
   editableRef.value?.applyStyleToSelection(styleType);
 }
 
+
 function handleApplyColor(color) {
   setColor(color);
+  editableRef.value?.resetCurrentElement(); 
   editableRef.value?.applyColorToSelection(color);
 }
+
 </script>
 
 <template>
