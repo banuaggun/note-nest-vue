@@ -16,7 +16,12 @@ const { isBold, isItalic, isUnderline } = useTextFormatting()
 const { isSpellcheckEnabled } = useSpellcheck()
 
 const { formatContent, onContentInput } = useEditorContent(editable, selectedNote)
-const { onBeforeInput, applyStyleToSelection, setCaretToEnd } = useEditorFormatting({
+const {
+  onBeforeInput,
+  applyStyleToSelection,
+  setCaretToEnd,
+  resetCurrentElement 
+} = useEditorFormatting({
   editable,
   selectedNote,
   activeHeading,
@@ -34,8 +39,8 @@ function applyColorToSelection(color) {
   const range = selection.getRangeAt(0)
 
   if (selection.isCollapsed) {
-    // Sadece stil durumu güncellenir, metin yazıldığında uygulanır
     activeColor.value = color
+    resetCurrentElement() 
     return
   }
 
@@ -55,7 +60,6 @@ function applyColorToSelection(color) {
 
   onContentInput({ target: editable.value })
 }
-
 
 onMounted(() => {
   nextTick(() => {
@@ -77,13 +81,12 @@ watch(
   { immediate: true }
 )
 
-
 defineExpose({
   applyStyleToSelection,
-  applyColorToSelection
+  applyColorToSelection,
+  resetCurrentElement
 })
 </script>
-
 
 <template>
   <div
@@ -117,5 +120,6 @@ defineExpose({
   white-space: normal;
   word-break: break-word;
   margin: 0 0 8px 0;
+  font-weight: bold;
 }
 </style>
