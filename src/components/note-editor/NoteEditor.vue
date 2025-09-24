@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Toolbar from "../toolbar/Toolbar.vue";
 import EditableArea from "./EditableArea.vue";
 import { useNotes } from "../../composables/useNotes";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useTextColor } from "../../composables/functions/useTextColor";
+import { toggleListType } from '../../composables/functions/useTextFormatting'
 
 const selectedNote = defineModel();
 const { notes } = useNotes();
@@ -13,6 +14,8 @@ const { isBold, isItalic, isUnderline } = useTextFormatting();
 const editableRef = ref(null);
 
 const { setColor } = useTextColor();
+
+const activeListType = computed(() => editableRef.value?.activeListType || null);
 
 function updateNote(updatedNote) {
   selectedNote.value = updatedNote;
@@ -26,16 +29,22 @@ function saveNote() {
 }
 
 function handleApplyStyle(styleType) {
-  editableRef.value?.resetCurrentElement(); 
+  editableRef.value?.resetCurrentElement(); // yeni fonksiyon
   editableRef.value?.applyStyleToSelection(styleType);
 }
 
 
 function handleApplyColor(color) {
   setColor(color);
-  editableRef.value?.resetCurrentElement(); 
+  editableRef.value?.resetCurrentElement(); // yeni fonksiyon
   editableRef.value?.applyColorToSelection(color);
 }
+
+function handleApplyList(type) {
+  toggleListType(type) // ⬅️ Liste modunu aç/kapat
+  editableRef.value?.resetCurrentElement()
+}
+
 
 </script>
 
@@ -45,10 +54,12 @@ function handleApplyColor(color) {
       :note="selectedNote"
       :isBold="isBold"
       :isItalic="isItalic"
-      :isUnderline="isUnderline"
+      :isUnderline="isUnderline" 
+      :activeListType="activeListType"
       @update="updateNote"
       @applyStyle="handleApplyStyle"
-      @applyColor="handleApplyColor"
+      @applyColor="handleApplyColor" 
+      @applyList="handleApplyList"
     />
     <EditableArea ref="editableRef" v-model="selectedNote" />
     <button @click="saveNote">Kaydet</button>

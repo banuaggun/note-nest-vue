@@ -3,15 +3,19 @@ import { ref } from 'vue'
 import HeadingControls from "./HeadingControls.vue";
 import TextStyleControls from "./TextStyleControls.vue";
 import SpellcheckToggle from "./SpellcheckToggle.vue";
+import ListControls from './ListControls.vue';
+import { activeListType } from '../../composables/functions/useTextFormatting';
+import { toggleListType } from '../../composables/functions/useTextFormatting'
 
 const props = defineProps({
   note: Object,
   isBold: Boolean,
   isItalic: Boolean,
-  isUnderline: Boolean
+  isUnderline: Boolean, 
+  activeListType: String
 })
 
-const emit = defineEmits(["update", "applyStyle", "applyColor"])
+const emit = defineEmits(["update", "applyStyle", "applyColor", "applyList"])
 
 const selectedColor = ref("#000000")
 
@@ -26,6 +30,16 @@ function handleStyle(styleType) {
 function handleColorChange() {
   emit("applyColor", selectedColor.value)
 }
+
+function handleList(type) {
+  emit("applyList", type)
+}
+
+
+function handleApplyList(type) {
+  toggleListType(type); // Liste modunu aç/kapat
+  editableRef.value?.resetCurrentElement();
+}
 </script>
 
 
@@ -38,6 +52,7 @@ function handleColorChange() {
       :isUnderline="isUnderline"
       @applyStyle="handleStyle"
     />
+<ListControls :activeListType="props.activeListType" @applyList="handleList" />
 
     <!-- Renk seçici -->
     <input type="color" v-model="selectedColor" @change="handleColorChange" />
