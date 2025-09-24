@@ -5,7 +5,8 @@ import { useTextFormatting } from '../../composables/functions/useTextFormatting
 import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 import { useEditorContent } from '../../composables/based/useEditorContent'
 import { useEditorFormatting } from '../../composables/based/useEditorFormatting'
-import { activeColor } from '../../composables/functions/useTextColor'
+import { activeColor } from '../../composables/functions/useTextColor' 
+//import { activeListType } from '../../composables/functions/useTextFormatting'
 
 const editable = ref(null)
 const currentHeadingElement = ref(null)
@@ -19,8 +20,10 @@ const { formatContent, onContentInput } = useEditorContent(editable, selectedNot
 const {
   onBeforeInput,
   applyStyleToSelection,
-  setCaretToEnd,
-  resetCurrentElement 
+  setCaretToEnd, 
+  applyListToSelection, 
+  resetCurrentElement, 
+  activeListType,
 } = useEditorFormatting({
   editable,
   selectedNote,
@@ -40,7 +43,7 @@ function applyColorToSelection(color) {
 
   if (selection.isCollapsed) {
     activeColor.value = color
-    resetCurrentElement() 
+    resetCurrentElement() // ✅ stil değiştiğinde yeni element için sıfırla
     return
   }
 
@@ -83,8 +86,10 @@ watch(
 
 defineExpose({
   applyStyleToSelection,
-  applyColorToSelection,
-  resetCurrentElement
+  applyColorToSelection, 
+  applyListToSelection, 
+  resetCurrentElement, 
+  activeListType
 })
 </script>
 
@@ -96,7 +101,7 @@ defineExpose({
     class="editable"
     @input="onContentInput"
     @beforeinput="onBeforeInput"
-    @focus="setCaretToEnd"
+    @focus="setCaretToEnd" 
   ></div>
 </template>
 

@@ -2,7 +2,9 @@ import { ref } from 'vue'
 
 export const isBold = ref(false)
 export const isItalic = ref(false)
-export const isUnderline = ref(false)
+export const isUnderline = ref(false) 
+export const activeListType = ref(false);
+
 
 export function useTextFormatting() {
   function toggleStyle(styleType) {
@@ -17,4 +19,8 @@ export function useTextFormatting() {
     isUnderline,
     toggleStyle
   }
+}
+
+export function toggleListType(type) {
+  activeListType.value = activeListType.value === type ? false : type;
 }
