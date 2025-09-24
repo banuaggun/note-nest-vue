@@ -103,6 +103,7 @@ defineExpose({
     @beforeinput="onBeforeInput"
     @focus="setCaretToEnd" 
   ></div>
+
 </template>
 
 <style scoped>
@@ -111,8 +112,6 @@ defineExpose({
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 16px;
-  white-space: pre-wrap;
-  word-break: normal;
 }
 .editable h1,
 .editable h2,
@@ -125,6 +124,38 @@ defineExpose({
   white-space: normal;
   word-break: break-word;
   margin: 0 0 8px 0;
-  font-weight: bold;
+  font-weight: bold !important;
 }
+
+li, li span {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  line-height: auto !important;
+}
+ol, ul {
+  margin: 0 !important;
+  padding-left: 0; /* sadece numaralandırma için */
+}
+
+.editable ol li::marker, .editable ul li::marker {
+  content: "";
+  font-size: 0;
+}
+
+
+.editable ol li, .editable ul li {
+   margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  line-height: 1.4 !important;
+  list-style-position: inside !important;
+}
+.editable ol,
+.editable ul {
+  margin: 0 !important;
+  padding-left: 1.2em !important;
+}
+
+
 </style>
