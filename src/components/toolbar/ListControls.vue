@@ -1,14 +1,47 @@
+<script setup>
+const props = defineProps({
+  activeListType: String
+})
+const emit = defineEmits(["applyList"]);
+
+function applyList(type) {
+  emit("applyList", type);
+}
+</script>
+
 <template>
-  <div class="button-group">
-    <button class="btn" @click="emit('format', 'unordered-list')">
-      <span>• List</span>
-    </button>
-    <button class="btn" @click="emit('format', 'ordered-list')">
-      <span>1. List</span>
-    </button>
+  <div class="list-controls">
+  <button
+  :class="{ active: props.activeListType === 'ul' }"
+  @click="applyList('ul')"
+>• Liste</button>
+
+<button
+  :class="{ active: props.activeListType === 'ol' }"
+  @click="applyList('ol')"
+>1. Liste</button>
+
+
   </div>
 </template>
 
-<script setup>
-const emit = defineEmits(['format']);
-</script>
+<style scoped>
+.list-controls button {
+  margin-right: 6px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+.list-controls button.active {
+  background-color: #cce;
+  font-weight: bold;
+}
+
+ul{
+  list-style-type: disc;
+}
+ol{
+  list-style-type: decimal;
+}
+</style>
