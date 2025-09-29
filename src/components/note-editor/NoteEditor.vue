@@ -29,19 +29,19 @@ function saveNote() {
 }
 
 function handleApplyStyle(styleType) {
-  editableRef.value?.resetCurrentElement(); // yeni fonksiyon
+  editableRef.value?.resetCurrentElement(); 
   editableRef.value?.applyStyleToSelection(styleType);
 }
 
 
 function handleApplyColor(color) {
   setColor(color);
-  editableRef.value?.resetCurrentElement(); // yeni fonksiyon
+  editableRef.value?.resetCurrentElement(); 
   editableRef.value?.applyColorToSelection(color);
 }
 
 function handleApplyList(type) {
-  toggleListType(type) // ⬅️ Liste modunu aç/kapat
+  toggleListType(type) 
   editableRef.value?.resetCurrentElement()
 }
 
@@ -55,7 +55,8 @@ function handleApplyList(type) {
       :isBold="isBold"
       :isItalic="isItalic"
       :isUnderline="isUnderline" 
-      :activeListType="activeListType"
+      :activeListType="activeListType" 
+        :resetCurrentElement="editableRef?.resetCurrentElement"
       @update="updateNote"
       @applyStyle="handleApplyStyle"
       @applyColor="handleApplyColor" 

@@ -1,15 +1,13 @@
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { watch, onMounted, nextTick } from 'vue'
 import { useHeadingMode } from '../../composables/functions/useHeadingMode'
 import { useTextFormatting } from '../../composables/functions/useTextFormatting'
 import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 import { useEditorContent } from '../../composables/based/useEditorContent'
 import { useEditorFormatting } from '../../composables/based/useEditorFormatting'
-import { activeColor } from '../../composables/functions/useTextColor' 
-//import { activeListType } from '../../composables/functions/useTextFormatting'
+import { activeColor } from '../../composables/functions/useTextColor'
+import { editable, currentHeadingElement } from '../../composables/based/useEditorState'
 
-const editable = ref(null)
-const currentHeadingElement = ref(null)
 const selectedNote = defineModel()
 
 const { activeHeading } = useHeadingMode()
@@ -20,9 +18,9 @@ const { formatContent, onContentInput } = useEditorContent(editable, selectedNot
 const {
   onBeforeInput,
   applyStyleToSelection,
-  setCaretToEnd, 
-  applyListToSelection, 
-  resetCurrentElement, 
+  setCaretToEnd,
+  applyListToSelection,
+  resetCurrentElement,
   activeListType,
 } = useEditorFormatting({
   editable,
@@ -43,7 +41,7 @@ function applyColorToSelection(color) {
 
   if (selection.isCollapsed) {
     activeColor.value = color
-    resetCurrentElement() // ✅ stil değiştiğinde yeni element için sıfırla
+    resetCurrentElement()
     return
   }
 
@@ -86,9 +84,9 @@ watch(
 
 defineExpose({
   applyStyleToSelection,
-  applyColorToSelection, 
-  applyListToSelection, 
-  resetCurrentElement, 
+  applyColorToSelection,
+  applyListToSelection,
+  resetCurrentElement,
   activeListType
 })
 </script>
@@ -101,9 +99,8 @@ defineExpose({
     class="editable"
     @input="onContentInput"
     @beforeinput="onBeforeInput"
-    @focus="setCaretToEnd" 
+    @focus="setCaretToEnd"
   ></div>
-
 </template>
 
 <style scoped>
@@ -126,7 +123,6 @@ defineExpose({
   margin: 0 0 8px 0;
   font-weight: bold !important;
 }
-
 li, li span {
   margin: 0 !important;
   padding: 0 !important;
@@ -135,17 +131,14 @@ li, li span {
 }
 ol, ul {
   margin: 0 !important;
-  padding-left: 0; /* sadece numaralandırma için */
+  padding-left: 0;
 }
-
 .editable ol li::marker, .editable ul li::marker {
   content: "";
   font-size: 0;
 }
-
-
 .editable ol li, .editable ul li {
-   margin: 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
   text-indent: 0 !important;
   line-height: 1.4 !important;
@@ -156,6 +149,4 @@ ol, ul {
   margin: 0 !important;
   padding-left: 1.2em !important;
 }
-
-
 </style>

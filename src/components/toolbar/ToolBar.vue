@@ -1,17 +1,17 @@
 <script setup>
 import { ref } from 'vue'
-import HeadingControls from "./HeadingControls.vue";
-import TextStyleControls from "./TextStyleControls.vue";
-import SpellcheckToggle from "./SpellcheckToggle.vue";
-import ListControls from './ListControls.vue';
-import { activeListType } from '../../composables/functions/useTextFormatting';
-import { toggleListType } from '../../composables/functions/useTextFormatting'
+import HeadingControls from "./HeadingControls.vue"
+import TextStyleControls from "./TextStyleControls.vue"
+import SpellcheckToggle from "./SpellcheckToggle.vue"
+import ListControls from './ListControls.vue'
+import { activeListType, toggleListType } from '../../composables/functions/useTextFormatting'
+import { editable } from '../../composables/based/useEditorState'
 
 const props = defineProps({
   note: Object,
   isBold: Boolean,
   isItalic: Boolean,
-  isUnderline: Boolean, 
+  isUnderline: Boolean,
   activeListType: String
 })
 
@@ -35,13 +35,11 @@ function handleList(type) {
   emit("applyList", type)
 }
 
-
 function handleApplyList(type) {
-  toggleListType(type); // Liste modunu aç/kapat
-  editableRef.value?.resetCurrentElement();
+  toggleListType(type)
+  editable.value?.__vueParentComponent?.exposed?.resetCurrentElement()
 }
 </script>
-
 
 <template>
   <div class="toolbar">
@@ -52,11 +50,8 @@ function handleApplyList(type) {
       :isUnderline="isUnderline"
       @applyStyle="handleStyle"
     />
-<ListControls :activeListType="props.activeListType" @applyList="handleList" />
-
-    <!-- Renk seçici -->
+    <ListControls :activeListType="props.activeListType" @applyList="handleList" />
     <input type="color" v-model="selectedColor" @change="handleColorChange" />
-
     <SpellcheckToggle />
   </div>
 </template>
