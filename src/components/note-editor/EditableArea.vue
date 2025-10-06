@@ -7,12 +7,15 @@ import { useEditorContent } from '../../composables/based/useEditorContent'
 import { useEditorFormatting } from '../../composables/based/useEditorFormatting'
 import { activeColor } from '../../composables/functions/useTextColor'
 import { editable, currentHeadingElement } from '../../composables/based/useEditorState'
+import { useFontFamily } from '../../composables/functions/useFontFamily'
 
 const selectedNote = defineModel()
 
 const { activeHeading } = useHeadingMode()
 const { isBold, isItalic, isUnderline } = useTextFormatting()
 const { isSpellcheckEnabled } = useSpellcheck()
+
+const { fontFamily } = useFontFamily()
 
 const { formatContent, onContentInput } = useEditorContent(editable, selectedNote)
 const {
@@ -62,10 +65,53 @@ function applyColorToSelection(color) {
   onContentInput({ target: editable.value })
 }
 
+function applyFontToSelection(font) {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+
+  if (selection.isCollapsed) {
+    fontFamily.value = font;
+
+  const span = document.createElement("span");
+  span.style.fontFamily = font;
+  span.appendChild(document.createTextNode("\u200B")); 
+
+  range.insertNode(span);
+
+  const newRange = document.createRange();
+  newRange.setStart(span, 1);
+  newRange.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(newRange);
+    resetCurrentElement();
+    return;
+  }
+
+  const selectedContent = range.cloneContents();
+  const span = document.createElement("span");
+  span.appendChild(selectedContent);
+  span.style.fontFamily = font;
+
+  range.deleteContents();
+  range.insertNode(span);
+
+  const newRange = document.createRange();
+  newRange.selectNodeContents(span);
+  newRange.collapse(false);
+  selection.removeAllRanges();
+  selection.addRange(newRange);
+
+  onContentInput({ target: editable.value });
+}
+
+
 onMounted(() => {
   nextTick(() => {
     if (selectedNote.value?.content && editable.value) {
       editable.value.innerHTML = formatContent(selectedNote.value)
+      document.addEventListener("selectionchange", saveSelection)
     }
   })
 })
@@ -85,10 +131,16 @@ watch(
 defineExpose({
   applyStyleToSelection,
   applyColorToSelection,
-  applyListToSelection,
+  applyListToSelection, 
+  applyFontToSelection, 
   resetCurrentElement,
   activeListType
 })
+
+watch(fontFamily, (newFont) => {
+  console.log("Yeni font seçildi:", newFont)
+})
+
 </script>
 
 <template>
@@ -99,7 +151,7 @@ defineExpose({
     class="editable"
     @input="onContentInput"
     @beforeinput="onBeforeInput"
-    @focus="setCaretToEnd"
+    @focus="setCaretToEnd" 
   ></div>
 </template>
 
@@ -110,43 +162,8 @@ defineExpose({
   padding: 10px;
   font-size: 16px;
 }
-.editable h1,
-.editable h2,
-.editable h3,
-.editable h4,
-.editable h5,
-.editable h6 {
-  display: block;
-  width: 100%;
-  white-space: normal;
-  word-break: break-word;
-  margin: 0 0 8px 0;
-  font-weight: bold !important;
-}
-li, li span {
-  margin: 0 !important;
-  padding: 0 !important;
-  text-indent: 0 !important;
-  line-height: auto !important;
-}
-ol, ul {
-  margin: 0 !important;
-  padding-left: 0;
-}
-.editable ol li::marker, .editable ul li::marker {
-  content: "";
-  font-size: 0;
-}
-.editable ol li, .editable ul li {
-  margin: 0 !important;
-  padding: 0 !important;
-  text-indent: 0 !important;
-  line-height: 1.4 !important;
-  list-style-position: inside !important;
-}
-.editable ol,
-.editable ul {
-  margin: 0 !important;
-  padding-left: 1.2em !important;
+.editable a {
+  color: #0077cc;
+  text-decoration: underline;
 }
 </style>

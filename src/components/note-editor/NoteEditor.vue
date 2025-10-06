@@ -6,14 +6,15 @@ import { useNotes } from "../../composables/useNotes";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useTextColor } from "../../composables/functions/useTextColor";
 import { toggleListType } from '../../composables/functions/useTextFormatting'
+import { fontFamily, setFontFamily } from "../../composables/functions/useFontFamily";
+
 
 const selectedNote = defineModel();
 const { notes } = useNotes();
 const { isBold, isItalic, isUnderline } = useTextFormatting();
+const { setColor } = useTextColor(); 
 
 const editableRef = ref(null);
-
-const { setColor } = useTextColor();
 
 const activeListType = computed(() => editableRef.value?.activeListType || null);
 
@@ -29,22 +30,27 @@ function saveNote() {
 }
 
 function handleApplyStyle(styleType) {
-  editableRef.value?.resetCurrentElement(); 
+  editableRef.value?.resetCurrentElement();
   editableRef.value?.applyStyleToSelection(styleType);
 }
 
-
 function handleApplyColor(color) {
   setColor(color);
-  editableRef.value?.resetCurrentElement(); 
+  editableRef.value?.resetCurrentElement();
   editableRef.value?.applyColorToSelection(color);
 }
 
-function handleApplyList(type) {
-  toggleListType(type) 
-  editableRef.value?.resetCurrentElement()
+function handleApplyFont(font) {
+  setFontFamily(font); 
+  editableRef.value?.resetCurrentElement(); 
+  editableRef.value?.applyFontToSelection(font); 
 }
 
+
+function handleApplyList(type) {
+  toggleListType(type);
+  editableRef.value?.resetCurrentElement();
+}
 
 </script>
 
@@ -54,13 +60,14 @@ function handleApplyList(type) {
       :note="selectedNote"
       :isBold="isBold"
       :isItalic="isItalic"
-      :isUnderline="isUnderline" 
+      :isUnderline="isUnderline"
       :activeListType="activeListType" 
-        :resetCurrentElement="editableRef?.resetCurrentElement"
+      :saveSelection="triggerSaveSelection"
       @update="updateNote"
       @applyStyle="handleApplyStyle"
-      @applyColor="handleApplyColor" 
-      @applyList="handleApplyList"
+      @applyColor="handleApplyColor"
+      @applyList="handleApplyList" 
+      @applyFont="handleApplyFont"
     />
     <EditableArea ref="editableRef" v-model="selectedNote" />
     <button @click="saveNote">Kaydet</button>
@@ -75,5 +82,6 @@ function handleApplyList(type) {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  border:1px solid green;
 }
 </style>
