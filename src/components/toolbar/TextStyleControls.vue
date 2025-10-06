@@ -30,19 +30,39 @@ function apply(styleType) {
 </template>
 
 <style scoped>
+
+.text-style-controls{
+  border:1px solid black;
+  display: flex;
+  width:max-content;
+  gap:12px;
+}
+
 .text-style-controls button {
-  margin-right: 6px;
   padding: 4px 8px;
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
-}
-.text-style-controls button.bold-btn.active,
-.text-style-controls button.italic-btn.active,
-.text-style-controls button.underline-btn.active{
-  background-color: fuchsia !important;
-  border-color: #999;
+  font-size:14px;
+  color:#444;
 }
 
+.text-style-controls button:hover{
+  color:#000;
+  cursor:pointer;
+  background-color: #BDBDEF;
+}
+
+.text-style-controls button.bold-btn.active{
+  background-color: #9898e7;
+  color:#000;
+}
+
+.text-style-controls button.italic-btn.active, 
+.text-style-controls button.underline-btn.active{
+  background-color: #9898e7;
+  font-weight: bold;
+  color:#000;
+}
 
 </style>

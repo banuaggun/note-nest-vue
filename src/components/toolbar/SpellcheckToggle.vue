@@ -1,3 +1,4 @@
+<!-- components/editor/tools/SpellcheckToggle.vue -->
 <script setup>
 import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 
@@ -7,7 +8,7 @@ const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck()
 <template>
   <div class="spellcheck-toggle">
     <button :class="{ active: isSpellcheckEnabled }" @click="toggleSpellcheck">
-      Yazım Denetimi: {{ isSpellcheckEnabled ? 'Açık' : 'Kapalı' }}
+      Spell Check: {{ isSpellcheckEnabled ? 'On' : 'Off' }}
     </button>
   </div>
 </template>
@@ -18,9 +19,21 @@ const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck()
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
+  font-size:14px;
+  color:#444;
+  min-width:150px;
+  text-align: center;
 }
-button.active {
-  background-color: #cce;
+
+.spellcheck-toggle button:hover{
+  color:#000;
+  cursor:pointer;
+  background-color: #BDBDEF;
+}
+
+.spellcheck-toggle button.active{
+  background-color: #9898e7;
   font-weight: bold;
+  color:#000;
 }
 </style>
