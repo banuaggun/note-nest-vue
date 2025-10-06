@@ -1,67 +1,100 @@
 <script setup>
-import { ref } from 'vue'
-import HeadingControls from "./HeadingControls.vue"
-import TextStyleControls from "./TextStyleControls.vue"
-import SpellcheckToggle from "./SpellcheckToggle.vue"
-import ListControls from './ListControls.vue'
-import { activeListType, toggleListType } from '../../composables/functions/useTextFormatting'
-import { editable } from '../../composables/based/useEditorState'
+import { ref } from "vue";
+import HeadingControls from "./HeadingControls.vue";
+import TextStyleControls from "./TextStyleControls.vue";
+import SpellcheckToggle from "./SpellcheckToggle.vue";
+import ListControls from "./ListControls.vue";
+import {
+  activeListType,
+  toggleListType,
+} from "../../composables/functions/useTextFormatting";
+import { editable } from "../../composables/based/useEditorState";
+import FontFamily from "./FontFamily.vue";
 
 const props = defineProps({
   note: Object,
   isBold: Boolean,
   isItalic: Boolean,
   isUnderline: Boolean,
-  activeListType: String
-})
+  activeListType: String,
+  saveSelection: Function,
+});
 
-const emit = defineEmits(["update", "applyStyle", "applyColor", "applyList"])
+const emit = defineEmits(["update", "applyStyle", "applyColor", "applyList", "applyFont"]);
 
-const selectedColor = ref("#000000")
+const selectedColor = ref("#000000");
 
 function handleUpdate(updatedNote) {
-  emit("update", updatedNote)
+  emit("update", updatedNote);
 }
 
 function handleStyle(styleType) {
-  emit("applyStyle", styleType)
+  emit("applyStyle", styleType);
 }
 
 function handleColorChange() {
-  emit("applyColor", selectedColor.value)
+  emit("applyColor", selectedColor.value);
 }
 
 function handleList(type) {
-  emit("applyList", type)
+  emit("applyList", type);
 }
 
 function handleApplyList(type) {
-  toggleListType(type)
-  editable.value?.__vueParentComponent?.exposed?.resetCurrentElement()
+  toggleListType(type);
+  editable.value?.__vueParentComponent?.exposed?.resetCurrentElement();
 }
 </script>
 
 <template>
   <div class="toolbar">
-    <HeadingControls :note="note" @update="handleUpdate" />
-    <TextStyleControls
-      :isBold="isBold"
-      :isItalic="isItalic"
-      :isUnderline="isUnderline"
-      @applyStyle="handleStyle"
-    />
-    <ListControls :activeListType="props.activeListType" @applyList="handleList" />
-    <input type="color" v-model="selectedColor" @change="handleColorChange" />
-    <SpellcheckToggle />
+    <div class="toolbar-header-tags">
+      <HeadingControls :note="note" @update="handleUpdate" />
+    </div>
+    <div class="toolbar-text-style-tags">
+      <TextStyleControls
+        :isBold="isBold"
+        :isItalic="isItalic"
+        :isUnderline="isUnderline"
+        @applyStyle="handleStyle"
+      />
+    </div>
+    <div class="toolbar-list-tags">
+      <ListControls
+        :activeListType="props.activeListType"
+        @applyList="handleList"
+      />
+    </div>
+
+    <div class="toolbar-color">
+      <input type="color" v-model="selectedColor" @change="handleColorChange" />
+     
+    </div>
+    <div class="toolbar-spellcheck">
+      <SpellcheckToggle />
+    </div>
+    <div class="toolbar-fontfamily">
+      <FontFamily @applyFont="(font) => emit('applyFont', font)" />
+
+    </div>
   </div>
 </template>
 
 <style scoped>
+.toolbar{
+  border:1px solid red;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap:30px;
+}
 .toolbar input[type="color"] {
-  margin-left: 8px;
   width: 32px;
   height: 32px;
   border: none;
   cursor: pointer;
+  background-color: transparent;
 }
+
+
 </style>
