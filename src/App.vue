@@ -47,13 +47,17 @@ const selectedNote = ref(null)
 }
 
 .content-area-list{
-  width: 40%;
+  width: 30%;
   border-right: 1px solid #ccc;
   overflow-y: auto;
 }
 
 .content-area-editor{
-  width: 60%;
+  width: 70%;
   padding: 20px;
+}
+
+ul, ol{
+  margin-left:40px !important;
 }
 </style>

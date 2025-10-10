@@ -20,7 +20,13 @@ const props = defineProps({
   saveSelection: Function,
 });
 
-const emit = defineEmits(["update", "applyStyle", "applyColor", "applyList", "applyFont"]);
+const emit = defineEmits([
+  "update",
+  "applyStyle",
+  "applyColor",
+  "applyList",
+  "applyFont",
+]);
 
 const selectedColor = ref("#000000");
 
@@ -59,34 +65,40 @@ function handleApplyList(type) {
         @applyStyle="handleStyle"
       />
     </div>
+    <div class="toolbar-spellcheck">
+      <SpellcheckToggle />
+    </div>
     <div class="toolbar-list-tags">
       <ListControls
         :activeListType="props.activeListType"
         @applyList="handleList"
       />
     </div>
-
     <div class="toolbar-color">
+      <label for="color">Color: </label>
       <input type="color" v-model="selectedColor" @change="handleColorChange" />
-     
     </div>
-    <div class="toolbar-spellcheck">
-      <SpellcheckToggle />
-    </div>
+
     <div class="toolbar-fontfamily">
       <FontFamily @applyFont="(font) => emit('applyFont', font)" />
-
     </div>
   </div>
 </template>
 
 <style scoped>
-.toolbar{
-  border:1px solid red;
-  display:flex;
+.toolbar {
+  border: 1px solid red;
+  display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap:30px;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 24px;
+  row-gap: 8px;
+}
+
+.toolbar-color {
+  display: flex;
+  align-items: center;
 }
 .toolbar input[type="color"] {
   width: 32px;
@@ -95,6 +107,5 @@ function handleApplyList(type) {
   cursor: pointer;
   background-color: transparent;
 }
-
 
 </style>

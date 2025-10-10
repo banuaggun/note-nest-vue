@@ -82,6 +82,5 @@ function handleApplyList(type) {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border:1px solid green;
 }
 </style>
