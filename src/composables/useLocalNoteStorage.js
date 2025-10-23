@@ -13,7 +13,6 @@ export function useLocalNoteStorage(selectedNote) {
   function saveNoteToStorage() {
     if (selectedNote.value?.id) {
       localStorage.setItem(storageKey(), JSON.stringify(selectedNote.value))
-      alert('Not kaydedildi!')
     }
   }
 
@@ -21,9 +20,6 @@ export function useLocalNoteStorage(selectedNote) {
     const stored = localStorage.getItem(storageKey())
     if (stored) {
       selectedNote.value = JSON.parse(stored)
-      alert('Değişiklikler geri alındı.')
-    } else {
-      alert('Geri alınacak bir kayıt bulunamadı.')
     }
   }
 
