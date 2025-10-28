@@ -10,14 +10,23 @@
 </template>
 
 <script setup>
-import { useNotes } from '../../composables/useNotes'
-import NoteItem from './NoteItem.vue'
+import { useNotes } from "../../composables/useNotes";
+import NoteItem from "./NoteItem.vue";
+import { computed } from "vue";
 
-const { notes } = useNotes()
-const selectedNote = defineModel()
+const props = defineProps({
+  showArchived: Boolean 
+})
+
+const selectedNote = defineModel();
+const { notes } = useNotes();
+
+const filteredNotes = computed(() =>
+  notes.value.filter(note => note.archived === props.showArchived)
+)
 
 function selectNote(note) {
-  selectedNote.value = note
+  selectedNote.value = note;
 }
 </script>
 
