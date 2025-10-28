@@ -1,63 +1,43 @@
 <template>
-  <div class="app-container">
-    <Header />
-    <div class="main-layout">
+  <div class="main-layout">
+    <div class="sidebar-panel">
       <Sidebar />
-      <div class="content-area">
-        <div class="content-area-list">
-<NoteList v-model="selectedNote" />
-        </div>
-        <div class="content-area-editor">
-<NoteEditor v-model="selectedNote" />
-        </div>
-        
-      </div>
+    </div>
+    <div class="note-list-panel">
+      <router-view v-model:selectedNote="selectedNote" />
+    </div>
+    <div class="note-editor-panel">
+      <NoteEditor v-model="selectedNote" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Header from "./components/Header.vue";
-import Sidebar from "./components/Sidebar.vue";
-import NoteList from "./components/notes/NoteList.vue";
-import NoteEditor from "./components/note-editor/NoteEditor.vue";
+import { ref } from 'vue'
+import NoteEditor from './components/note-editor/NoteEditor.vue'
+import Sidebar from './components/sidebar/Sidebar.vue'
 
 const selectedNote = ref(null)
 </script>
 
-<style>
-.app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f5f5f5;
-}
+<style scoped>
 .main-layout {
   display: flex;
-  flex: 1;
-}
-.content-area {
-  display:flex;
-  flex: 1;
-  flex-direction: row;
-  padding: 1rem;
-  margin-top: 100px;
-  margin-left: 260px;
+  height: 100vh;
 }
 
-.content-area-list{
-  width: 30%;
+.sidebar-panel {
+  width: 200px;
+}
+
+.note-list-panel {
+  width: 40%;
   border-right: 1px solid #ccc;
   overflow-y: auto;
 }
 
-.content-area-editor{
-  width: 70%;
+.note-editor-panel {
+  width: 60%;
   padding: 20px;
-}
-
-ul, ol{
-  margin-left:40px !important;
 }
 </style>
