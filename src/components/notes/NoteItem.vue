@@ -1,5 +1,5 @@
 <template>
-  <div class="note-item" @click="emit('select', note)">
+  <div class="note-item" @click="emit('select', note)" :class="{ archived: note.archived }">
     <h3>{{ note.title }}</h3>
     <p class="preview">{{ note.content.slice(0, 50) }}...</p>
   </div>
