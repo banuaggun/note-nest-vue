@@ -4,7 +4,8 @@
     "title": "Vue Projesi Planı",
     "content": "Yeni Vue projesi için Vite ile başlangıç yapılacak. Pinia, Vue Router ve TailwindCSS entegre edilecek.",
     "tags": ["vue", "vite", "frontend"],
-    "archived": false,
+    "archived": false, 
+    "deleted": false,
     "createdAt": "2025-09-02T18:30:00Z"
   },
   {
@@ -12,7 +13,8 @@
     "title": "NestJS API Yapısı",
     "content": "NestJS ile REST API kurulacak. Kullanıcı doğrulama JWT ile yapılacak. Notlar için CRUD endpoint'leri hazırlanacak.",
     "tags": ["backend", "nestjs", "api"],
-    "archived": false,
+    "archived": false, 
+    "deleted": false,
     "createdAt": "2025-09-01T14:15:00Z"
   },
   {
@@ -20,7 +22,8 @@
     "title": "Arşivlenmiş Not Örneği",
     "content": "Bu not arşivlenmiş durumda. Arşiv sayfasında listelenmeli ama düzenleme yapılmamalı.",
     "tags": ["arşiv", "örnek"],
-    "archived": true,
+    "archived": true, 
+    "deleted": false,
     "createdAt": "2025-08-28T09:00:00Z"
   }
 ]

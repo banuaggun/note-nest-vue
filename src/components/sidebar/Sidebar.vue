@@ -8,6 +8,10 @@
 
                 <router-link to="/archived" class="nav-item" :class="{active:$route.path === '/archived'}">
                     Archived Notes
+                </router-link> 
+
+                <router-link to="/deleted" class="nav-item" :class="{active:$route.path === '/deleted'}">
+                    Deleted Notes
                 </router-link>
             </div>
         </nav>
