@@ -1,13 +1,32 @@
 <template>
-  <div class="note-item" @click="emit('select', note)" :class="{ archived: note.archived }">
+  <div
+    class="note-item"
+    @click="emit('select', note)"
+    :class="{ archived: note.archived }"
+  >
     <h3>{{ note.title }}</h3>
     <p class="preview">{{ note.content.slice(0, 50) }}...</p>
+
+    <ArchiveDeleteButtons
+      :note="note"
+      @archive="emit('archive', $event)"
+      @unarchive="emit('unarchive', $event)"
+      @delete="emit('delete', $event)"
+      @restore="emit('restore', $event)"
+    />
   </div>
 </template>
 
 <script setup>
-defineProps({ note: Object }) 
-const emit = defineEmits(['select'])
+import ArchiveDeleteButtons from "../toolbar/ArchiveDeleteButtons.vue";
+defineProps({ note: Object });
+const emit = defineEmits([
+  "select",
+  "archive",
+  "unarchive",
+  "delete",
+  "restore",
+]);
 </script>
 
 <style scoped>

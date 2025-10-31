@@ -1,45 +1,66 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 export function useNotes() {
   const notes = ref([])
-  const isLoading = ref(true)
+  const STORAGE_KEY = 'notes'
 
-  // JSON'dan veriyi çek
+  const saveNotes = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes.value))
+  }
+
   const fetchNotes = async () => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+
+    if (stored) {
+      notes.value = JSON.parse(stored)
+      return
+    }
+
     try {
       const res = await fetch('/collect-data/notes.json')
       const data = await res.json()
-      notes.value = data
+
+      notes.value = data.map(note => ({
+        ...note,
+        deleted: note.deleted ?? false
+      }))
+
+      saveNotes()
     } catch (error) {
       console.error('Veri alınamadı:', error)
-    } finally {
-      isLoading.value = false
     }
   }
 
-  // Etiketle filtreleme
-  const filterByTag = (tag) => {
-    return notes.value.filter(note => note.tags.includes(tag))
+  /*
+  const updateNote = (id, changes) => {
+    const note = notes.value.find(n => n.id === id)
+    if (note) {
+      Object.assign(note, changes)
+      saveNotes()
+    }
+  }
+*/
+
+const updateNote = (id, changes) => {
+  const note = notes.value.find(n => n.id === id)
+  if (!note) return
+
+  const allowedFields = ['archived', 'deleted', 'title', 'content']
+  for (const key in changes) {
+    if (allowedFields.includes(key)) {
+      note[key] = changes[key]
+    }
   }
 
-  // Arşivlenmiş notlar
-  const archivedNotes = computed(() =>
-    notes.value.filter(note => note.archived)
-  )
-
-  // Aktif notlar
-  const activeNotes = computed(() =>
-    notes.value.filter(note => !note.archived)
-  )
+  saveNotes()
+}
 
   onMounted(fetchNotes)
 
   return {
     notes,
-    isLoading,
     fetchNotes,
-    filterByTag,
-    archivedNotes,
-    activeNotes
+    saveNotes,
+    updateNote
   }
 }
