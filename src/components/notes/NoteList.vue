@@ -1,5 +1,6 @@
 <template>
   <div class="note-list">
+    <CreateNewNote :onCreate="createNote" @save="createNote" />
     <NoteItem
       v-for="note in filteredNotes"
       :key="note.id"
@@ -8,7 +9,8 @@
       @archive="handleArchive"
       @unarchive="handleUnarchive"
       @delete="handleDelete"
-      @restore="handleRestore"
+      @restore="handleRestore" 
+      @save="createNote"
     />
 
     <NotificationModal
@@ -24,6 +26,7 @@ import { ref, computed } from "vue"
 import { useNotes } from "../../composables/useNotes"
 import NoteItem from "./NoteItem.vue"
 import NotificationModal from "../note-editor/NotificationModal.vue"
+import CreateNewNote from "../note-editor/CreateNewNote.vue"
 
 const props = defineProps({
   showArchived: Boolean,
@@ -67,6 +70,46 @@ const filteredNotes = computed(() =>
     note.deleted === props.showDeleted
   )
 )
+
+
+function createNote() {
+  const id = Math.random().toString(36).substring(2, 9); 
+ 
+
+  const newNote = {
+    id,
+    title: ref(''),
+    content: ref(''),
+    archived: false,
+    deleted: false
+  }
+
+  notes.value.push(newNote) 
+    localStorage.setItem('notes', JSON.stringify(notes.value))
+  setActiveNote(id) 
+  
+}
+
+function setActiveNote(id) {
+  const note = notes.value.find(n => n.id === id)
+  //if (!note) return
+
+  selectedNote.value = {
+    title: titleEditable.value?.innerText || note.title,
+    content: contentEditable.value?.innerHTML || note.content, 
+    ...note
+  }
+}
+
+const title = ref('')
+const content = ref('')
+function save() {
+  emit('save', {
+    title: title.value,
+    content: content.value
+  })
+}
+
 
 function selectNote(note) {
   selectedNote.value = note

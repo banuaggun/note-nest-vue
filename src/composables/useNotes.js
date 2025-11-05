@@ -55,12 +55,30 @@ const updateNote = (id, changes) => {
   saveNotes()
 }
 
+function createNote(noteData) {
+  const id = Math.random().toString(36).substring(2, 9)
+
+  const newNote = {
+    id,
+    title: noteData.title || 'untitled',
+    content: noteData.content || '',
+    archived: false,
+    deleted: false
+  }
+
+  notes.value.push(newNote)
+  localStorage.setItem('notes', JSON.stringify(notes.value))
+  setActiveNote(id)
+}
+
+
   onMounted(fetchNotes)
 
   return {
     notes,
     fetchNotes,
     saveNotes,
-    updateNote
+    updateNote, 
+    createNote
   }
 }

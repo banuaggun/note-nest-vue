@@ -36,7 +36,12 @@ function isNoteChanged() {
 
 function saveNoteToStorage() {
   if (!isNoteChanged()) return
-  localStorage.setItem(`note-${selectedNote.value.id}`, JSON.stringify(selectedNote.value))
+  localStorage.setItem(`note-${selectedNote.value.id}`, JSON.stringify(selectedNote.value)) 
+    // Notes dizisini güncelle
+  updateNote(selectedNote.value.id, {
+    title: selectedNote.value.title,
+    content: selectedNote.value.content
+  })
   modalMessage.value = 'Note saved!'
   modalVisible.value = true
 }
