@@ -1,84 +1,117 @@
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
+
+const STORAGE_KEY = 'note-app-data'
 
 export function useNotes() {
   const notes = ref([])
-  const STORAGE_KEY = 'notes'
 
-  const saveNotes = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes.value))
+  // LocalStorage'tan veri yükle
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      try {
+        notes.value = JSON.parse(saved)
+      } catch (e) {
+        console.error('LocalStorage verisi bozuk:', e)
+      }
+    }
   }
 
-  const fetchNotes = async () => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-
-    if (stored) {
-      notes.value = JSON.parse(stored)
-      return
-    }
-
+  // JSON dosyasından veri yükle (ilk kullanımda)
+  async function loadFromJson() {
     try {
       const res = await fetch('/collect-data/notes.json')
-      const data = await res.json()
-
-      notes.value = data.map(note => ({
-        ...note,
-        deleted: note.deleted ?? false
-      }))
-
-      saveNotes()
+      const jsonData = await res.json()
+      if (notes.value.length === 0) {
+        notes.value = jsonData
+      }
     } catch (error) {
-      console.error('Veri alınamadı:', error)
+      console.error('notes.json yüklenemedi:', error)
     }
   }
 
-  /*
-  const updateNote = (id, changes) => {
+  // notes değiştiğinde LocalStorage'a kaydet
+  watch(notes, (newNotes) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newNotes))
+  }, { deep: true })
+
+  onMounted(() => {
+    loadFromLocalStorage()
+    loadFromJson()
+  })
+
+  // Filtrelenmiş listeler
+  const activeNotes = computed(() =>
+    notes.value.filter(note => note.status === 'active')
+  )
+
+  const archivedNotes = computed(() =>
+    notes.value.filter(note => note.status === 'archived')
+  )
+
+  const deletedNotes = computed(() =>
+    notes.value.filter(note => note.status === 'deleted')
+  )
+
+  // Yeni not oluştur
+  function createNote({ title, content, tags = [] }) {
+    const newNote = {
+      id: Date.now(),
+      title,
+      content,
+      tags,
+      status: 'active'
+    }
+    notes.value.push(newNote)
+  }
+
+  // Var olan notu güncelle
+  function updateNote(updatedNote) {
+    const index = notes.value.findIndex(n => n.id === updatedNote.id)
+    if (index !== -1) {
+      notes.value[index] = { ...notes.value[index], ...updatedNote }
+    }
+  }
+
+  // Notu arşivle / geri al
+  function archiveNote(id) {
     const note = notes.value.find(n => n.id === id)
     if (note) {
-      Object.assign(note, changes)
-      saveNotes()
+      note.status = note.status === 'archived' ? 'active' : 'archived'
     }
   }
-*/
 
-const updateNote = (id, changes) => {
+  // Notu sil (soft delete)
+  function deleteNote(id) {
+    const note = notes.value.find(n => n.id === id)
+    if (note) {
+      note.status = 'deleted'
+    }
+  }
+
+  // Notu kalıcı olarak sil (hard delete)
+  function deleteNotePermanently(id) {
+    notes.value = notes.value.filter(n => n.id !== id)
+  }
+
+  function restoreNote(id) {
   const note = notes.value.find(n => n.id === id)
-  if (!note) return
-
-  const allowedFields = ['archived', 'deleted', 'title', 'content']
-  for (const key in changes) {
-    if (allowedFields.includes(key)) {
-      note[key] = changes[key]
-    }
+  if (note && note.status === 'deleted') {
+    note.status = 'active'
   }
-
-  saveNotes()
 }
 
-function createNote(noteData) {
-  const id = Math.random().toString(36).substring(2, 9)
-
-  const newNote = {
-    id,
-    title: noteData.title || 'untitled',
-    content: noteData.content || '',
-    archived: false,
-    deleted: false
-  }
-
-  notes.value.push(newNote)
-  localStorage.setItem('notes', JSON.stringify(notes.value))
-  setActiveNote(id)
-}
-
-
-  onMounted(fetchNotes)
 
   return {
     notes,
-    fetchNotes,
-    saveNotes,
-    updateNote, 
-    createNote
+    activeNotes,
+    archivedNotes,
+    deletedNotes,
+    createNote,
+    updateNote,
+    archiveNote,
+    deleteNote,
+    deleteNotePermanently, 
+    restoreNote
   }
 }
