@@ -1,43 +1,41 @@
 <template>
-  <div class="main-layout">
+  <div class="app-layout">
     <div class="sidebar-panel">
       <Sidebar />
     </div>
-    <div class="note-list-panel">
-      <router-view v-model:selectedNote="selectedNote" />
-    </div>
-    <div class="note-editor-panel">
-      <NoteEditor v-model="selectedNote" />
-    </div>
+    
+
+    <!-- Sağ: Sayfa içeriği -->
+    <main class="main-content">
+      <RouterView />
+    </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import NoteEditor from './components/note-editor/NoteEditor.vue'
 import Sidebar from './components/sidebar/Sidebar.vue'
-
-const selectedNote = ref(null)
+import { RouterView } from 'vue-router'
 </script>
 
 <style scoped>
-.main-layout {
+.app-layout {
   display: flex;
   height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Sidebar bileşeni sabit genişlikte */
 .sidebar-panel {
-  width: 200px;
-}
-
-.note-list-panel {
-  width: 40%;
+  width: 220px;
+  background-color: #f0f0f0;
+  padding: 1rem;
   border-right: 1px solid #ccc;
-  overflow-y: auto;
 }
 
-.note-editor-panel {
-  width: 60%;
-  padding: 20px;
+/* Sayfa içeriği alanı */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
 }
 </style>

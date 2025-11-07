@@ -1,31 +1,34 @@
 <template>
-  <div class="button-group">
-    <button class="btn" @click="emit('edit-note', selectedNote)" aria-label="Edit note">
-      <IconPencil />
-      <span>Edit</span>
-    </button>
+  <div class="actions">
+    <template v-if="note.status === 'archived'">
+      <button @click="$emit('unarchive', note.id)">Geri Al</button>
+      <button @click="$emit('delete', note.id)">Kalıcı Olarak Sil</button>
+    </template>
 
-    <button class="btn btn-remove" :disabled="disabled" @click="emit('remove-note')">
-      <IconTrash />
-    </button>
+    <template v-else-if="note.status === 'deleted'">
+      <button @click="$emit('restore', note.id)">Çöp Kutusundan Çıkar</button>
+      <button @click="$emit('delete', note.id)">Kalıcı Olarak Sil</button>
+    </template>
+
+    <template v-else>
+      <button @click="$emit('edit', note)">Düzenle</button>
+      <button @click="$emit('delete', note.id)">Sil</button>
+      <button @click="$emit('archive', note.id)">Arşivle</button>
+    </template>
   </div>
 </template>
 
 <script setup>
-import IconPencil from "../icons/editor/IconPencil.vue";
-import IconTrash from "../icons/editor/IconTrash.vue";
-
-const emit = defineEmits(['edit-note', 'remove-note']);
-
-defineProps({
-  disabled: Boolean,
-  selectedNote: Object
-});
+const props = defineProps({
+  note: {
+    type: Object,
+    required: true
+  }
+})
 </script>
 
 <style scoped>
-.btn-remove {
-  color: red;
-  font-size: 1.5rem;
+.actions button {
+  margin-right: 0.5rem;
 }
 </style>

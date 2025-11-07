@@ -1,196 +1,72 @@
-<script setup>
-import { ref, watch, onMounted, nextTick } from "vue";
-import { useHeadingMode } from "../../composables/functions/useHeadingMode";
-import { useTextFormatting } from "../../composables/functions/useTextFormatting";
-import { useSpellcheck } from "../../composables/functions/useSpellcheck";
-import { useEditorFormatting } from "../../composables/based/useEditorFormatting";
-import { activeColor } from "../../composables/functions/useTextColor";
-import { currentHeadingElement } from "../../composables/based/useEditorState";
-import { useFontFamily } from "../../composables/functions/useFontFamily";
-
-const selectedNote = defineModel();
-
-const titleEditable = ref(null);
-const contentEditable = ref(null);
-
-const { activeHeading } = useHeadingMode();
-const { isBold, isItalic, isUnderline } = useTextFormatting();
-const { isSpellcheckEnabled } = useSpellcheck();
-const { fontFamily } = useFontFamily();
-
-const {
-  onBeforeInput,
-  applyStyleToSelection,
-  setCaretToEnd,
-  applyListToSelection,
-  resetCurrentElement,
-  activeListType,
-} = useEditorFormatting({
-  editable: contentEditable,
-  selectedNote,
-  activeHeading,
-  isBold,
-  isItalic,
-  isUnderline,
-  currentHeadingElement,
-  onContentInput,
-});
-
-function onTitleInput() {
-  selectedNote.value.title = titleEditable.value.innerText;
-}
-
-function onContentInput() {
-  selectedNote.value.content = contentEditable.value.innerHTML;
-}
-
-function applyColorToSelection(color) {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-
-  const range = selection.getRangeAt(0);
-
-  if (selection.isCollapsed) {
-    activeColor.value = color;
-    resetCurrentElement();
-    return;
-  }
-
-  const selectedContent = range.cloneContents();
-  const span = document.createElement("span");
-  span.appendChild(selectedContent);
-  span.style.color = color;
-
-  range.deleteContents();
-  range.insertNode(span);
-
-  const newRange = document.createRange();
-  newRange.selectNodeContents(span);
-  newRange.collapse(false);
-  selection.removeAllRanges();
-  selection.addRange(newRange);
-
-  onContentInput();
-}
-
-function applyFontToSelection(font) {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-
-  const range = selection.getRangeAt(0);
-  const anchorNode = selection.anchorNode;
-  const isInTitle = titleEditable.value.contains(anchorNode);
-  const targetEditable = isInTitle ? titleEditable : contentEditable;
-
-  if (selection.isCollapsed) {
-    fontFamily.value = font;
-
-    const span = document.createElement("span");
-    span.style.fontFamily = font;
-    span.appendChild(document.createTextNode("\u200B"));
-
-    range.insertNode(span);
-
-    const newRange = document.createRange();
-    newRange.setStart(span, 1);
-    newRange.collapse(true);
-    selection.removeAllRanges();
-    selection.addRange(newRange);
-
-    resetCurrentElement();
-    return;
-  }
-
-  const selectedContent = range.cloneContents();
-  const span = document.createElement("span");
-  span.appendChild(selectedContent);
-  span.style.fontFamily = font;
-
-  range.deleteContents();
-  range.insertNode(span);
-
-  const newRange = document.createRange();
-  newRange.selectNodeContents(span);
-  newRange.collapse(false);
-  selection.removeAllRanges();
-  selection.addRange(newRange);
-
-  // Güncelleme tetikleyelim
-  if (isInTitle) {
-    onTitleInput();
-  } else {
-    onContentInput();
-  }
-}
-
-
-
-onMounted(() => {
-  nextTick(() => {
-    if (selectedNote.value) {
-      titleEditable.value.innerText = selectedNote.value.title;
-      contentEditable.value.innerHTML = selectedNote.value.content;
-      document.addEventListener("selectionchange", saveSelection);
-    }
-  });
-});
-
-watch(
-  () => selectedNote.value,
-  (newNote) => {
-    nextTick(() => {
-      if (newNote) {
-        titleEditable.value.innerText = newNote.title;
-        contentEditable.value.innerHTML = newNote.content;
-      }
-    });
-  },
-  { immediate: true }
-);
-
-defineExpose({
-  applyStyleToSelection,
-  applyColorToSelection,
-  applyListToSelection,
-  applyFontToSelection,
-  resetCurrentElement,
-  activeListType,
-});
-</script>
-
 <template>
-  <div class="editable-wrapper">
+  <div class="editable-area">
     <div
-      ref="titleEditable"
+      class="editable title"
       contenteditable="true"
-      class="editable-title"
-      @input="onTitleInput"
+      ref="titleRef"
+      @input="updateTitle"
+      placeholder="Başlık yazın..."
     ></div>
 
     <div
-      ref="contentEditable"
+      class="editable content"
       contenteditable="true"
-      :spellcheck="isSpellcheckEnabled"
-      class="editable-content"
-      @input="onContentInput"
-      @beforeinput="onBeforeInput"
-      @focus="setCaretToEnd"
+      ref="contentRef"
+      @input="updateContent"
+      placeholder="İçerik yazın..."
     ></div>
   </div>
 </template>
 
+<script setup>
+import { ref, watch, defineExpose, nextTick } from 'vue'
+
+const props = defineProps({ note: Object })
+
+const titleRef = ref(null)
+const contentRef = ref(null)
+
+watch(
+  () => props.note,
+  async (note) => {
+    await nextTick() // DOM render edilsin
+
+    if (titleRef.value) {
+      titleRef.value.innerHTML = note?.title || ''
+    }
+
+    if (contentRef.value) {
+      contentRef.value.innerHTML = note?.content || ''
+    }
+  },
+  { immediate: true }
+)
+
+defineExpose({
+  titleRef,
+  contentRef
+})
+</script>
+
+
 <style scoped>
-.editable-wrapper {
+.editable-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.editable {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 0.5rem;
+  min-height: 40px;
+  border-radius: 4px;
+  background-color: #fff;
 }
-.editable-title {
-  font-size: 24px;
+.title {
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 12px;
 }
-.editable-content {
-  min-height: 300px;
-  font-size: 16px;
+.content {
+  min-height: 120px;
 }
 </style>
