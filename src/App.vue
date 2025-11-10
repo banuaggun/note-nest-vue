@@ -20,7 +20,7 @@ import { RouterView } from 'vue-router'
 <style scoped>
 .app-layout {
   display: flex;
-  height: 100vh;
+  height: auto;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -35,7 +35,7 @@ import { RouterView } from 'vue-router'
 /* Sayfa içeriği alanı */
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 1rem;
   overflow-y: auto;
 }
 </style>
