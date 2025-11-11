@@ -10,7 +10,12 @@ export const availableFonts = [
   "Verdana",
   "Tahoma",
   "Trebuchet MS",
+  "Open Sans",   // buraya ekle
+  "Roboto",      // Google Fonts’tan
+  "Pacifico",    // Google Fonts’tan
+  "Montserrat"   // Google Fonts’tan
 ];
+
 
 export function setFontFamily(font) {
   fontFamily.value = font;
