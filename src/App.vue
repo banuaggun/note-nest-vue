@@ -37,5 +37,11 @@ import { RouterView } from 'vue-router'
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
+} 
+ul{
+  list-style-type: disc;
+}
+ol{
+  list-style-type: decimal;
 }
 </style>
