@@ -24,19 +24,15 @@ import { RouterView } from 'vue-router'
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Sidebar bileşeni sabit genişlikte */
 .sidebar-panel {
-  width: 220px;
-  background-color: #f0f0f0;
-  padding: 1rem;
-  border-right: 1px solid #ccc;
+  width: 200px;
 }
 
-/* Sayfa içeriği alanı */
 .main-content {
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
+  margin-top: 20px;
 } 
 ul{
   list-style-type: disc;
