@@ -18,21 +18,21 @@
       <div class="sidebar-nav-links">
         <router-link
           to="/"
-          class="nav-item"
+          class="nav-item btn"
           :class="{ active: $route.path === '/' }"
         >
           <i class="ph ph-house"></i> <span>All</span>
         </router-link>
         <router-link
           to="/archived"
-          class="nav-item"
+          class="nav-item btn"
           :class="{ active: $route.path === '/archived' }"
         >
           <i class="ph ph-box-arrow-down"></i> <span>Archived</span>
         </router-link>
         <router-link
           to="/deleted"
-          class="nav-item"
+          class="nav-item btn"
           :class="{ active: $route.path === '/deleted' }"
         >
           <i class="ph ph-trash"></i> <span>Deleted</span>
@@ -44,7 +44,7 @@
         <a
           href="https://portfolio-banuaggun.vercel.app/"
           target="_blank"
-          class="portfolio-link"
+          class="portfolio-link btn"
         >
           <img :src="logob" alt="Banu Ağgün Logo" class="bottom-logo" />
           <span>My Portfolio</span>
@@ -52,13 +52,13 @@
 
         <!-- Sosyal linkler -->
         <div class="social-links">
-          <a href="https://github.com/banuaggun" target="_blank"
+          <a class="btn" href="https://github.com/banuaggun" target="_blank"
             ><i class="ph ph-github-logo"></i><span>GitHub</span></a
           >
-          <a href="https://www.behance.net/banuaggun" target="_blank"
+          <a class="btn" href="https://www.behance.net/banuaggun" target="_blank"
             ><i class="ph ph-behance-logo"></i><span>Behance</span></a
           >
-          <a href="https://www.linkedin.com/in/banuaggun/?locale=en_US" target="_blank"
+          <a class="btn" href="https://www.linkedin.com/in/banuaggun/?locale=en_US" target="_blank"
             ><i class="ph-fill ph-linkedin-logo"></i><span>LinkedIn</span></a
           >
         </div>
@@ -161,16 +161,6 @@ const isCollapsed = ref(false);
   font-size: 1rem;
 }
 
-.nav-item:hover {
-  color: #0077ff;
-}
-
-.nav-item.active {
-  font-weight: bold;
-  color: #0077ff;
-  background-color: wheat;
-}
-
 .toggle-btn {
   position: absolute;
   right: -10px;
@@ -209,7 +199,6 @@ const isCollapsed = ref(false);
   transition: all 0.2s ease;
   padding: 12px 0 12px 0px;
   gap: 0px;
-  background-color: wheat;
 }
 
 .portfolio-link img {
@@ -254,12 +243,8 @@ const isCollapsed = ref(false);
   text-decoration: none;
   padding: 12px 0 12px 0px;
   width:100%;
-  background-color: wheat;
 }
 
-.social-links a:hover{
-  background-color: pink;
-}
 
 .social-links a span{
   font-size: 16px;
@@ -290,9 +275,6 @@ const isCollapsed = ref(false);
   margin-left:0;
 }
 
-
-
-
 .sidebar.collapsed .portfolio-link span,
 .sidebar.collapsed .social-links span {
   display: none; 
@@ -302,4 +284,43 @@ const isCollapsed = ref(false);
 .sidebar.collapsed .social-links a {
   justify-content: center; 
 }
+
+.btn {
+	color: #000;
+	transition: all 0.5s;
+	position: relative;
+}
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(102, 161, 130, 0.1);
+	transition: all 0.3s;
+}
+.btn:hover::before {
+	opacity: 0 ;
+	transform: scale(0.5,0.5);
+}
+.btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
+	transition: all 0.3s;
+	border: 1px solid rgba(102, 161, 130, 0.8);
+	transform: scale(1.2,1.2);
+}
+.btn:hover::after {
+	opacity: 1;
+	transform: scale(1,1);
+}
+
 </style>
