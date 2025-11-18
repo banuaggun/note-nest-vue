@@ -1,11 +1,10 @@
 <template>
   <div class="app-layout">
+  
     <div class="sidebar-panel">
       <Sidebar />
     </div>
     
-
-    <!-- Sağ: Sayfa içeriği -->
     <main class="main-content">
       <RouterView />
     </main>
@@ -14,7 +13,7 @@
 
 <script setup>
 import Sidebar from './components/sidebar/Sidebar.vue'
-import { RouterView } from 'vue-router'
+import { RouterView } from 'vue-router' 
 </script>
 
 <style scoped>
@@ -22,17 +21,16 @@ import { RouterView } from 'vue-router'
   display: flex;
   height: auto;
   font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f8f8;
 }
 
-.sidebar-panel {
-  width: 200px;
-}
 
 .main-content {
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
   margin-top: 20px;
+  background-color: #f8f8f8;
 } 
 ul{
   list-style-type: disc;

@@ -31,6 +31,7 @@ defineEmits(['edit', 'delete', 'archive', 'unarchive', 'restore'])
 .note-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
+  padding:0.8rem;
 }
 </style>
