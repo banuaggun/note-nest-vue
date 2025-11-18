@@ -1,14 +1,8 @@
 <template>
-  <div
-    class="note-item" :class="{ archived: note.status === 'archived' }">
-    <h3>{{ cleanedTitle }}</h3>
-    <p>{{ cleanedContent }}...</p> 
-    <div class="tags">
-      <span v-for="tag in note.tags" :key="tag" class="tag">{{ tag }}</span>
-    </div>
-
-    <NoteActions 
-    class="actions"
+  
+  <div class="note-item" :class="{ archived: note.status === 'archived' }"> 
+    <NoteActions
+      class="actions"
       :note="note"
       @edit="$emit('edit', $event)"
       @delete="$emit('delete', $event)"
@@ -16,63 +10,64 @@
       @unarchive="$emit('unarchive', $event)"
       @restore="$emit('restore', $event)"
     />
+    <h3>{{ cleanedTitle }}</h3>
+    <p>{{ cleanedContent }}...</p>
+    <!--
+    <div class="tags">
+      <span v-for="tag in note.tags" :key="tag" class="tag">{{ tag }}</span>
+    </div>
+  -->
+    
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 import NoteActions from "../toolbar/NoteActions.vue";
 
 const props = defineProps({
   note: {
     type: Object,
-    required: true
-  }
-}) 
+    required: true,
+  },
+});
 
 const cleanedTitle = computed(() => {
-  const raw = props.note.title || ''
+  const raw = props.note.title || "";
   const text = raw
-    .replace(/&nbsp;/g, ' ')       // HTML boşluk karakterlerini düzelt
-    .replace(/<[^>]+>/g, '')       // HTML etiketlerini kaldır
-    .replace(/\s+/g, ' ')          // Fazla boşlukları sadeleştir
-    .trim()
+    .replace(/&nbsp;/g, " ") // HTML boşluk karakterlerini düzelt
+    .replace(/<[^>]+>/g, "") // HTML etiketlerini kaldır
+    .replace(/\s+/g, " ") // Fazla boşlukları sadeleştir
+    .trim();
 
-  const maxLength = 30
-  return text.length > maxLength
-    ? text.slice(0, maxLength) + '...'
-    : text
-})
+  const maxLength = 30;
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+});
 
 const cleanedContent = computed(() => {
-  const raw = props.note.content || ''
+  const raw = props.note.content || "";
   const text = raw
-    .replace(/&nbsp;/g, ' ')       // HTML boşluk karakterlerini düzelt
-    .replace(/<[^>]+>/g, '')       // HTML etiketlerini kaldır
-    .replace(/\s+/g, ' ')          // Fazla boşlukları sadeleştir
-    .trim()
+    .replace(/&nbsp;/g, " ") // HTML boşluk karakterlerini düzelt
+    .replace(/<[^>]+>/g, "") // HTML etiketlerini kaldır
+    .replace(/\s+/g, " ") // Fazla boşlukları sadeleştir
+    .trim();
 
-  const maxLength = 50
-  return text.length > maxLength
-    ? text.slice(0, maxLength) + '...'
-    : text
-})
-
+  const maxLength = 50;
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+});
 </script>
 
 <style scoped>
 .note-item {
   border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding:0.5rem;
   border-radius: 8px;
-} 
-.archived {
-  opacity: 0.6;
 }
-.note-item:hover {
-  background-color: #f9f9f9;
-} 
+
+.note-item h3, .note-item p{
+  margin:8px 8px;
+}
+/*
 .tag {
   background-color: #eee;
   padding: 0.2rem 0.5rem;
@@ -80,7 +75,9 @@ const cleanedContent = computed(() => {
   border-radius: 4px;
   font-size: 0.8rem;
 }
-.actions button {
-  margin-right: 0.5rem;
+  */
+.actions  {
+  display:flex;
+  justify-content: flex-end;
 }
 </style>

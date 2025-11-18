@@ -1,326 +1,230 @@
 <template>
-  <aside class="sidebar" :class="{ collapsed: isCollapsed }">
-    <!-- Toggle Button -->
-    <button class="toggle-btn" @click="isCollapsed = !isCollapsed">
-      <i :class="isCollapsed ? 'ph ph-caret-right' : 'ph ph-caret-left'"></i>
-    </button>
+    <div>
+        <div class="container">
+           
+            <input type="checkbox" id="toggle" checked />
+            <label class="button" for="toggle">
+                <nav class="nav dot">
+                    <ul>
+                        <li>
+                            <router-link to="/" :class="{ active: $route.path === '/' }">
+                                <i class="ph ph-house"></i> 
+                            </router-link>
+                        </li>
 
-    <nav class="sidebar-nav">
-      <!-- Logo -->
-      <div class="sidebar-nav-logo">
-        <router-link to="/" class="logo-link">
-          <img :src="logoIcon" alt="note nest vue" class="logo-icon" />
-          <img :src="logoText" alt="note nest vue" class="logo-text" />
-        </router-link>
-      </div>
+                        <li>
+                            <router-link to="/archived" :class="{ active: $route.path === '/archived' }">
+                                <i class="ph ph-box-arrow-down"></i> 
+                            </router-link>
+                        </li> 
 
-      <!-- Menü -->
-      <div class="sidebar-nav-links">
-        <router-link
-          to="/"
-          class="nav-item btn"
-          :class="{ active: $route.path === '/' }"
-        >
-          <i class="ph ph-house"></i> <span>All</span>
-        </router-link>
-        <router-link
-          to="/archived"
-          class="nav-item btn"
-          :class="{ active: $route.path === '/archived' }"
-        >
-          <i class="ph ph-box-arrow-down"></i> <span>Archived</span>
-        </router-link>
-        <router-link
-          to="/deleted"
-          class="nav-item btn"
-          :class="{ active: $route.path === '/deleted' }"
-        >
-          <i class="ph ph-trash"></i> <span>Deleted</span>
-        </router-link>
-      </div>
+                        <li>
+                            <router-link to="/deleted" :class="{ active: $route.path === '/deleted' }">
+                                <i class="ph ph-trash"></i>
+                            </router-link>
+                        </li>
 
-      <div class="sidebar-nav-bottom">
-        <!-- Portfolio link -->
-        <a
-          href="https://portfolio-banuaggun.vercel.app/"
-          target="_blank"
-          class="portfolio-link btn"
-        >
-          <img :src="logob" alt="Banu Ağgün Logo" class="bottom-logo" />
-          <span>My Portfolio</span>
-        </a>
-
-        <!-- Sosyal linkler -->
-        <div class="social-links">
-          <a class="btn" href="https://github.com/banuaggun" target="_blank"
-            ><i class="ph ph-github-logo"></i><span>GitHub</span></a
-          >
-          <a class="btn" href="https://www.behance.net/banuaggun" target="_blank"
-            ><i class="ph ph-behance-logo"></i><span>Behance</span></a
-          >
-          <a class="btn" href="https://www.linkedin.com/in/banuaggun/?locale=en_US" target="_blank"
-            ><i class="ph-fill ph-linkedin-logo"></i><span>LinkedIn</span></a
-          >
+                        <li>
+                            <router-link to="/settings" :class="{ active: $route.path === '/settings' }">
+                                <i class="ph ph-gear"></i> 
+                            </router-link>
+                        </li>
+                    </ul>
+                </nav>
+            </label>
         </div>
-      </div>
-    </nav>
-  </aside>
+    </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import logoIcon from "../../assets/image/logo-icon.svg";
-import logoText from "../../assets/image/logo-text.svg";
-import logob from "../../assets/image/logob.png";
-
-const isCollapsed = ref(false);
 </script>
 
-<style>
-.sidebar {
+<style scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 20%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 200px;
-  background-color: #fff;
-  border-right: 2px solid #ccc;
-  border-radius: 0 8px 8px 0;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s ease;
+  bottom:40px;
+  left:15px;
+  right:0;
 }
 
-.sidebar.collapsed {
-  width: 60px;
-  height: 100vh;
+@media only screen and (min-width:641px){
+  .container{
+    left:20px;
+  }
 }
 
-.sidebar-nav-logo {
-  margin: 60px auto 20px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#toggle {
+  -webkit-appearance: none;
 }
 
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-}
-
-.logo-icon {
-  width: 28px;
-  height: 28px;
-}
-
-.logo-text {
-  height: 18px;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar.collapsed .logo-text,
-.sidebar.collapsed .nav-item span {
-  opacity: 0;
-  display: none;
-}
-
-.sidebar-nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 30px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  padding: 12px 0 12px 16px;
-  gap: 6px;
-}
-
-.sidebar.collapsed .nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 0 12px 0;
-  gap: 6px;
-  color: #242424;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.nav-item i {
-  font-size: 24px;
-}
-
-.nav-item span {
-  font-size: 1rem;
-}
-
-.toggle-btn {
+.button {
   position: absolute;
-  right: -10px;
-  top: 20px;
-  margin-bottom: 20px;
-  align-self: center;
+  z-index: 999;
+  width: 280px;
+  height: 65px;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 100%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  opacity:1;
+  z-index:10;
+  box-shadow: 2px 2px 12px rgba(136, 136, 136, 1);
+  border: 2px solid #ccc;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 18px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 0 24px;
+  overflow: hidden;
+  transition: width 300ms linear; 
 }
-
-.toggle-btn i {
-  font-size: 1rem;
-  color: #000;
-}
-
-.sidebar-nav-bottom {
+.button:before {
   position: absolute;
-  width:100%;
-  bottom: 30px;
-  display: flex;
-  flex-direction: column;
+  content: "";
+  width: 20px;
+  height: 2px;
+  background: #242424;
+  transform: rotate(225deg);
+  transition: all 0.4s ease;
+}
+.button:after {
+  position: absolute;
+  content: "";
+  width: 20px;
+  height: 2px;
+  background: #242424;
+  transform: rotate(135deg);
+  transition: all 0.4s ease;
 }
 
-.portfolio-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  padding: 12px 0 12px 0px;
-  gap: 0px;
-}
-
-.portfolio-link img {
-  width: 50px;
-  height: 30px;
-}
-
-.portfolio-link span{
-  font-size:16px;
-  font-weight:500;
-  color:#242424;
-}
-
-.sidebar.collapsed .portfolio-link{
+.nav {
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
   width: 100%;
+  border-radius: 5px;
+  transform: translateX(10%);
+  padding: 10px 0;
+  background-color: white;
+}
+.nav ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+.nav li {
+  opacity: 0;
+  list-style: none;
+}
+.nav li:nth-child(1) {
+  transform-origin: bottom;
+  animation: itop 300ms 300ms linear forwards;
+}
+.nav li:nth-child(2) {
+  transform-origin: bottom;
+  animation: itop 300ms 400ms linear forwards;
+}
+.nav li:nth-child(3) {
+  transform-origin: bottom;
+  animation: itop 300ms 500ms linear forwards;
+}
+.nav li:nth-child(4) {
+  transform-origin: bottom;
+  animation: itop 300ms 600ms linear forwards;
+}
+.nav a {
+  transition: all 0.5s linear;
+  text-decoration: none;
+  color: #242424;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 0 12px 0;
-  gap: 0;
-  color: #242424;
-  text-decoration: none;
-  transition: all 0.2s ease;
 }
-
-.social-links {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  padding: 12px 0 12px 0px; 
-  gap: 16px;
-  color: #242424;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.social-links a{
-  gap:8px;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  padding: 12px 0 12px 0px;
-  width:100%;
-}
-
-
-.social-links a span{
-  font-size: 16px;
-  font-weight: 500;
-  color:#242424;
-}
-
-.social-links a i{
+.nav a i{
   font-size:24px;
-  color:#242424;
-  margin-left:8px;
 }
 
-.sidebar.collapsed .social-links {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 12px 0 12px 0;
-  gap: 16px;
+.nav a:hover {
   color: #242424;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 
+			4px 4px 6px rgba(0,0,0,.2), 
+			5px 10px 35px rgba(0,0,0,.1),
+			8px 10px 25px rgba(0,0,0,.1),
+			inset -1px -1px 9px rgba(0,0,0,.2),
+			inset -1px -1px 3px rgba(255,255,255,.6),
+			inset 1px 1px 8px rgba(255,255,255,1),
+			inset 4px 4px 24px rgba(0,0,0,.15),
+			-5px -5px 15px rgba(255,255,255,.9);
+		transform: scale(.98);
+    font-size:24px;
 }
 
-.sidebar.collapsed .social-links a i{
-  margin-left:0;
+.nav a:hover i{
+  font-size:24px;
 }
 
-.sidebar.collapsed .portfolio-link span,
-.sidebar.collapsed .social-links span {
-  display: none; 
+.nav a.active{
+  border-radius:50%;
+  box-shadow: 
+			2px 2px 3px rgba(0,0,0,.2), 
+			3px 5px 18px rgba(0,0,0,.1),
+			4px 5px 13px rgba(0,0,0,.1),
+			inset -0.5px -0.5px 5px rgba(0,0,0,.2),
+			inset -0.5px -0.5px 1.5px rgba(255,255,255,.6),
+			inset 0.5px 0.5px 4px rgba(255,255,255,1),
+			inset 2px 2px 12px rgba(0,0,0,.15),
+			-2.5px -2.5px 7.5px rgba(255,255,255,.9);
 }
 
-.sidebar.collapsed .portfolio-link,
-.sidebar.collapsed .social-links a {
-  justify-content: center; 
+#toggle:checked ~ label .nav {
+  display: none;
+  opacity: 0;
+  transform: translateX(0);
 }
 
-.btn {
-	color: #000;
-	transition: all 0.5s;
-	position: relative;
+#toggle:checked ~ .button:before {
+  transform: rotate(90deg);
 }
-.btn::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
-	background-color: rgba(102, 161, 130, 0.1);
-	transition: all 0.3s;
+
+#toggle:checked ~ .button:after {
+  transform: rotate(0deg);
 }
-.btn:hover::before {
-	opacity: 0 ;
-	transform: scale(0.5,0.5);
+
+#toggle:checked ~ .button {
+  width: 70px;
+  transition: all 0.1s linear;
 }
-.btn::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
-	opacity: 0;
-	transition: all 0.3s;
-	border: 1px solid rgba(102, 161, 130, 0.8);
-	transform: scale(1.2,1.2);
+
+@media (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
 }
-.btn:hover::after {
-	opacity: 1;
-	transform: scale(1,1);
+@keyframes itop {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 
 </style>
