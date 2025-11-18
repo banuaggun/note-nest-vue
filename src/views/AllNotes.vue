@@ -6,7 +6,11 @@
     </div>
 
     <div class="main-content">
-      <div class="list-panel">
+      <!-- Liste sadece editor kapalıysa -->
+      <div 
+        class="list-panel" 
+        v-if="!isEditorOpen || !isMobile"
+      >
         <NoteList
           :notes="activeNotes"
           @edit="startEdit"
@@ -14,23 +18,28 @@
           @archive="archiveNote"
         />
       </div>
-      <div class="editor-panel" v-if="isEditorOpen">
-        <NoteEditor 
+
+      <!-- Editor sadece editor açıksa -->
+      <div 
+        class="editor-panel" 
         v-if="isEditorOpen"
+      >
+        <NoteEditor 
           :note="editingNote"
           @save="handleSave"
           @cancel="closeEditor"
         /> 
-        <div v-else class="placeholder">
+        
+      </div>
+      <div v-if="!isEditorOpen && !isMobile" class="placeholder">
           <p>Bir not seçin ya da yeni bir not oluşturun. Burada düzenleme yapabilirsiniz.</p>
         </div>
-      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useNotes } from '../composables/useNotes'
 import NoteList from '../components/notes/NoteList.vue'
 import NoteEditor from '../components/note-editor/NoteEditor.vue'
@@ -45,6 +54,19 @@ const {
 
 const isEditorOpen = ref(false)
 const editingNote = ref(null)
+const isMobile = ref(window.innerWidth <= 641) // başlangıç değeri
+
+function updateIsMobile() {
+  isMobile.value = window.innerWidth <= 641
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateIsMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile)
+})
 
 function startCreate() {
   editingNote.value = null
@@ -71,11 +93,13 @@ function handleSave(noteData) {
 }
 </script>
 
+
 <style scoped>
 .all-notes {
-  max-width: 1200px;
-  margin: 2rem 0;
+  width:100%;
+  margin: 0;
   padding: 0rem;
+  border:1px solid red;
 } 
 .header {
   display: flex;
@@ -86,18 +110,18 @@ function handleSave(noteData) {
 }
 .main-content{
   display:flex;
-  gap:0.5rem;
+  gap:1rem;
+  width:100%;
 } 
 
 .list-panel {
-  flex:1; 
+  width:30%;
   height:80vh; 
   overflow-y: auto;
-  padding-right:0.5rem;
 }
 
 .editor-panel {
-  flex: 2.5; 
+  width:70%;
   /*max-width: 400px;*/
   border-left: 1px solid #ccc;
   padding-left: 1rem;
@@ -108,4 +132,18 @@ function handleSave(noteData) {
   color: #666;
   font-style: italic;
 }
+
+@media only screen and (max-width:641px){
+  .main-content{
+    display:flex;
+    flex-direction: column;
+  }
+  .list-panel{
+    width:100%;
+  }
+  .editor-panel{
+    width:100%;
+  }
+}
+
 </style>
