@@ -1,5 +1,5 @@
 <template>
-  <div class="app-layout">
+  <div class="app-layout" :class="[settings.theme, settings.font]">
   
     <div class="sidebar-panel">
       <Sidebar />
@@ -12,8 +12,11 @@
 </template>
 
 <script setup>
+import { inject } from 'vue';
 import Sidebar from './components/sidebar/Sidebar.vue'
 import { RouterView } from 'vue-router' 
+
+const settings = inject('settings')
 </script>
 
 <style scoped>
@@ -37,5 +40,27 @@ ul{
 }
 ol{
   list-style-type: decimal;
+}
+
+.light {
+  background: #f9f9f9;
+  color: #333;
+}
+
+.dark {
+  background: #333;
+  color: #000;
+}
+
+
+/* Font class'ları */
+.sans {
+  font-family: Arial, sans-serif;
+}
+.serif {
+  font-family: Georgia, serif;
+}
+.mono {
+  font-family: Courier New, monospace;
 }
 </style>
