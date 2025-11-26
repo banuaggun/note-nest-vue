@@ -1,38 +1,11 @@
-:root {
-  --link-color: #A2B3B9;
-  --link-color-two:rgba(162, 179, 185, 0.5);
-  --button-color: #ffffff;
-  --accent-color: #ff6f61;
-  --text-color: rgb(29, 34, 38); /* #1d2226 */
-  --text-color-two:rgba(29, 34, 38, 0.80);
-  --font-family: "Open Sans", sans-serif;
-  --border-radius: 8px;
-  --spacing: 1rem;
-}
-
-
-button.btn:disabled, button.btn[disabled]{
-  color:var(--text-color-two);
-}
-
-.btn:hover:not([disabled]){
-  background-color: var(--link-color);
-}
-
-.no-notes-message{
-  height:calc(100vh - 50px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color:green;
-}
-
-/* global.css veya App.vue içinde */
 .light {
-  --bg-color: #6f7cec;
-  --text-color: #333;
-  --button-bg: #e0e0e0;
+  --bg-color: #f8f8f8;
+  --text-color: #242424;
+  --button-bg: #e0e0e0; 
+  --warning-color:#FDCA40; 
+  --danger-color:#C0212E;
   --button-text: #333; 
+  --nav-bg:#444;
   --box-shadow-style-hover: 
     4px 4px 6px rgba(15,139,141,.2),
     5px 10px 35px rgba(15,139,141,.1),
@@ -42,38 +15,45 @@ button.btn:disabled, button.btn[disabled]{
     inset 1px 1px 8px rgba(255,255,255,1),
     inset 4px 4px 24px rgba(15,139,141,.15),
     -5px -5px 15px rgba(255,255,255,.9);
+    --box-shadow-style-active: 
+			2px 2px 3px rgba(15,139,141,.2), 
+			3px 5px 18px rgba(15,139,141,.1),
+			4px 5px 13px rgba(15,139,141,.1),
+			inset -0.5px -0.5px 5px rgba(15,139,141,.2),
+			inset -0.5px -0.5px 1.5px rgba(255,255,255,.6),
+			inset 0.5px 0.5px 4px rgba(255,255,255,1),
+			inset 2px 2px 12px rgba(15,139,141,.15),
+			-2.5px -2.5px 7.5px rgba(255,255,255,.9);
 
   --transform-style: scale(.98);
 }
 
 .dark {
-  --bg-color: #3249b1;
+  --bg-color: #333;
   --text-color: #f9f9f9;
-  --button-bg: #444;
+  --button-bg: #444; 
+  --warning-color:#FFCE5C; 
+  --danger-color:#DB2B39;
   --button-text: #f9f9f9; 
+  --nav-bg:#fff;
   --box-shadow-style-hover: 
-    4px 4px 6px rgba(0,0,0,.4),
-    5px 10px 35px rgba(0,0,0,.3),
-    8px 10px 25px rgba(0,0,0,.3),
-    inset -1px -1px 9px rgba(0,0,0,.4),
-    inset -1px -1px 3px rgba(255,255,255,.2),
-    inset 1px 1px 8px rgba(255,255,255,.1),
-    inset 4px 4px 24px rgba(0,0,0,.2),
-    -5px -5px 15px rgba(255,255,255,.1);
+    4px 4px 6px rgba(15,139,141,.2),
+    5px 10px 35px rgba(15,139,141,.1),
+    8px 10px 25px rgba(15,139,141,.1),
+    inset -1px -1px 9px rgba(15,139,141,.2),
+    inset -1px -1px 3px rgba(255,255,255,.6),
+    inset 1px 1px 8px rgba(255,255,255,1),
+    inset 4px 4px 24px rgba(15,139,141,.15),
+    -2.5px -2.5px 7.5px rgba(255,255,255,.9);
+    --box-shadow-style-active: 
+			2px 2px 3px rgba(15,139,141,.2), 
+			3px 5px 18px rgba(15,139,141,.1),
+			4px 5px 13px rgba(15,139,141,.1),
+			inset -0.5px -0.5px 5px rgba(15,139,141,.2),
+			inset -0.5px -0.5px 1.5px rgba(255,255,255,.6),
+			inset 0.5px 0.5px 4px rgba(255,255,255,1),
+			inset 2px 2px 12px rgba(15,139,141,.15),
+			-1.25px -1.25px 5px rgba(255,255,255,.9);
 
   --transform-style: scale(.98);
-}
-
-/* Genel kullanım */
-body, .app-container {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-}
-
-button {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
 }

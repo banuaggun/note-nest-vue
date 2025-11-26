@@ -1,6 +1,7 @@
 import { createApp, reactive, watch } from 'vue'
 import App from './App.vue'
 import router from './router'
+import './assets/styles/global.css'
 import './assets/styles/variables.css'
 
 // localStorage'dan önceki değerleri oku
