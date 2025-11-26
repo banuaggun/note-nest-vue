@@ -57,9 +57,10 @@
   bottom: 40px;
   left: 15px;
   right: 0;
+  z-index:1000;
 }
 
-@media only screen and (min-width: 641px) {
+@media only screen and (min-width:641px) {
   .container {
     left: 20px;
   }
