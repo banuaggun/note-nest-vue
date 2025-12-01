@@ -1,5 +1,6 @@
 <template>
-  <div class="note-card">
+  <div class="note-list">
+<div class="note-list-card">
     <NoteItem
       v-for="note in notes"
       :key="note.id"
@@ -12,6 +13,8 @@
     />
 
   </div>
+  </div>
+  
 </template>
 
 <script setup>
@@ -28,7 +31,7 @@ defineEmits(['edit', 'delete', 'archive', 'unarchive', 'restore'])
 
 </script> 
 <style scoped>
-.note-card {
+.note-list-card {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;

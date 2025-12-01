@@ -25,7 +25,7 @@ const { activeHeading, toggleHeading } = useHeadingMode()
   border:1px solid black;
   display: flex;
   width:max-content;
-  gap:12px;
+  gap:8px;
 }
 
 .text-style-controls button {

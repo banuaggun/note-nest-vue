@@ -25,7 +25,6 @@ function handleChange(event) {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0;
 }
 
 select {

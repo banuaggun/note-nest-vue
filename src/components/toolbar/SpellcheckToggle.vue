@@ -21,7 +21,6 @@ const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck()
   cursor: pointer;
   font-size:14px;
   color:#444;
-  min-width:150px;
   text-align: center;
 }
 
