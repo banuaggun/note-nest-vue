@@ -1,14 +1,16 @@
 <template>
   <section class="deleted-notes">
-    <div class="header">
+    <div class="deleted-notes-header">
       <h2>Çöp Kutusu</h2>
     </div>
-
-    <NoteList
+    <div class="deleted-notes-area">
+<NoteList
       :notes="deletedNotes"
       @restore="restoreNote"
       @delete="deleteNotePermanently"
     />
+    </div>
+    
   </section>
 </template>
 
@@ -28,14 +30,27 @@ function restoreNote(id) {
 <style scoped>
 .deleted-notes {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height:auto
 }
 
-.header {
+.deleted-notes-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* sabit yükseklik */
+  background: white;
+  border-bottom: 1px solid yellowgreen;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding: 0 12px;
+  margin-top:40px;
+}
+
+.deleted-notes-area{
+  margin-top: 100px; 
 }
 </style>

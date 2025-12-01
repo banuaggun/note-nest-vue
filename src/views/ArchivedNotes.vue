@@ -1,14 +1,16 @@
 <template>
   <section class="archived-notes">
-    <div class="header">
-      <h2>Arşivlenmiş Notlar</h2>
+    <div class="archived-notes-header">
+      <h2>Archived Notes</h2>
     </div>
-
-    <NoteList
+    <div class="archived-notes-area">
+<NoteList
       :notes="archivedNotes"
       @unarchive="unarchiveNote"
       @delete="deleteNotePermanently"
     />
+    </div>
+    
   </section>
 </template>
 
@@ -26,14 +28,28 @@ function unarchiveNote(id) {
 <style scoped>
 .archived-notes {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
 }
 
-.header {
+.archived-notes-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* sabit yükseklik */
+  background: white;
+  border-bottom: 1px solid yellowgreen;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding: 0 12px;
+  margin-top:40px;
 }
+
+.archived-notes-area{
+   margin-top: 100px; 
+}
+
 </style>
