@@ -1,5 +1,11 @@
 <template>
   <div class="note-editor">
+  <div class="actions">
+      <button @click="handleSubmit">
+        {{ note?.id ? "Güncelle" : "Oluştur" }}
+      </button>
+      <button @click="$emit('cancel')">İptal</button>
+    </div>
     <Toolbar
       :isBold="isBold"
       :isItalic="isItalic"
@@ -12,19 +18,14 @@
       @applyList="handleApplyList"
     />
 
-    <EditableArea ref="editable" :note="note" />
+    <EditableArea :ref="editable" :note="note" />
 
     <label>
       Etiketler (virgülle ayır):
       <input v-model="tags" type="text" />
     </label>
 
-    <div class="actions">
-      <button @click="handleSubmit">
-        {{ note?.id ? "Güncelle" : "Oluştur" }}
-      </button>
-      <button @click="$emit('cancel')">İptal</button>
-    </div>
+    
   </div>
 </template>
 
@@ -63,11 +64,34 @@ watch(
 
 function updateNote(updatedNote) {
   selectedNote.value = updatedNote
+} 
+
+function applyStyle(styleType) {
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const span = document.createElement("span");
+
+  if (styleType === "italic") span.style.fontStyle = "italic";
+  if (styleType === "bold") span.style.fontWeight = "bold";
+  if (styleType === "underline") span.style.textDecoration = "underline";
+
+  range.surroundContents(span);
 }
 
+/*
+function applyStyle(style) {
+  // Toggle state (yeni yazılan karakterler için)
+  toggleStyle(style);
+  // Mevcut seçili metin için gerçek uygulama
+  editable.value?.applyStyleToSelection(style);
+}
+*/
+/*
 function applyStyle(style) {
   toggleStyle(style); 
-}
+}*/
 
 function handleApplyColor(color) {
   setColor(color);
@@ -155,6 +179,5 @@ function handleSubmit() {
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
 }
 </style>

@@ -62,7 +62,8 @@ export function useNotes() {
       tags,
       status: 'active'
     }
-    notes.value.push(newNote)
+    notes.value.push(newNote) 
+    return newNote; 
   }
 
   // Var olan notu güncelle
