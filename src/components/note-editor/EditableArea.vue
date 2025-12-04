@@ -6,7 +6,7 @@
       ref="titleRef"
       @input="updateTitle"
       @keydown="handleKeydown"
-      placeholder="Başlık yazın..."
+      placeholder="Başlık yazın..." 
     ></div>
 
     <div
@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, defineExpose } from "vue";
+import { ref, watch, onMounted, nextTick, defineExpose } from "vue";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useHeadingMode } from "../../composables/functions/useHeadingMode";
 import { useEditorFormatting } from "../../composables/based/useEditorFormatting";
@@ -36,7 +36,7 @@ const props = defineProps({
     type: Object,
     default: () => ({ title: "", content: "" }),
   },
-});
+}); 
 
 const titleRef = ref(null);
 const contentRef = ref(null);
@@ -44,12 +44,14 @@ const { isBold, isItalic, isUnderline } = useTextFormatting();
 const { isSpellcheckEnabled } = useSpellcheck();
 const { activeHeading } = useHeadingMode();
 const { fontFamily } = useFontFamily();
-  const currentHeadingElement = ref(null);
+const currentHeadingElement = ref(null); 
+const selectedNote = defineModel();
 
 
 const { onBeforeinput, resetCurrentElement, activeListType, applyListToSelection } =
-  useEditorFormatting({
-    editable: contentRef,
+  useEditorFormatting({ 
+    note:props.note, 
+    editable: titleRef || contentRef,
     isBold,
     isItalic,
     isUnderline,
@@ -62,7 +64,7 @@ const { onBeforeinput, resetCurrentElement, activeListType, applyListToSelection
 
 function updateTitle() {
   if (!props.note) return;
-  props.note.title = titleRef.value?.innerText || "";
+  props.note.title = titleRef.value?.innerHTML || "";
 }
 
 function updateContent() {
@@ -180,7 +182,7 @@ function applyListToSelection(type) {
   updateContent();
 }
 */
-
+/*
 function handleKeydown(e) {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
@@ -196,7 +198,7 @@ function handleKeydown(e) {
     selection.addRange(range);
     return;
   }
-/*
+
   if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
     e.preventDefault();
 
@@ -227,7 +229,80 @@ function handleKeydown(e) {
     selection.removeAllRanges();
     selection.addRange(newRange);
   }
-  */
+  
+}
+
+*/
+
+function getClosestFromRange(range, selector) {
+  const start = range.startContainer;
+  const baseEl = start.nodeType === 3 ? start.parentElement : start;
+  return baseEl ? baseEl.closest(selector) : null;
+}
+
+
+function handleKeydown(e) {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+
+  // Space → NBSP
+  if (e.key === " ") {
+    e.preventDefault();
+    const space = document.createTextNode("\u00A0");
+    range.insertNode(space);
+    range.setStartAfter(space);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return;
+  }
+
+  // Tek karakter yazımı
+  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+
+    let element;
+
+    if (activeHeading.value) {
+      element = getClosestFromRange(range, activeHeading.value);
+      if (!element) {
+        element = document.createElement(activeHeading.value);
+        // Range içeriğine node eklerken caret’i doğru konumlamak önemli:
+        range.insertNode(element);
+        const move = document.createRange();
+        move.selectNodeContents(element);
+        move.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(move);
+      }
+    } else {
+      element = document.createElement("span");
+      range.insertNode(element);
+      const move = document.createRange();
+      move.selectNodeContents(element);
+      move.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(move);
+    }
+
+    // Stil uygula veya toggle off ise normalleştir 
+     if (isBold.value) element.style.fontWeight = "bold";
+    if (isItalic.value) element.style.fontStyle = "italic";
+    if (isUnderline.value) element.style.textDecoration = "underline";
+    if (activeColor.value) element.style.color = activeColor.value;
+    if (fontFamily.value) element.style.fontFamily = fontFamily.value; 
+ 
+    element.appendChild(document.createTextNode(e.key));
+
+    const newRange = document.createRange();
+    newRange.setStartAfter(element.lastChild);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+
+    updateContent();
+  }
 }
 
 
@@ -287,7 +362,7 @@ function handleBeforeInput(e) {
   updateContent();
 }
 */
-
+/*
 function handleBeforeInput(e) {
   if (typeof onBeforeinput === "function") {
     onBeforeinput(e);
@@ -345,14 +420,89 @@ function handleBeforeInput(e) {
 
   updateContent();
 }
+*/
+
+function handleBeforeInput(e) {
+  if (typeof onBeforeinput === "function") {
+    onBeforeinput(e);
+  }
+
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  // Liste içinde ise custom insertText’i atla
+  const container = selection.getRangeAt(0).startContainer;
+  const inListItem = container.nodeType === 1
+    ? container.closest("li")
+    : container.parentElement?.closest("li");
+  if (inListItem) return;
+
+  if (e.inputType !== "insertText" || !e.data) return;
+
+  const range = selection.getRangeAt(0);
+
+  let element;
+  if (activeHeading.value) {
+    const closestHeading = getClosestFromRange(range, activeHeading.value);
+    if (closestHeading) {
+      element = closestHeading;
+    } else {
+      element = document.createElement(activeHeading.value);
+      range.insertNode(element);
+      const move = document.createRange();
+      move.selectNodeContents(element);
+      move.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(move);
+    }
+  } else {
+    element = document.createElement("span");
+    range.insertNode(element);
+    const move = document.createRange();
+    move.selectNodeContents(element);
+    move.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(move);
+  }
+
+  // Stil uygula veya toggle off ise normalleştir
+  element.style.fontWeight   = isBold.value ? "bold"      : "normal";
+  element.style.fontStyle    = isItalic.value ? "italic"  : "normal";
+  element.style.textDecoration = isUnderline.value ? "underline" : "none";
+  if (activeColor.value) element.style.color = activeColor.value;
+  if (fontFamily.value) element.style.fontFamily = fontFamily.value;
+
+  // NBSP koruma (örn. e.data === " ")
+  const text = e.data === " " ? "\u00A0" : e.data;
+  element.appendChild(document.createTextNode(text));
+  e.preventDefault();
+
+  const newRange = document.createRange();
+  newRange.setStartAfter(element.lastChild);
+  newRange.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(newRange);
+
+  updateContent();
+}
+
+onMounted(() => {
+  nextTick(() => {
+    if (selectedNote.value) {
+      titleRef.value.innerText = selectedNote.value.title;
+      contentRef.value.innerHTML = selectedNote.value.content;
+      document.addEventListener("selectionchange", saveSelection);
+    }
+  });
+});
 
 
 watch(
-  () => props.note,
+  () => selectedNote.value || props.note,
   async (note) => {
     await nextTick();
     if (titleRef.value) {
-      titleRef.value.innerHTML = note?.title || "";
+      titleRef.value.innerText = note?.title || "";
     }
     if (contentRef.value) {
       contentRef.value.innerHTML = note?.content || "";
@@ -360,6 +510,21 @@ watch(
   },
   { immediate: true }
 );
+
+/*
+watch(
+  () => selectedNote.value,
+  (newNote) => {
+    nextTick(() => {
+      if (newNote) {
+        titleEditable.value.innerText = newNote.title;
+        contentEditable.value.innerHTML = newNote.content;
+      }
+    });
+  },
+  { immediate: true }
+);
+*/
 
 defineExpose({
   titleRef,

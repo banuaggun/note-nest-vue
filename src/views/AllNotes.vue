@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useNotes } from "../composables/useNotes";
 import NoteList from "../components/notes/NoteList.vue";
 import NoteEditor from "../components/note-editor/NoteEditor.vue";
@@ -47,7 +47,10 @@ import NoteEditor from "../components/note-editor/NoteEditor.vue";
 const props = defineProps({ isEditorOpen: Boolean });
 const emit = defineEmits(["update:isEditorOpen"]);
 
-const { activeNotes, createNote, updateNote, archiveNote, deleteNote } = useNotes();
+const { activeNotes, createNote, updateNote, archiveNote, deleteNote } = useNotes();  
+const selectedNote = defineModel(); 
+const titleRef = ref(null);
+const contentRef = ref(null);
 
 const editingNote = ref(null);
 const isMobile = ref(window.innerWidth <= 641);
@@ -64,7 +67,8 @@ onUnmounted(() => {
 });
 
 function startCreate() {
-  editingNote.value = null;
+  //editingNote.value = null; 
+    editingNote.value = { title: "", content: "" }; 
   emit("update:isEditorOpen", true); // App.vue’deki state’i aç
 }
 
@@ -78,11 +82,27 @@ function closeEditor() {
   emit("update:isEditorOpen", false); // App.vue’deki state’i kapat
 }
 
+watch(
+  () => selectedNote.value || props.note,
+  async (note) => {
+    await nextTick();
+    if (titleRef.value) {
+      titleRef.value.innerHTML = note?.title || "";
+    }
+    if (contentRef.value) {
+      contentRef.value.innerHTML = note?.content || "";
+    }
+  },
+  { immediate: true }
+);
+
 function handleSave(noteData) {
-  if (noteData.id) {
-    updateNote(noteData);
-  } else {
-    createNote(noteData);
+  if (noteData.id != null) {
+    updateNote(noteData); 
+  } else { 
+     const newNote = createNote(noteData);
+    editingNote.value = newNote;
+    //createNote(noteData);
   }
   closeEditor();
 }
