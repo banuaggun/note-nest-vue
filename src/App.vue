@@ -10,8 +10,18 @@
     </div>
 
     <main class="main-content">
-      <!-- v-model ile AllNotes’a state aktar -->
+      <!-- v-model ile AllNotes’a state aktar 
       <RouterView v-model:isEditorOpen="isEditorOpen" />
+    -->
+    <RouterView v-slot="{ Component }">
+  <component
+    :is="Component"
+    :isEditorOpen="isEditorOpen"
+    @update:isEditorOpen="val => isEditorOpen = val"
+  />
+</RouterView>
+
+
     </main>
   </div>
 </template>
