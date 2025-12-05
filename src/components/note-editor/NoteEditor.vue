@@ -1,173 +1,89 @@
 <template>
   <div class="note-editor">
-  <div class="actions">
+    <div class="actions">
       <button @click="handleSubmit">
         {{ note?.id ? "Güncelle" : "Oluştur" }}
       </button>
       <button @click="$emit('cancel')">İptal</button>
     </div>
+
+    <!-- Toolbar -->
     <Toolbar
       :isBold="isBold"
       :isItalic="isItalic"
-      :isUnderline="isUnderline" 
-      :activeListType="activeListType" 
-      @style="applyStyle"
-      @applyColor="handleApplyColor"
-      @applyFont="handleApplyFont"
-      @update="updateNote" 
-      @applyList="handleApplyList"
+      :isUnderline="isUnderline"
+      :activeListType="activeListType"
+      @applyStyle="editable.value?.applyStyle($event)"
+      @applyColor="editable.value?.applyColor($event)"
+      @applyFont="editable.value?.applyFont($event)"
+      @applyList="editable.value?.applyList($event)"
     />
 
-    <EditableArea :ref="editable" :note="note" />
+    <!-- EditableArea -->
+    <EditableArea ref="editable" :note="note" />
 
+    <!-- Etiketler -->
     <label>
       Etiketler (virgülle ayır):
       <input v-model="tags" type="text" />
     </label>
-
-    
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
+import { useNotes } from "../../composables/useNotes";
 import Toolbar from "../toolbar/Toolbar.vue";
 import EditableArea from "./EditableArea.vue";
-import { useNotes } from "../../composables/useNotes";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useTextColor } from "../../composables/functions/useTextColor";
+import { useFontFamily } from "../../composables/functions/useFontFamily";
 import { toggleListType } from "../../composables/functions/useTextFormatting";
-import {
-  fontFamily,
-  setFontFamily,
-} from "../../composables/functions/useFontFamily";
 
 const props = defineProps({ note: Object });
-const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
-const { setColor } = useTextColor(); 
-
 const emit = defineEmits(["save", "cancel"]);
 
-const editable = ref(null);
+const { createNote, updateNote } = useNotes();
+
 const tags = ref(""); 
-
-const activeListType = computed(() => editable.value?.activeListType || null)
-
+const title = ref(""); 
+const content = ref(""); 
+const editable = ref(null);
 
 watch(
   () => props.note,
-  (note) => {
+  (note) => { 
+    title.value = note?.title || "";
+    content.value = note?.content || "";
     tags.value = note?.tags?.join(", ") || "";
   },
   { immediate: true }
-);  
-
-function updateNote(updatedNote) {
-  selectedNote.value = updatedNote
-} 
-
-function applyStyle(styleType) {
-  const selection = window.getSelection();
-  if (!selection.rangeCount) return;
-
-  const range = selection.getRangeAt(0);
-  const span = document.createElement("span");
-
-  if (styleType === "italic") span.style.fontStyle = "italic";
-  if (styleType === "bold") span.style.fontWeight = "bold";
-  if (styleType === "underline") span.style.textDecoration = "underline";
-
-  range.surroundContents(span);
-}
-
-/*
-function applyStyle(style) {
-  // Toggle state (yeni yazılan karakterler için)
-  toggleStyle(style);
-  // Mevcut seçili metin için gerçek uygulama
-  editable.value?.applyStyleToSelection(style);
-}
-*/
-/*
-function applyStyle(style) {
-  toggleStyle(style); 
-}*/
-
-function handleApplyColor(color) {
-  setColor(color);
-  editable.value?.resetCurrentElement();
-  editable.value?.applyColorToSelection(color);
-}
-
-function handleApplyFont(font) {
-  setFontFamily(font);
-  editable.value?.resetCurrentElement();
-  editable.value?.applyFontToSelection(font);
-}
-
-function handleApplyList(type) {
-  const selection = window.getSelection();
-  const li = selection?.anchorNode?.closest("li");
-
-  if (activeListType.value === type) {
-    // Aynı tipe tekrar basınca listeden çık
-   // activeListType.value = null; 
-   toggleListType(null);
-
-    if (li) {
-      const parentList = li.parentElement;
-      const fragment = document.createDocumentFragment();
-
-      // <li> içindeki içeriği al
-      while (li.firstChild) {
-        fragment.appendChild(li.firstChild);
-      }
-
-      // Listeyi kaldır, içeriği parent’a ekle
-      parentList.parentElement.insertBefore(fragment, parentList.nextSibling);
-
-      // Eğer listede başka <li> yoksa listeyi tamamen kaldır
-      if (parentList.children.length === 1) {
-        parentList.remove();
-      }
-
-      // Cursor’u içeriğin sonuna taşı
-      const range = document.createRange();
-      range.selectNodeContents(fragment);
-      range.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-
-    editable.value?.resetCurrentElement();
-  } else {
-    // Listeye gir
-    toggleListType(type);
-    editable.value?.applyListToSelection(type);
-    editable.value?.resetCurrentElement();
-  }
-}
-
-
-
+);
 
 function handleSubmit() {
-  if (!editable.value) return;
+  const safeNote = editable.value?.noteLocal || { title: "", content: "" };
+
   const noteData = {
-    title: editable.value.titleRef?.innerHTML.trim() || "",
-    content: editable.value.contentRef?.innerHTML.trim() || "",
-    tags: tags.value
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean),
+    id: props.note?.id,
+    title: (safeNote.title).trim(),
+    content: (safeNote.content).trim(),
+    tags: tags.value.split(",").map(t => t.trim()).filter(Boolean),
   };
 
-  if (props.note?.id) {
-    noteData.id = props.note.id;
+  if (noteData.id) {
+    updateNote(noteData);
+  } else {
+    createNote(noteData);
   }
 
   emit("save", noteData);
 }
+
+/* Toolbar state */
+const { isBold, isItalic, isUnderline } = useTextFormatting();
+const { setColor } = useTextColor();
+const { setFontFamily } = useFontFamily();
+const activeListType = ref(null);
 </script>
 
 <style scoped>
