@@ -1,5 +1,6 @@
 <template>
   <div class="note-editor">
+    <!-- Actions -->
     <div class="actions">
       <button @click="handleSubmit">
         {{ note?.id ? "Güncelle" : "Oluştur" }}
@@ -7,67 +8,139 @@
       <button @click="$emit('cancel')">İptal</button>
     </div>
 
-    <!-- Toolbar -->
-    <Toolbar
-      :isBold="isBold"
-      :isItalic="isItalic"
-      :isUnderline="isUnderline"
-      :activeListType="activeListType"
-      @applyStyle="editable.value?.applyStyle($event)"
-      @applyColor="editable.value?.applyColor($event)"
-      @applyFont="editable.value?.applyFont($event)"
-      @applyList="editable.value?.applyList($event)"
-    />
+    <div class="note-editor-toolbar">
+      <Toolbar
+        :isBold="isBold"
+        :isItalic="isItalic"
+        :isUnderline="isUnderline"
+        @applyStyle="applyStyle"
+      />
+    </div>
 
-    <!-- EditableArea -->
-    <EditableArea ref="editable" :note="note" />
-
-    <!-- Etiketler -->
-    <label>
-      Etiketler (virgülle ayır):
-      <input v-model="tags" type="text" />
-    </label>
+    <div class="note-editor-editable">
+      <!-- Başlık -->
+      <input
+        v-model="noteLocal.title"
+        type="text"
+        placeholder="Başlık yazın..."
+      />
+      <div
+        class="text-area"
+        v-html="noteLocal.content"
+        contenteditable="true"
+        ref="contentRef"
+        @input="onInput" 
+      >
+      </div> 
+      <!--  @input="noteLocal.content = contentRef.innerHTML" -->
+   
+      <!-- Etiketler -->
+      <label>
+        Etiketler (virgülle ayır):
+        <input v-model="tags" type="text" />
+      </label>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { useNotes } from "../../composables/useNotes";
 import Toolbar from "../toolbar/Toolbar.vue";
-import EditableArea from "./EditableArea.vue";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
-import { useTextColor } from "../../composables/functions/useTextColor";
-import { useFontFamily } from "../../composables/functions/useFontFamily";
-import { toggleListType } from "../../composables/functions/useTextFormatting";
 
 const props = defineProps({ note: Object });
 const emit = defineEmits(["save", "cancel"]);
 
 const { createNote, updateNote } = useNotes();
 
-const tags = ref(""); 
-const title = ref(""); 
-const content = ref(""); 
-const editable = ref(null);
+// Local state
+const noteLocal = ref({ title: "", content: "" });
 
+const tags = ref("");
+
+const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
+
+function applyStyle(styleType) {
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const span = document.createElement("span");
+
+  if (styleType === "italic") span.style.fontStyle = "italic";
+  if (styleType === "bold") span.style.fontWeight = "bold";
+  if (styleType === "underline") span.style.textDecoration = "underline";
+
+  range.surroundContents(span);
+}
+ 
+const contentRef = ref(null);  
+
+function onInput() {
+  // İçeriği güncelle
+  noteLocal.value.content = contentRef.value.innerHTML;
+
+  // Vue güncellemeden sonra caret'i sona taşı
+  nextTick(() => {
+    const sel = window.getSelection();
+    if (!sel || !contentRef.value) return;
+
+    const range = document.createRange();
+    range.selectNodeContents(contentRef.value);
+    range.collapse(false); // false => sona collapse et
+
+    sel.removeAllRanges();
+    sel.addRange(range);
+  });
+}
+
+
+
+// Edit modunda gelen notu doldur
 watch(
   () => props.note,
-  (note) => { 
-    title.value = note?.title || "";
-    content.value = note?.content || "";
+  (note) => {
+    noteLocal.value.title = note?.title || "";
+    noteLocal.value.content = note?.content || "";
     tags.value = note?.tags?.join(", ") || "";
+
+    // contenteditable div'i doldur
+    if (contentRef.value) {
+      contentRef.value.innerHTML = noteLocal.value.content;
+    }
   },
   { immediate: true }
 );
 
-function handleSubmit() {
-  const safeNote = editable.value?.noteLocal || { title: "", content: "" };
+/*
+watch(
+  () => props.note,
+  (note) => {
+    noteLocal.value.title = note?.title || "";
+    noteLocal.value.content = note?.content || "";
+    tags.value = note?.tags?.join(", ") || "";
+  },
+  { immediate: true }
+);
+*/
 
+// Kaydet
+function handleSubmit() {
   const noteData = {
     id: props.note?.id,
-    title: (safeNote.title).trim(),
-    content: (safeNote.content).trim(),
-    tags: tags.value.split(",").map(t => t.trim()).filter(Boolean),
+    title: noteLocal.value.title.trim(),
+    //content: contentRef.value.innerHTML.trim(),
+    content: noteLocal.value.content.trim(),
+    tags: tags.value
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    styles: {
+      bold: isBold.value,
+      italic: isItalic.value,
+      underline: isUnderline.value,
+    },
   };
 
   if (noteData.id) {
@@ -78,12 +151,6 @@ function handleSubmit() {
 
   emit("save", noteData);
 }
-
-/* Toolbar state */
-const { isBold, isItalic, isUnderline } = useTextFormatting();
-const { setColor } = useTextColor();
-const { setFontFamily } = useFontFamily();
-const activeListType = ref(null);
 </script>
 
 <style scoped>
@@ -95,5 +162,14 @@ const activeListType = ref(null);
 .actions {
   display: flex;
   gap: 1rem;
+}
+input,
+textarea,
+.text-area {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  width: 100%;
+  height: 80px;
+  border-radius: 4px;
 }
 </style>
