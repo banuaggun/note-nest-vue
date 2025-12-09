@@ -20,6 +20,7 @@
         :isUnderline="isUnderline"
         @applyStyle="applyStyle"
         @applyColor="applyColor"
+        @applyFont="applyFont"
       />
     </div>
 
@@ -63,8 +64,85 @@ const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
 const contentRef = ref(null);
 
 const currentColor = ref("#000000"); // default black
+
+const currentFont = ref("Arial"); // default font
+
 function applyColor(color) {
   currentColor.value = color; // just update state
+}
+
+function applyFont(font) {
+  currentFont.value = font;
+
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+
+  // If no selection: apply to nearest style container
+  if (sel.isCollapsed) {
+    const container =
+      range.startContainer.nodeType === Node.TEXT_NODE
+        ? range.startContainer.parentNode
+        : range.startContainer;
+
+    // Nearest <span> or styled element
+    const spanAncestor = findStylableAncestor(container);
+
+    if (spanAncestor) {
+      spanAncestor.style.fontFamily = font;
+    } else {
+      // If no suitable style container is available: minimal wrap
+      const span = document.createElement("span");
+      span.style.fontFamily = font;
+      span.appendChild(document.createTextNode("\u200B"));
+      range.insertNode(span);
+
+      // put caret back into span
+      const newRange = document.createRange();
+      newRange.setStart(span.firstChild, 1);
+      newRange.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+    }
+
+    noteLocal.value.content = contentRef.value.innerHTML;
+    return;
+  }
+
+  // If selected: non-destructive wrap
+  try {
+    const span = document.createElement("span");
+    span.style.fontFamily = font;
+    range.surroundContents(span);
+  } catch {
+    // if surroundContents fails (fragmented DOM):
+    const span = document.createElement("span");
+    span.style.fontFamily = font;
+    const frag = range.cloneContents(); // copy the content (do not extract!)
+    range.deleteContents(); // then delete
+    span.appendChild(frag);
+    range.insertNode(span);
+    // move caret to end of span
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  }
+
+  noteLocal.value.content = contentRef.value.innerHTML;
+}
+
+// Helper: find the nearest inertia where the style is applicable
+function findStylableAncestor(node) {
+  let cur = node;
+  while (cur && cur !== contentRef.value) {
+    if (cur.nodeType === Node.ELEMENT_NODE && cur.tagName === "SPAN") {
+      return cur;
+    }
+    cur = cur.parentNode;
+  }
+  return null;
 }
 
 function onBeforeInput(e) {
@@ -80,6 +158,7 @@ function onBeforeInput(e) {
     span.style.fontStyle = isItalic.value ? "italic" : "normal";
     span.style.textDecoration = isUnderline.value ? "underline" : "none";
     span.style.color = currentColor.value;
+    span.style.fontFamily = currentFont.value; // active font comes from here
 
     const text = e.data === " " ? "\u00A0" : e.data;
     span.textContent = text;
@@ -171,7 +250,8 @@ watch(
 
     // only fill on first load
     if (contentRef.value && note?.content) {
-      contentRef.value.innerHTML = noteLocal.value.content;
+      //contentRef.value.innerHTML = noteLocal.value.content;
+      contentRef.value.innerHTML = note?.content; // direct HTML
     }
   },
   { immediate: true }
@@ -212,7 +292,9 @@ function handleSubmit() {
     id: props.note?.id,
     title: noteLocal.value.title.trim(),
     //content: contentRef.value.innerHTML.trim(),
-    content: noteLocal.value.content.trim(),
+    //content: noteLocal.value.content.trim(),
+    content: contentRef.value.innerHTML,
+
     tags: tags.value
       .split(",")
       .map((t) => t.trim())
