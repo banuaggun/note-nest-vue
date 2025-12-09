@@ -104,7 +104,6 @@ function onBeforeInput(e) {
   noteLocal.value.content = contentRef.value.innerHTML;
 }
 
-
 function applyStyle(styleType) { 
 
   const selection = window.getSelection();
@@ -129,7 +128,7 @@ function applyStyle(styleType) {
   try {
     range.surroundContents(span);
   } catch (err) {
-    // Eğer range boşsa veya surroundContents hata verirse fallback
+    // If range is empty or surroundContents fails, fallback
     span.appendChild(range.extractContents());
     range.insertNode(span);
   }
