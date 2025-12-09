@@ -11,7 +11,7 @@
 
     <div class="toolbar-color">
       <label for="color">Color: </label>
-      <input type="color" v-model="selectedColor" @change="handleColorChange" />
+      <input type="color" v-model="selectedColor" @input="handleColorChange" />
     </div> 
 
     <div class="toolbar-header-tags">

@@ -3,39 +3,37 @@
     <!-- Actions -->
     <div class="actions">
       <button @click="handleSubmit">
-        {{ note?.id ? "Güncelle" : "Oluştur" }}
+        {{ note?.id ? "Update" : "Create" }}
       </button>
-      <button @click="$emit('cancel')">İptal</button>
+      <button @click="$emit('cancel')">Cancel</button>
     </div>
- <!-- Header -->
-      <input
-        v-model="noteLocal.title"
-        type="text"
-        placeholder="Başlık yazın..."
-      />
+    <!-- Header -->
+    <input
+      v-model="noteLocal.title"
+      type="text"
+      placeholder="Başlık yazın..."
+    />
     <div class="note-editor-toolbar">
       <Toolbar
         :isBold="isBold"
         :isItalic="isItalic"
-        :isUnderline="isUnderline" 
-          
-         @applyStyle="applyStyle"
+        :isUnderline="isUnderline"
+        @applyStyle="applyStyle"
+        @applyColor="applyColor"
       />
     </div>
 
     <div class="note-editor-editable">
-     
       <div
         class="text-area"
         v-html="noteLocal.content"
         contenteditable="true"
         ref="contentRef"
-        @input="onInput"  
+        @input="onInput"
         @beforeinput="onBeforeInput"
-      >
-      </div> 
+      ></div>
       <!--  @input="noteLocal.content = contentRef.innerHTML" -->
-   
+
       <!-- Tags -->
       <label>
         Etiketler (virgülle ayır):
@@ -61,55 +59,51 @@ const noteLocal = ref({ title: "", content: "" });
 
 const tags = ref("");
 
-const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting(); 
-const contentRef = ref(null); 
+const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
+const contentRef = ref(null);
+
+const currentColor = ref("#000000"); // default black
+function applyColor(color) {
+  currentColor.value = color; // just update state
+}
 
 function onBeforeInput(e) {
-  if (e.inputType !== "insertText") return;
+  // perform special action only for adding text
+  if (e.inputType === "insertText") {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
+    const range = selection.getRangeAt(0);
+
+    const span = document.createElement("span");
+    span.style.fontWeight = isBold.value ? "bold" : "normal";
+    span.style.fontStyle = isItalic.value ? "italic" : "normal";
+    span.style.textDecoration = isUnderline.value ? "underline" : "none";
+    span.style.color = currentColor.value;
+
+    const text = e.data === " " ? "\u00A0" : e.data;
+    span.textContent = text;
+
+    if (range.collapsed) {
+      range.insertNode(span);
+      range.setStartAfter(span);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      e.preventDefault(); // only for insertText
+      return;
+    }
+
+    noteLocal.value.content = contentRef.value.innerHTML;
+  }
+  // do nothing for other input types (e.g. deleteContentBackward)
+}
+
+function applyStyle(styleType) {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
 
   const range = selection.getRangeAt(0);
-
-  const span = document.createElement("span");
-  // toggle logic: apply style if true, normal if false
-  span.style.fontWeight = isBold.value ? "bold" : "normal";
-  span.style.fontStyle = isItalic.value ? "italic" : "normal";
-  span.style.textDecoration = isUnderline.value ? "underline" : "none";
-
-  const text = e.data === " " ? "\u00A0" : e.data;
-  span.textContent = text;
-
-  if (range.collapsed) { 
-     if (
-      range.startContainer.parentNode &&
-      range.startContainer.parentNode.style &&
-      range.startContainer.parentNode.style.textDecoration === "underline" &&
-      !isUnderline.value
-    ) {
-      // remove caret from underline span
-      range.setStartAfter(range.startContainer.parentNode);
-    }
-
-    range.insertNode(span);
-    range.setStartAfter(span);
-    range.collapse(true);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    e.preventDefault(); 
-    return;
-  }
-
-  noteLocal.value.content = contentRef.value.innerHTML;
-}
-
-function applyStyle(styleType) { 
-
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-
-  const range = selection.getRangeAt(0); 
 
   const span = document.createElement("span");
 
@@ -137,26 +131,36 @@ function applyStyle(styleType) {
   noteLocal.value.content = contentRef.value.innerHTML;
 }
 
+function moveCaretToEnd() {
+  const sel = window.getSelection();
+  if (!sel || !contentRef.value) return;
 
-function onInput() {
-  // Update content
-  noteLocal.value.content = contentRef.value.innerHTML;
-/*
-  // Move caret to end after Vue update
-  nextTick(() => {
-    const sel = window.getSelection();
-    if (!sel || !contentRef.value) return;
+  const range = document.createRange();
+  range.selectNodeContents(contentRef.value);
+  range.collapse(false); // false => finally collapse
 
-    const range = document.createRange();
-    range.selectNodeContents(contentRef.value);
-    range.collapse(false); // false => sona collapse et
-
-    sel.removeAllRanges();
-    sel.addRange(range);
-  });
-  */
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
 
+function moveCaretToStart() {
+  const sel = window.getSelection();
+  if (!sel || !contentRef.value) return;
+
+  const range = document.createRange();
+  range.selectNodeContents(contentRef.value);
+  range.collapse(true); // true => collapse start
+
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function onInput() {
+  noteLocal.value.content = contentRef.value.innerHTML;
+  nextTick(() => {
+    moveCaretToEnd(); // or moveCaretToStart()
+  });
+}
 
 watch(
   () => props.note,
@@ -172,7 +176,6 @@ watch(
   },
   { immediate: true }
 );
-
 
 /*
 // Fill in the note in edit mode
@@ -231,10 +234,16 @@ function handleSubmit() {
 }
 </script>
 
-<style scoped> 
-.bold { font-weight: bold; }
-.italic { font-style: italic; }
-.underline { text-decoration: underline; }
+<style scoped>
+.bold {
+  font-weight: bold;
+}
+.italic {
+  font-style: italic;
+}
+.underline {
+  text-decoration: underline;
+}
 
 .note-editor {
   display: flex;
