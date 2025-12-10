@@ -2,12 +2,19 @@
 <script setup>
 import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 
-const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck()
+const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck() 
+
+const emit = defineEmits(["applySpellcheck"]) 
+
+function handleToggle() {
+  toggleSpellcheck()
+  emit("applySpellcheck", isSpellcheckEnabled.value)
+}
 </script>
 
 <template>
   <div class="spellcheck-toggle">
-    <button :class="{ active: isSpellcheckEnabled }" @click="toggleSpellcheck">
+    <button :class="{ active: isSpellcheckEnabled }" @click="handleToggle">
       Spell Check: {{ isSpellcheckEnabled ? 'On' : 'Off' }}
     </button>
   </div>

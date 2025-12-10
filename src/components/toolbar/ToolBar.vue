@@ -26,7 +26,8 @@
     </div>
 
     <div class="toolbar-spellcheck">
-      <SpellcheckToggle />
+      <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
+
     </div>
 
     <div class="toolbar-fontfamily">
@@ -45,6 +46,7 @@ import FontFamily from "./FontFamily.vue";
 import HeadingControls from "./HeadingControls.vue";
 import ListControls from "./ListControls.vue"; 
 import {useTextFormatting} from "../../composables/functions/useTextFormatting";
+import { isSpellcheckEnabled } from "../../composables/functions/useSpellcheck";
 
 const props = defineProps({  
   styles: {
@@ -61,20 +63,14 @@ const props = defineProps({
 
 const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
 
-const emit = defineEmits(["style", "applyColor", "applyFont", "applyList", "applyStyle", "applyHeading"]);
+const emit = defineEmits(["style", "applyColor", "applyFont", "applyList", "applyStyle", "applyHeading", "applySpellcheck"]);
 
 const selectedColor = ref("#000000");
 
 function handleStyle(styleType) {
-  toggleStyle(styleType);   // state güncellenir
-  emit("applyStyle", styleType); // parent’a haber verilir
+  toggleStyle(styleType);   // state is updated
+  emit("applyStyle", styleType); // The parent is notified.
 }
-
-/*
-function handleStyle(styleType) {
-  emit("applyStyle", styleType);
-}
-*/
 
 function handleColorChange() {
   emit("applyColor", selectedColor.value);
