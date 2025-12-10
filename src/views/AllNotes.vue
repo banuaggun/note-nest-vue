@@ -155,6 +155,6 @@ function handleSave(noteData) {
 
 .editor-panel {
   width: 100%;
-  height: auto;
+  height: 800px;
 }
 </style>

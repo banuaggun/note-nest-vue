@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import { useHeadingMode } from '../../composables/functions/useHeadingMode'
 
-const { activeHeading, toggleHeading } = useHeadingMode()
+const { activeHeading, toggleHeading } = useHeadingMode()  
+
+const emit = defineEmits(['applyHeading'])
 </script>
 
 <template>
@@ -12,8 +14,9 @@ const { activeHeading, toggleHeading } = useHeadingMode()
         v-for="level in 6"
         :key="level"
         :class="{ active: activeHeading === `h${level}` }"
-        @click="toggleHeading(level)"
+        @click="() => { toggleHeading(level); emit('applyHeading', level) }"
       >
+      <!-- @click="toggleHeading(level)"-->
         H{{ level }}
       </button>
     </div>

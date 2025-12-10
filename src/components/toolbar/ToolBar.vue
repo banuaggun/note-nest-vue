@@ -14,8 +14,11 @@
       <input type="color" v-model="selectedColor" @input="handleColorChange" />
     </div> 
 
-    <div class="toolbar-header-tags">
+    <div class="toolbar-header-tags"> 
+        <HeadingControls @applyHeading="(level) => emit('applyHeading', level)" />
+      <!--
       <HeadingControls :note="note" @update="handleUpdate" />
+    -->
     </div>
 
     <div class="toolbar-list-tags">
@@ -58,7 +61,7 @@ const props = defineProps({
 
 const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
 
-const emit = defineEmits(["style", "applyColor", "applyFont", "applyList", "applyStyle"]);
+const emit = defineEmits(["style", "applyColor", "applyFont", "applyList", "applyStyle", "applyHeading"]);
 
 const selectedColor = ref("#000000");
 

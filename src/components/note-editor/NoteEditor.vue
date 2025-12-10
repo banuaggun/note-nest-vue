@@ -20,8 +20,10 @@
         :isUnderline="isUnderline"
         @applyStyle="applyStyle"
         @applyColor="applyColor"
-        @applyFont="applyFont"
+        @applyFont="applyFont" 
+        @applyHeading="applyHeading" 
       />
+      <!-- apply heading çalışmadı -->
     </div>
 
     <div class="note-editor-editable">
@@ -35,11 +37,6 @@
       ></div>
       <!--  @input="noteLocal.content = contentRef.innerHTML" -->
 
-      <!-- Tags -->
-      <label>
-        Etiketler (virgülle ayır):
-        <input v-model="tags" type="text" />
-      </label>
     </div>
   </div>
 </template>
@@ -49,6 +46,8 @@ import { ref, watch, nextTick } from "vue";
 import { useNotes } from "../../composables/useNotes";
 import Toolbar from "../toolbar/Toolbar.vue";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
+import { useHeadingMode } from "../../composables/functions/useHeadingMode";
+import { currentHeadingElement } from "../../composables/based/useEditorState"; //buradan devam et
 
 const props = defineProps({ note: Object });
 const emit = defineEmits(["save", "cancel"]);
@@ -57,8 +56,6 @@ const { createNote, updateNote } = useNotes();
 
 // Local state
 const noteLocal = ref({ title: "", content: "" });
-
-const tags = ref("");
 
 const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
 const contentRef = ref(null);
@@ -69,7 +66,9 @@ const currentFont = ref("Arial"); // default font
 
 function applyColor(color) {
   currentColor.value = color; // just update state
-}
+} 
+
+const { activeHeading, toggleHeading } = useHeadingMode();
 
 function applyFont(font) {
   currentFont.value = font;
@@ -131,9 +130,46 @@ function applyFont(font) {
   }
 
   noteLocal.value.content = contentRef.value.innerHTML;
+} 
+
+function applyHeading(level) {
+  const tag = `h${level}`;
+  currentHeadingElement.value = tag;
+
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+
+  // Eğer caret boşsa heading aç
+  if (sel.isCollapsed) {
+    const heading = document.createElement(tag);
+    heading.appendChild(document.createTextNode("\u200B"));
+    range.insertNode(heading);
+
+    // caret'i heading içine taşı
+    const newRange = document.createRange();
+    newRange.setStart(heading.firstChild, 1);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+
+    // heading'i state'te tut
+    currentHeadingElement.value = heading;
+  } else {
+    // seçili metni heading ile sar
+    const frag = range.extractContents();
+    const heading = document.createElement(tag);
+    heading.appendChild(frag);
+    range.insertNode(heading);
+    currentHeadingElement.value = heading;
+  }
+
+  noteLocal.value.content = contentRef.value.innerHTML;
 }
 
-// Helper: find the nearest inertia where the style is applicable
+
+
+// Helper: find the nearest inertia where the style is applicable 
 function findStylableAncestor(node) {
   let cur = node;
   while (cur && cur !== contentRef.value) {
@@ -145,38 +181,122 @@ function findStylableAncestor(node) {
   return null;
 }
 
+/*
 function onBeforeInput(e) {
-  // perform special action only for adding text
+  // sadece yazı ekleme için özel işlem
   if (e.inputType === "insertText") {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
 
-    const range = selection.getRangeAt(0);
+    // heading seçildiyse heading element, değilse span
+    const element = activeHeading.value
+      ? document.createElement(activeHeading.value)
+      : document.createElement("span");
 
+    element.style.fontWeight = isBold.value ? "bold" : "normal";
+    element.style.fontStyle = isItalic.value ? "italic" : "normal";
+    element.style.textDecoration = isUnderline.value ? "underline" : "none";
+    element.style.color = currentColor.value;
+    element.style.fontFamily = currentFont.value;
+
+    const text = e.data === " " ? "\u00A0" : e.data;
+    element.textContent = text;
+
+    range.insertNode(element);
+    range.setStartAfter(element);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    e.preventDefault(); // sadece insertText için engelle
+    noteLocal.value.content = contentRef.value.innerHTML;
+  }
+  // diğer input tiplerinde (silme, enter vb.) hiçbir şey yapma
+}
+*/
+
+
+function onBeforeInput(e) {
+  if (e.inputType !== "insertText") return;
+
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+  const text = e.data === " " ? "\u00A0" : e.data;
+
+  if (activeHeading.value) {
+    // Eğer caret zaten heading içindeyse sadece text ekle
+    const container = range.startContainer;
+    const headingAncestor = findHeadingAncestor(container);
+
+    if (headingAncestor) {
+      // heading içine text node ekle
+      const textNode = document.createTextNode(text);
+      range.insertNode(textNode);
+
+      // caret'i textNode sonuna taşı
+      const newRange = document.createRange();
+      newRange.setStartAfter(textNode);
+      newRange.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+
+      e.preventDefault(); 
+      return;
+    } else {
+      // ilk kez heading açılıyorsa heading oluştur
+      const heading = document.createElement(activeHeading.value);
+      heading.textContent = text;
+      range.insertNode(heading);
+
+      const newRange = document.createRange();
+      newRange.selectNodeContents(heading);
+      newRange.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+
+      e.preventDefault(); 
+      return;
+    }
+  } else {
+    // Normal stil için span kullan
     const span = document.createElement("span");
     span.style.fontWeight = isBold.value ? "bold" : "normal";
     span.style.fontStyle = isItalic.value ? "italic" : "normal";
     span.style.textDecoration = isUnderline.value ? "underline" : "none";
     span.style.color = currentColor.value;
-    span.style.fontFamily = currentFont.value; // active font comes from here
+    span.style.fontFamily = currentFont.value;
 
-    const text = e.data === " " ? "\u00A0" : e.data;
     span.textContent = text;
+    range.insertNode(span);
 
-    if (range.collapsed) {
-      range.insertNode(span);
-      range.setStartAfter(span);
-      range.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      e.preventDefault(); // only for insertText
-      return;
-    }
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
 
-    noteLocal.value.content = contentRef.value.innerHTML;
+    e.preventDefault(); 
+    return;
   }
-  // do nothing for other input types (e.g. deleteContentBackward)
+
+  noteLocal.value.content = contentRef.value.innerHTML;
 }
+
+// Yardımcı: caret hangi heading içindeyse bul
+function findHeadingAncestor(node) {
+  let cur = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+  while (cur) {
+    if (/^H[1-6]$/.test(cur.tagName)) return cur;
+    cur = cur.parentNode;
+  }
+  return null;
+}
+
+
+
 
 function applyStyle(styleType) {
   const selection = window.getSelection();
@@ -246,7 +366,6 @@ watch(
   (note) => {
     noteLocal.value.title = note?.title || "";
     noteLocal.value.content = note?.content || "";
-    tags.value = note?.tags?.join(", ") || "";
 
     // only fill on first load
     if (contentRef.value && note?.content) {
@@ -257,35 +376,6 @@ watch(
   { immediate: true }
 );
 
-/*
-// Fill in the note in edit mode
-watch(
-  () => props.note,
-  (note) => {
-    noteLocal.value.title = note?.title || "";
-    noteLocal.value.content = note?.content || "";
-    tags.value = note?.tags?.join(", ") || "";
-
-    // contenteditable div fill
-    if (contentRef.value) {
-      contentRef.value.innerHTML = noteLocal.value.content;
-    }
-  },
-  { immediate: true }
-);
-*/
-/*
-watch(
-  () => props.note,
-  (note) => {
-    noteLocal.value.title = note?.title || "";
-    noteLocal.value.content = note?.content || "";
-    tags.value = note?.tags?.join(", ") || "";
-  },
-  { immediate: true }
-);
-*/
-
 // Save
 function handleSubmit() {
   const noteData = {
@@ -295,10 +385,6 @@ function handleSubmit() {
     //content: noteLocal.value.content.trim(),
     content: contentRef.value.innerHTML,
 
-    tags: tags.value
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean),
     styles: {
       bold: isBold.value,
       italic: isItalic.value,
@@ -325,7 +411,55 @@ function handleSubmit() {
 }
 .underline {
   text-decoration: underline;
+} 
+
+.text-area h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.5em 0;
 }
+
+.text-area h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.text-area h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.text-area h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.text-area h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.text-area h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+.note-editor-editable h1,
+.note-editor-editable h2,
+.note-editor-editable h3,
+.note-editor-editable h4,
+.note-editor-editable h5,
+.note-editor-editable h6 {
+  margin: 0;          /* varsayılan boşlukları kaldır */
+  line-height: 1.4;   /* satır yüksekliğini ayarla */ 
+  display:inline-block;
+}
+
 
 .note-editor {
   display: flex;
@@ -336,13 +470,17 @@ function handleSubmit() {
   display: flex;
   gap: 1rem;
 }
-input,
+input{
+  width:100%;
+  height:40px;
+}
+
 textarea,
 .text-area {
   border: 1px solid #ccc;
   padding: 0.5rem;
   width: 100%;
-  height: 80px;
+  height: 400px;
   border-radius: 4px;
 }
 </style>
