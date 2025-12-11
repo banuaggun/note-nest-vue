@@ -11,7 +11,7 @@
     <input
       v-model="noteLocal.title"
       type="text"
-      placeholder="Başlık yazın..."
+      placeholder="Enter a Title..."
     />
     <div class="note-editor-toolbar">
       <Toolbar
@@ -22,7 +22,7 @@
         @applyColor="applyColor"
         @applyFont="applyFont"
         @applyHeading="applyHeading"
-        @applySpellcheck="applySpellcheck"
+        @applySpellcheck="applySpellcheck" 
       />
     </div>
 
@@ -34,9 +34,8 @@
         ref="contentRef"
         :spellcheck="isSpellcheckEnabled"
         @input="onInput"
-        @beforeinput="onBeforeInput"
-      ></div>
-      <!--  @input="noteLocal.content = contentRef.innerHTML" -->
+        @beforeinput="(e) => { handleEnter(e); onBeforeInput(e); }"
+      ></div> 
     </div>
   </div>
 </template>
@@ -64,6 +63,21 @@ const contentRef = ref(null);
 const currentColor = ref("#000000"); // default black
 
 const currentFont = ref("Arial"); // default font
+
+function handleEnter(e) {
+  if (e.inputType !== "insertParagraph") return;
+   
+  e.preventDefault();
+
+  //console.log("ENTER");
+
+   const br = document.createElement("br");
+   const range = window.getSelection().getRangeAt(0);
+   range.insertNode(br);
+   range.setStartAfter(br);
+   range.collapse(true);
+}
+
 
 function applyColor(color) {
   currentColor.value = color; // just update state
@@ -145,7 +159,7 @@ function applyFont(font) {
   }
 
   noteLocal.value.content = contentRef.value.innerHTML;
-}
+} 
 
 function applyHeading(level) {
   const tag = `h${level}`;
