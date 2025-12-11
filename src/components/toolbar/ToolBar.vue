@@ -16,15 +16,7 @@
 
     <div class="toolbar-header-tags"> 
         <HeadingControls @applyHeading="(level) => emit('applyHeading', level)" />
-      <!--
-      <HeadingControls :note="note" @update="handleUpdate" />
-    -->
-    </div>
-
-    <div class="toolbar-list-tags">
-      <ListControls :activeListType="props.activeListType" @applyList="handleList" />
-    </div>
-
+    </div> 
     <div class="toolbar-spellcheck">
       <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
 
@@ -38,15 +30,12 @@
 
 <script setup>
 import { ref } from "vue";  
-import { activeListType, toggleListType } from "../../composables/functions/useTextFormatting"; 
 import { editable } from "../../composables/based/useEditorState";
 import TextStyleControls from "./TextStyleControls.vue";
 import SpellcheckToggle from "./SpellcheckToggle.vue";
 import FontFamily from "./FontFamily.vue";
 import HeadingControls from "./HeadingControls.vue";
-import ListControls from "./ListControls.vue"; 
 import {useTextFormatting} from "../../composables/functions/useTextFormatting";
-import { isSpellcheckEnabled } from "../../composables/functions/useSpellcheck";
 
 const props = defineProps({  
   styles: {
@@ -74,19 +63,6 @@ function handleStyle(styleType) {
 
 function handleColorChange() {
   emit("applyColor", selectedColor.value);
-}
- 
-function handleUpdate(updatedNote) {
-  emit("update", updatedNote);
-} 
-
-function handleList(type) {
-  emit("applyList", type);
-} 
-
-function handleApplyList(type) {
-  toggleListType(type);
-  editable.value?.__vueParentComponent?.exposed?.resetCurrentElement();
 }
 
 </script>
@@ -118,7 +94,6 @@ function handleApplyList(type) {
   color: white;
   border-radius: 4px;
 } 
-
 
 .toolbar-color {
   display: flex;
