@@ -9,10 +9,3 @@ body {
   background-color: var(--secondary-color);
   color: var(--text-color);
 }
-
-ul{
-  list-style-type: disc;
-}
-ol{
-  list-style-type: decimal;
-}
