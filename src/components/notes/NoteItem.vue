@@ -12,11 +12,6 @@
     />
     <h3>{{ cleanedTitle }}</h3>
     <p>{{ cleanedContent }}...</p>
-    <!--
-    <div class="tags">
-      <span v-for="tag in note.tags" :key="tag" class="tag">{{ tag }}</span>
-    </div>
-  -->
     
   </div>
 </template>
@@ -66,16 +61,7 @@ const cleanedContent = computed(() => {
 
 .note-item h3, .note-item p{
   margin:8px 8px;
-}
-/*
-.tag {
-  background-color: #eee;
-  padding: 0.2rem 0.5rem;
-  margin-right: 0.3rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-  */
+} 
 .actions  {
   display:flex;
   justify-content: flex-end;

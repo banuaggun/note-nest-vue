@@ -1,4 +1,3 @@
-<!-- components/editor/tools/SpellcheckToggle.vue -->
 <script setup>
 import { useSpellcheck } from '../../composables/functions/useSpellcheck'
 

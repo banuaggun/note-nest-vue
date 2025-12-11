@@ -1,4 +1,3 @@
-// Tema ve font seçeneklerini merkezi bir yerde tutuyoruz
 export const themeOptions = {
   themes: [
     { value: "light", label: "Light Mode" },
