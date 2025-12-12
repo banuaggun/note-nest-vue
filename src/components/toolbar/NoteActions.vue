@@ -2,25 +2,21 @@
   <div class="actions-item">
     <template v-if="note.status === 'archived'">
       <div class="item-buttons-2">
-        <button @click="$emit('unarchive', note.id)">
-          <!--Geri Al-->
+        <button @click="$emit('unarchive', note.id)"> 
           Unarchive
         </button>
-        <button @click="$emit('delete', note.id)">
-          <!--Kalıcı Olarak Sil-->
-          Delete Permanently
+        <button @click="$emit('delete', note.id)"> 
+          Move To Trash
         </button>
       </div>
     </template>
 
     <template v-else-if="note.status === 'deleted'">
       <div class="item-buttons-2">
-        <button @click="$emit('restore', note.id)">
-          <!--Çöp Kutusundan Çıkar-->
+        <button @click="$emit('restore', note.id)"> 
           Restore
         </button>
-        <button @click="$emit('delete', note.id)">
-          <!--Kalıcı Olarak Sil-->
+        <button @click="$emit('delete', note.id)"> 
           Delete Permanently
         </button>
       </div>

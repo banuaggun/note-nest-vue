@@ -47,7 +47,8 @@ import Toolbar from "../toolbar/Toolbar.vue";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useHeadingMode } from "../../composables/functions/useHeadingMode";
 import { currentHeadingElement } from "../../composables/based/useEditorState";
-import { useSpellcheck } from "../../composables/functions/useSpellcheck";
+import { useSpellcheck } from "../../composables/functions/useSpellcheck"; 
+
 
 const props = defineProps({ note: Object });
 const emit = defineEmits(["save", "cancel"]);
