@@ -4,36 +4,39 @@
       <Header />
     </div>
 
-    <!-- Navbar sadece editor kapalıysa -->
+    <!-- The navbar only works if the editor is closed -->
     <div class="sidebar-panel" v-if="!isEditorOpen">
       <Navbar />
     </div>
 
     <main class="main-content">
-      <!-- v-model ile AllNotes’a state aktar 
-      <RouterView v-model:isEditorOpen="isEditorOpen" />
-    -->
-    <RouterView v-slot="{ Component }">
-  <component
-    :is="Component"
-    :isEditorOpen="isEditorOpen"
-    @update:isEditorOpen="val => isEditorOpen = val"
-  />
-</RouterView>
-
-
+      <RouterView v-slot="{ Component }">
+        <component
+          :is="Component"
+          :isEditorOpen="isEditorOpen"
+          @update:isEditorOpen="val => isEditorOpen = val"
+        />
+      </RouterView>
     </main>
+
+    <!-- Global Toast -->
+    <NotificationModal :message="message" :visible="visible" />
   </div>
 </template>
 
 <script setup>
 import { ref, inject } from 'vue';
 import Header from './components/Header.vue';
-import Navbar from './components/navbar/Navbar.vue';
+import Navbar from './components/navbar/Navbar.vue'; 
+import NotificationModal from './components/note-editor/NotificationModal.vue'; 
 import { RouterView } from 'vue-router';
+import { useToast } from './composables/useToast'; 
 
 const settings = inject('settings');
-const isEditorOpen = ref(false); // state artık App.vue’de
+const isEditorOpen = ref(false);
+
+// Global toast state
+const { message, visible } = useToast();
 </script>
 
 <style scoped>

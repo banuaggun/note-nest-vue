@@ -8,29 +8,31 @@
     </div>
 
     <div class="all-notes-area">
-      <!-- Liste sadece editor kapalıysa -->
+      <!-- The list is only available if the editor is closed. -->
       <div class="list-panel" v-if="!isEditorOpen || !isMobile">
         <NoteList
           :notes="activeNotes"
           @edit="startEdit"
-          @delete="deleteNote"
-          @archive="archiveNote"
+          @delete="handleDelete"
+          @archive="handleArchive"
+          @unarchive="handleUnarchive"
+          @restore="handleRestore"
+          @delete-permanent="handleDeletePermanent"
         />
       </div>
 
-      <!-- Editor sadece editor açıksa -->
+      <!-- Editor only if editor is open -->
       <div class="editor-panel" v-if="isEditorOpen">
         <NoteEditor
           :note="editingNote"
           @save="handleSave"
-          @cancel="closeEditor"
+          @cancel="handleCancel"
         />
       </div>
 
       <div v-if="!isEditorOpen && !isMobile" class="placeholder">
         <p>
-          Bir not seçin ya da yeni bir not oluşturun. Burada düzenleme
-          yapabilirsiniz.
+          Select a note or create a new one. You can edit it here.
         </p>
       </div>
     </div>
@@ -40,15 +42,28 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useNotes } from "../composables/useNotes";
+import { useToast } from "../composables/useToast";
 import NoteList from "../components/notes/NoteList.vue";
 import NoteEditor from "../components/note-editor/NoteEditor.vue";
 
-// v-model için props ve emit tanımla
+// Get the toast function
+const { showToast } = useToast();
+
+// Define props and emit for v-model
 const props = defineProps({ isEditorOpen: Boolean });
 const emit = defineEmits(["update:isEditorOpen"]);
 
-const { activeNotes, createNote, updateNote, archiveNote, deleteNote } = useNotes();  
-const selectedNote = defineModel(); 
+const {
+  activeNotes,
+  createNote,
+  updateNote,
+  archiveNote,
+  deleteNote,
+  deleteNotePermanently,
+  restoreNote
+} = useNotes();
+
+const selectedNote = defineModel();
 const titleRef = ref(null);
 const contentRef = ref(null);
 
@@ -67,9 +82,8 @@ onUnmounted(() => {
 });
 
 function startCreate() {
-  //editingNote.value = null; 
-    editingNote.value = { title: "", content: "" }; 
-  emit("update:isEditorOpen", true); // App.vue’deki state’i aç
+  editingNote.value = { title: "", content: "" };
+  emit("update:isEditorOpen", true);
 }
 
 function startEdit(note) {
@@ -77,34 +91,61 @@ function startEdit(note) {
   emit("update:isEditorOpen", true);
 }
 
+function handleCancel() {
+  showToast("Action canceled");
+  closeEditor();
+}
+
 function closeEditor() {
   editingNote.value = null;
-  emit("update:isEditorOpen", false); // App.vue’deki state’i kapat
+  emit("update:isEditorOpen", false);
 }
 
 watch(
   () => selectedNote.value || props.note,
   async (note) => {
     await nextTick();
-    if (titleRef.value) {
-      titleRef.value.innerHTML = note?.title || "";
-    }
-    if (contentRef.value) {
-      contentRef.value.innerHTML = note?.content || "";
-    }
+    if (titleRef.value) titleRef.value.innerHTML = note?.title || "";
+    if (contentRef.value) contentRef.value.innerHTML = note?.content || "";
   },
   { immediate: true }
 );
 
 function handleSave(noteData) {
   if (noteData.id != null) {
-    updateNote(noteData); 
-  } else { 
-     const newNote = createNote(noteData);
+    updateNote(noteData);
+    showToast("Note updated");
+  } else {
+    const newNote = createNote(noteData);
     editingNote.value = newNote;
-    //createNote(noteData);
+    showToast("Note created");
   }
   closeEditor();
+}
+
+function handleDelete(id) {
+  deleteNote(id);
+  showToast("Note moved to trash");
+}
+
+function handleDeletePermanent(id) {
+  deleteNotePermanently(id);
+  showToast("Note permanently deleted");
+}
+
+function handleArchive(id) {
+  archiveNote(id);
+  showToast("Note archived");
+}
+
+function handleUnarchive(id) {
+  archiveNote(id);
+  showToast("Note unarchived");
+}
+
+function handleRestore(id) {
+  restoreNote(id);
+  showToast("Note restored");
 }
 </script>
 

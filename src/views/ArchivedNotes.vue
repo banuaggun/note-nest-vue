@@ -3,25 +3,34 @@
     <div class="archived-notes-header">
       <h2>Archived Notes</h2>
     </div>
+
     <div class="archived-notes-area">
-<NoteList
-      :notes="archivedNotes"
-      @unarchive="unarchiveNote"
-      @delete="deleteNotePermanently"
-    />
+      <NoteList
+        :notes="archivedNotes"
+        @unarchive="handleUnarchive"
+        @delete="handleMoveToTrash"
+      />
     </div>
-    
   </section>
 </template>
 
 <script setup>
 import { useNotes } from '../composables/useNotes'
+import { useToast } from '../composables/useToast'
 import NoteList from '../components/notes/NoteList.vue'
 
-const { archivedNotes, archiveNote, deleteNotePermanently } = useNotes()
+const { archivedNotes, archiveNote, deleteNote } = useNotes()
+const { showToast } = useToast()
 
-function unarchiveNote(id) {
-  archiveNote(id) // status: 'archived' → 'active'
+function handleUnarchive(id) {
+  archiveNote(id)
+  showToast("Note unarchived")
+}
+
+
+function handleMoveToTrash(id) {
+  deleteNote(id)
+  showToast("Note moved to trash")
 }
 </script>
 
@@ -39,7 +48,7 @@ function unarchiveNote(id) {
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* sabit yükseklik */
+  height: 60px;
   background: white;
   border-bottom: 1px solid yellowgreen;
   display: flex;
@@ -51,5 +60,4 @@ function unarchiveNote(id) {
 .archived-notes-area{
    margin-top: 100px; 
 }
-
 </style>
