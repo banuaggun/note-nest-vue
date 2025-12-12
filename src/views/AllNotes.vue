@@ -8,6 +8,17 @@
     </div>
 
     <div class="all-notes-area">
+      <div
+        v-if="(!isEditorOpen || !isMobile) && activeNotes.length === 0"
+        class="empty-message"
+      >
+        <EmptyState
+          title="No notes yet"
+          description="Create your first note to get started"
+          :image="image"
+        />
+      </div>
+
       <!-- The list is only available if the editor is closed. -->
       <div class="list-panel" v-if="!isEditorOpen || !isMobile">
         <NoteList
@@ -31,20 +42,20 @@
       </div>
 
       <div v-if="!isEditorOpen && !isMobile" class="placeholder">
-        <p>
-          Select a note or create a new one. You can edit it here.
-        </p>
+        <p>Select a note or create a new one. You can edit it here.</p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
+import image from "../assets/image/logo-icon.svg";
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useNotes } from "../composables/useNotes";
 import { useToast } from "../composables/useToast";
 import NoteList from "../components/notes/NoteList.vue";
 import NoteEditor from "../components/note-editor/NoteEditor.vue";
+import EmptyState from "../components/empty-states/EmptyState.vue";
 
 // Get the toast function
 const { showToast } = useToast();
@@ -60,7 +71,7 @@ const {
   archiveNote,
   deleteNote,
   deleteNotePermanently,
-  restoreNote
+  restoreNote,
 } = useNotes();
 
 const selectedNote = defineModel();
@@ -175,7 +186,7 @@ function handleRestore(id) {
 }
 
 .create-note {
-  background-color: #9DBEBC;
+  background-color: #9dbebc;
   color: #242424;
   padding: 8px 16px;
   border-radius: 4px;
@@ -186,7 +197,7 @@ function handleRestore(id) {
 }
 .create-note:hover,
 .create-note.active {
-  background-color: #78A5A3;
+  background-color: #78a5a3;
 }
 
 .all-notes-area {
@@ -197,5 +208,11 @@ function handleRestore(id) {
 .editor-panel {
   width: 100%;
   height: 800px;
+}
+.empty-message {
+  text-align: center;
+  padding: 40px 0;
+  color: #888;
+  font-size: 1.1rem;
 }
 </style>

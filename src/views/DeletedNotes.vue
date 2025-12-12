@@ -5,11 +5,21 @@
     </div>
 
     <div class="deleted-notes-area">
-      <NoteList
+      <div v-if="deletedNotes.length === 0" class="empty-message">
+        <EmptyState
+          title="No deleted notes"
+          description="Deleted notes will appear here"
+          :image="image"
+        />
+</div>
+<div v-else>
+<NoteList
         :notes="deletedNotes"
         @restore="handleRestore"
         @delete="handleDeletePermanent"
       />
+</div>
+      
     </div>
   </section>
 </template>
@@ -17,7 +27,9 @@
 <script setup>
 import { useNotes } from '../composables/useNotes'
 import { useToast } from '../composables/useToast'
-import NoteList from '../components/notes/NoteList.vue'
+import NoteList from '../components/notes/NoteList.vue' 
+import EmptyState from '../components/empty-states/EmptyState.vue' 
+import image from "../assets/image/logo-icon.svg" 
 
 const { deletedNotes, deleteNotePermanently, restoreNote } = useNotes()
 const { showToast } = useToast()
