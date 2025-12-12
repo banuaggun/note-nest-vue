@@ -2,13 +2,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AllNotes from '@/views/AllNotes.vue'
 import ArchivedNotes from '@/views/ArchivedNotes.vue'
 import DeletedNotes from '@/views/DeletedNotes.vue'
-import Settings from '../views/Settings.vue'
+import Settings from '../views/Settings.vue' 
+import NotFound  from '../views/NotFound.vue'
 
 const routes = [
   { path: '/', name: 'AllNotes', component: AllNotes },
   { path: '/archived', name: 'ArchivedNotes', component: ArchivedNotes }, 
   { path: '/deleted', name: 'DeletedNotes', component: DeletedNotes }, 
-  {path:'/settings', name:'Settings', component:Settings},
+  {path:'/settings', name:'Settings', component:Settings}, 
+  {
+  path: '/:pathMatch(.*)*',
+  name: 'NotFound',
+  component: NotFound
+}
+
 ]
 
 const router = createRouter({
