@@ -24,11 +24,12 @@ defineProps({
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: #777;
+  color: #777; 
+  margin:40px auto;
 }
 .empty-image {
-  width: 180px;
-  height:auto;
+  width: 100%;
+  height:400px;
   opacity: 0.8;
   margin-bottom: 20px;
 }

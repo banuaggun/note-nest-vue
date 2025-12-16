@@ -12,7 +12,7 @@
 
 <script setup>
 import EmptyState from "../components/empty-states/EmptyState.vue";
-import image from "../assets/image/logo-icon.svg";
+import image from "../assets/image/notFound.svg";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
