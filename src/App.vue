@@ -1,15 +1,10 @@
 <template>
   <div class="app-layout" :class="[settings.theme, settings.font]">
-    <div class="header-panel">
+    <div class="header-panel" ref="headerRef">
       <Header />
     </div>
 
-    <!-- The navbar only works if the editor is closed -->
-    <div class="navbar-panel" v-if="!(isDesktop && isEditorOpen)">
-      <Navbar />
-    </div>
-
-    <main class="main-content">
+    <main class="main-content" :style="{ paddingTop: headerHeight + 'px' }">
       <RouterView v-slot="{ Component }">
         <component
           :is="Component"
@@ -19,13 +14,18 @@
       </RouterView>
     </main>
 
+    <!-- The navbar only works if the editor is closed -->
+    <div class="navbar-panel" v-if="!(!isDesktop && isEditorOpen)">
+      <Navbar />
+    </div>
+     
     <!-- Global Toast -->
     <NotificationModal :message="message" :visible="visible" />
   </div>
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import Header from './components/Header.vue';
 import Navbar from './components/navbar/Navbar.vue'; 
 import NotificationModal from './components/note-editor/NotificationModal.vue'; 
@@ -35,12 +35,18 @@ import { useToast } from './composables/useToast';
 const settings = inject('settings');
 const isEditorOpen = ref(false);
 
-const isDesktop = ref(window.innerWidth < 1024);
+const isDesktop = ref(window.innerWidth > 1024);
 
 window.addEventListener("resize", () => {
   isDesktop.value = window.innerWidth < 1024;
 });
 
+const headerRef = ref(null);
+const headerHeight = ref(0);
+
+onMounted(() => {
+  headerHeight.value = headerRef.value.offsetHeight;
+});
 
 // Global toast state
 const { message, visible } = useToast();
@@ -49,7 +55,9 @@ const { message, visible } = useToast();
 <style scoped>
 .app-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  width:100%; 
+  height:auto;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -57,19 +65,21 @@ const { message, visible } = useToast();
   width: 100%;
   height: 42px;
   padding: 24px 0 12px 12px;
-  border: 1px solid blue;
   background-color: var(--bg-color);
-  position: fixed;
-  margin-bottom: 20px;
+  position: fixed; 
   z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: center; 
+}
+
+.navbar-panel{
+  width:100%;
 }
 
 .main-content {
   width: 100%;
-  height: auto;
-  border: 1px solid fuchsia;
+  height: auto;  
+  padding:0;
 }
 
 .light {

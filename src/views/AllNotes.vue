@@ -161,19 +161,16 @@ function handleRestore(id) {
 </script>
 
 <style scoped>
-.all-notes {
-  margin: 0;
-  padding: 0;
+.all-notes { 
+  border:1px solid blue; 
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 }
 .all-notes-header {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: fixed; 
+  left:0;
   width: 100%;
   height: 60px;
   background: var(--bg-color);
@@ -182,7 +179,6 @@ function handleRestore(id) {
   align-items: center;
   justify-content: space-between;
   padding: 0 12px;
-  margin-top: 40px;
 }
 
 .create-note {
@@ -200,8 +196,8 @@ function handleRestore(id) {
   background-color: #78a5a3;
 }
 
-.all-notes-area {
-  margin-top: 100px;
+.all-notes-area { 
+  margin-top: 60px;
   width: 100%;
 }
 

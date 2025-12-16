@@ -1,3 +1,6 @@
+:root{
+   --app-header-height: 78px;
+}
 * {
   margin: 0;
   padding: 0;
