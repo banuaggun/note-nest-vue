@@ -5,7 +5,7 @@
     </div>
 
     <!-- The navbar only works if the editor is closed -->
-    <div class="sidebar-panel" v-if="!isEditorOpen">
+    <div class="navbar-panel" v-if="!(isDesktop && isEditorOpen)">
       <Navbar />
     </div>
 
@@ -34,6 +34,13 @@ import { useToast } from './composables/useToast';
 
 const settings = inject('settings');
 const isEditorOpen = ref(false);
+
+const isDesktop = ref(window.innerWidth < 1024);
+
+window.addEventListener("resize", () => {
+  isDesktop.value = window.innerWidth < 1024;
+});
+
 
 // Global toast state
 const { message, visible } = useToast();
