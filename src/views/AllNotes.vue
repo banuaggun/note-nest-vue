@@ -206,7 +206,7 @@ function handleRestore(id) {
 
 .editor-panel {
   width: 100%;
-  height: 800px;
+  height: auto; 
 }
 .empty-message {
   text-align: center;

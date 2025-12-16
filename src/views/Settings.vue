@@ -5,7 +5,6 @@
     </div>
 
     <div class="settings-page-area">
-      <!-- Tema Ayarı -->
       <section>
         <h3>Theme</h3>
 
@@ -15,7 +14,6 @@
         </label>
       </section>
 
-      <!-- Font Ayarı -->
       <section>
         <h3>Font</h3>
 
@@ -24,7 +22,6 @@
           {{ opt.label }}
         </label>
       </section>
-      <!-- About Bölümü -->
       <section class="about">
         <h3>Hakkımda</h3>
         <p>
@@ -78,19 +75,20 @@ const fontFamily = computed(() => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* sabit yükseklik */
-  background: white;
+  height: 60px; 
+  background: var(--bg-color);
   border-bottom: 1px solid yellowgreen;
   display: flex;
   align-items: center;
   padding: 0 12px;
-  margin-top:40px;
+  margin-top:var(--app-header-height);
 }
 
 
 .settings-page-area {
    margin-top: 60px; /* header yüksekliği kadar boşluk */
-  padding: 1rem;
+  padding: 1rem; 
+  width:100%;
 }
   /*
 .settings-page-area section {

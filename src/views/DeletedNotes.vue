@@ -11,15 +11,14 @@
           description="Deleted notes will appear here"
           :image="image"
         />
-</div>
-<div v-else>
-<NoteList
+      </div> 
+      <div class="list-panel" v-else>
+        <NoteList
         :notes="deletedNotes"
         @restore="handleRestore"
         @delete="handleDeletePermanent"
-      />
-</div>
-      
+      /> 
+    </div>
     </div>
   </section>
 </template>
@@ -50,8 +49,8 @@ function handleDeletePermanent(id) {
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height:auto
+  align-items: flex-start;
+  height:auto;
 }
 
 .deleted-notes-header{
@@ -60,15 +59,18 @@ function handleDeletePermanent(id) {
   left: 0;
   width: 100%;
   height: 60px;
-  background: white;
-  border-bottom: 1px solid yellowgreen;
+  background: var(--bg-color);
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  margin-top:40px;
+  padding: 0 12px; 
+  margin-top:var(--app-header-height);
 }
 
 .deleted-notes-area{
-  margin-top: 100px; 
+  width:100%; 
+}
+
+.list-panel{
+  margin-top:50px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="actions-item">
     <template v-if="note.status === 'archived'">
-      <div class="item-buttons-2">
+      <div class="item-buttons-2 actions-item-archive-page">
         <button @click="$emit('unarchive', note.id)"> 
           Unarchive
         </button>
@@ -12,7 +12,7 @@
     </template>
 
     <template v-else-if="note.status === 'deleted'">
-      <div class="item-buttons-2">
+      <div class="item-buttons-2 actions-item-deleted-page">
         <button @click="$emit('restore', note.id)"> 
           Restore
         </button>
@@ -23,7 +23,7 @@
     </template>
 
     <template v-else>
-      <div class="item-buttons">
+      <div class="item-buttons actions-item-all-page">
         <button @click="$emit('delete', note.id)">
           <i class="ph ph-trash"></i>
         </button>

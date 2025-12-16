@@ -8,12 +8,13 @@
       <button @click="$emit('cancel')">Cancel</button>
     </div>
     <!-- Header -->
-    <input
+    <textarea
       v-model="noteLocal.title"
-      type="text" 
-      class="note-editor-input" 
+      rows="3"
+      class="note-editor-input"
+      @input="handleTitleInput"
       placeholder="Enter a Title..."
-    />
+    ></textarea>
     <div class="note-editor-toolbar">
       <Toolbar
         :isBold="isBold"
@@ -23,7 +24,7 @@
         @applyColor="applyColor"
         @applyFont="applyFont"
         @applyHeading="applyHeading"
-        @applySpellcheck="applySpellcheck" 
+        @applySpellcheck="applySpellcheck"
       />
     </div>
 
@@ -35,8 +36,13 @@
         ref="contentRef"
         :spellcheck="isSpellcheckEnabled"
         @input="onInput"
-        @beforeinput="(e) => { handleEnter(e); onBeforeInput(e); }"
-      ></div> 
+        @beforeinput="
+          (e) => {
+            handleEnter(e);
+            onBeforeInput(e);
+          }
+        "
+      ></div>
     </div>
   </div>
 </template>
@@ -48,8 +54,7 @@ import Toolbar from "../toolbar/Toolbar.vue";
 import { useTextFormatting } from "../../composables/functions/useTextFormatting";
 import { useHeadingMode } from "../../composables/functions/useHeadingMode";
 import { currentHeadingElement } from "../../composables/based/useEditorState";
-import { useSpellcheck } from "../../composables/functions/useSpellcheck"; 
-
+import { useSpellcheck } from "../../composables/functions/useSpellcheck";
 
 const props = defineProps({ note: Object });
 const emit = defineEmits(["save", "cancel"]);
@@ -66,20 +71,33 @@ const currentColor = ref("#000000"); // default black
 
 const currentFont = ref("Arial"); // default font
 
+const titleCharCount = ref(0);
+const MAX_TITLE_LENGTH = 100;
+
+function handleTitleInput(e) {
+  const value = e.target.value;
+
+  if (value.length > MAX_TITLE_LENGTH) {
+    e.target.value = value.slice(0, MAX_TITLE_LENGTH);
+    noteLocal.value.title = e.target.value;
+  }
+
+  titleCharCount.value = noteLocal.value.title.length;
+}
+
 function handleEnter(e) {
   if (e.inputType !== "insertParagraph") return;
-   
+
   e.preventDefault();
 
   //console.log("ENTER");
 
-   const br = document.createElement("br");
-   const range = window.getSelection().getRangeAt(0);
-   range.insertNode(br);
-   range.setStartAfter(br);
-   range.collapse(true);
+  const br = document.createElement("br");
+  const range = window.getSelection().getRangeAt(0);
+  range.insertNode(br);
+  range.setStartAfter(br);
+  range.collapse(true);
 }
-
 
 function applyColor(color) {
   currentColor.value = color; // just update state
@@ -161,7 +179,7 @@ function applyFont(font) {
   }
 
   noteLocal.value.content = contentRef.value.innerHTML;
-} 
+}
 
 function applyHeading(level) {
   const tag = `h${level}`;
@@ -451,44 +469,58 @@ function handleSubmit() {
 }
 
 .note-editor {
+  position: relative;
+  margin: 42px 16px 0 16px;
   display: flex;
   flex-direction: column;
-  gap: 1rem; 
-  width:100%;
+  align-items: center;
+  gap: 1rem;
+  width: calc(100% - 32px);
+  height: auto;
 }
 .note-editor-actions {
-  display: flex; 
-  justify-content:flex-end; 
-  align-items:center;
-  gap: 1rem; 
-  border:1px solid red;
-  padding-right:16px; 
-  position:fixed; 
-  width:100%;
-  top:calc(var(--app-header-height) + 16px); 
+  position: fixed;
+  width: calc(100% - 32px);
+  height: var(--editor-action-height);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0;
+  top: var(--app-header-height);
 }
 .note-editor-input {
-  width: 100%;
-  height: 40px; 
-  position:fixed; 
-  top:calc(var(--app-header-height) + 16px + 40px);
+  position: fixed;
+  height: var(--title-input-height);
+  background: white;
+  padding: 8px 0px 8px 12px;
+  width: calc(100% - 32px);
+  margin: 0 auto;
+  display: flex;
+  border: 1px solid red;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
 }
 
-.note-editor-toolbar{
-  position:fixed;
-  top:calc(var(--app-header-height) + 16px + 40px + 40px);
+.note-editor-toolbar {
+  position: fixed;
+  top: calc(
+    var(--app-header-height) + var(--editor-action-height) + var(--title-input-height) +
+      60px
+  );
+  height: var(--toolbar-height);
+  background: var(--bg-color);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
 }
 
-.note-editor-editable{
-  margin-top:calc(var(--app-header-height) + 200px);
-}
-
-
-.text-area {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
+.note-editor-editable {
+  margin-top: calc(var(--app-header-height) + 200px);
   width: 100%;
   height: 400px;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
 }
 </style>

@@ -1,5 +1,8 @@
 :root{
-   --app-header-height: 42px;
+   --app-header-height: 42px; 
+   --editor-action-height: 44px;
+  --title-input-height: 55px;
+  --toolbar-height: 45px;
 }
 * {
   margin: 0;
