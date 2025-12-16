@@ -2,23 +2,15 @@
   <div class="actions-item">
     <template v-if="note.status === 'archived'">
       <div class="item-buttons-2 actions-item-archive-page">
-        <button @click="$emit('unarchive', note.id)"> 
-          Unarchive
-        </button>
-        <button @click="$emit('delete', note.id)"> 
-          Move To Trash
-        </button>
+        <button @click="$emit('unarchive', note.id)">Unarchive</button>
+        <button @click="$emit('delete', note.id)">Move To Trash</button>
       </div>
     </template>
 
     <template v-else-if="note.status === 'deleted'">
       <div class="item-buttons-2 actions-item-deleted-page">
-        <button @click="$emit('restore', note.id)"> 
-          Restore
-        </button>
-        <button @click="$emit('delete', note.id)"> 
-          Delete Permanently
-        </button>
+        <button @click="$emit('restore', note.id)">Restore</button>
+        <button @click="$emit('delete', note.id)">Delete Permanently</button>
       </div>
     </template>
 
@@ -51,11 +43,12 @@ const props = defineProps({
 .actions-item {
   background: lightblue;
 }
-.item-buttons, .item-buttons-2 {
+.item-buttons,
+.item-buttons-2 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap:8px;
+  gap: 8px;
   background-color: lightcoral;
 }
 .item-buttons button {
@@ -70,11 +63,11 @@ const props = defineProps({
   outline: none;
 }
 
-.item-buttons-2 button{
-  padding:8px 16px;
+.item-buttons-2 button {
+  padding: 8px 16px;
   border-radius: 4px;
-  border:none;
-  outline:none;
+  border: none;
+  outline: none;
   background-color: #ccc;
 }
 
@@ -87,9 +80,8 @@ const props = defineProps({
   background: #fff;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 2px 2px 3px rgba(15, 139, 141, 0.2),
-    3px 5px 18px rgba(15, 139, 141, 0.1), 4px 5px 13px rgba(15, 139, 141, 0.1),
-    inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
+  box-shadow: 2px 2px 3px rgba(15, 139, 141, 0.2), 3px 5px 18px rgba(15, 139, 141, 0.1),
+    4px 5px 13px rgba(15, 139, 141, 0.1), inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
     inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
     inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
     inset 2px 2px 12px rgba(15, 139, 141, 0.15),
@@ -105,9 +97,8 @@ const props = defineProps({
   background: #fff;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 2px 2px 3px rgba(254, 95, 85, 0.2),
-    3px 5px 18px rgba(254, 95, 85, 0.1), 4px 5px 13px rgba(254, 95, 85, 0.1),
-    inset -0.5px -0.5px 5px rgba(254, 95, 85, 0.2),
+  box-shadow: 2px 2px 3px rgba(254, 95, 85, 0.2), 3px 5px 18px rgba(254, 95, 85, 0.1),
+    4px 5px 13px rgba(254, 95, 85, 0.1), inset -0.5px -0.5px 5px rgba(254, 95, 85, 0.2),
     inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
     inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
     inset 2px 2px 12px rgba(254, 95, 85, 0.15),

@@ -493,14 +493,17 @@ function handleSubmit() {
   position: fixed;
   height: var(--title-input-height);
   background: white;
-  padding: 8px 0px 8px 12px;
+  padding: 4px 0px 4px 12px;
   width: calc(100% - 32px);
-  margin: 0 auto;
   display: flex;
-  border: 1px solid red;
+  align-items: flex-start;
+  justify-content: center;
+  border: 1px solid #ccc;
   resize: none;
   outline: none;
+  overflow-y: hidden;
   box-sizing: border-box;
+  line-height: 20px;
 }
 
 .note-editor-toolbar {
