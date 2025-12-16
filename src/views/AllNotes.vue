@@ -197,8 +197,11 @@ function handleRestore(id) {
 }
 
 .all-notes-area { 
-  margin-top: 60px;
   width: 100%;
+}
+
+.list-panel{
+  margin-top:60px;
 }
 
 .editor-panel {

@@ -71,7 +71,7 @@ const props = defineProps({
 }
 
 .item-buttons-2 button{
-  padding:4px 8px;
+  padding:8px 16px;
   border-radius: 4px;
   border:none;
   outline:none;

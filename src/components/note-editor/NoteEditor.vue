@@ -1,7 +1,7 @@
 <template>
   <div class="note-editor">
     <!-- Actions -->
-    <div class="actions">
+    <div class="note-editor-actions">
       <button @click="handleSubmit">
         {{ note?.id ? "Update" : "Create" }}
       </button>
@@ -10,7 +10,8 @@
     <!-- Header -->
     <input
       v-model="noteLocal.title"
-      type="text"
+      type="text" 
+      class="note-editor-input" 
       placeholder="Enter a Title..."
     />
     <div class="note-editor-toolbar">
@@ -452,18 +453,37 @@ function handleSubmit() {
 .note-editor {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; 
+  width:100%;
 }
-.actions {
-  display: flex;
-  gap: 1rem;
+.note-editor-actions {
+  display: flex; 
+  justify-content:flex-end; 
+  align-items:center;
+  gap: 1rem; 
+  border:1px solid red;
+  padding-right:16px; 
+  position:fixed; 
+  width:100%;
+  top:calc(var(--app-header-height) + 16px); 
 }
-input {
+.note-editor-input {
   width: 100%;
-  height: 40px;
+  height: 40px; 
+  position:fixed; 
+  top:calc(var(--app-header-height) + 16px + 40px);
 }
 
-textarea,
+.note-editor-toolbar{
+  position:fixed;
+  top:calc(var(--app-header-height) + 16px + 40px + 40px);
+}
+
+.note-editor-editable{
+  margin-top:calc(var(--app-header-height) + 200px);
+}
+
+
 .text-area {
   border: 1px solid #ccc;
   padding: 0.5rem;
