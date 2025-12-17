@@ -1,34 +1,35 @@
 <template>
   <div class="note-editor">
-    <!-- Actions -->
-    <div class="note-editor-actions">
-      <button @click="handleSubmit">
-        {{ note?.id ? "Update" : "Create" }}
-      </button>
-      <button @click="$emit('cancel')">Cancel</button>
+    <div class="note-editor-header">
+      <!-- Actions -->
+      <div class="note-editor-actions">
+        <button @click="handleSubmit">
+          {{ note?.id ? "Update" : "Create" }}
+        </button>
+        <button @click="$emit('cancel')">Cancel</button>
+      </div>
+      <!-- Header -->
+      <textarea
+        v-model="noteLocal.title"
+        rows="3"
+        class="note-editor-input"
+        @input="handleTitleInput"
+        placeholder="Enter a Title..."
+      >
+      </textarea>
+      <div class="note-editor-toolbar">
+        <Toolbar
+          :isBold="isBold"
+          :isItalic="isItalic"
+          :isUnderline="isUnderline"
+          @applyStyle="applyStyle"
+          @applyColor="applyColor"
+          @applyFont="applyFont"
+          @applyHeading="applyHeading"
+          @applySpellcheck="applySpellcheck"
+        />
+      </div>
     </div>
-    <!-- Header -->
-    <textarea
-      v-model="noteLocal.title"
-      rows="3"
-      class="note-editor-input"
-      @input="handleTitleInput"
-      placeholder="Enter a Title..."
-    >
-    </textarea>
-    <div class="note-editor-toolbar">
-      <Toolbar
-        :isBold="isBold"
-        :isItalic="isItalic"
-        :isUnderline="isUnderline"
-        @applyStyle="applyStyle"
-        @applyColor="applyColor"
-        @applyFont="applyFont"
-        @applyHeading="applyHeading"
-        @applySpellcheck="applySpellcheck"
-      />
-    </div>
-
     <div class="note-editor-editable">
       <div
         class="text-area"
@@ -469,7 +470,7 @@ function handleSubmit() {
   display: inline-block;
 }
 
-.note-editor {
+.note-editor-header {
   position: relative;
   margin: 42px 16px 0 16px;
   display: flex;
@@ -530,41 +531,53 @@ function handleSubmit() {
 
 @media only screen and (min-width: 1026px) {
   .note-editor {
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    height: auto;
+    align-items: flex-start;
+    width: 100%;
     border: 1px solid red;
+  }
+  .note-editor-header {
+    position: fixed;
+    top: calc(var(--app-header-height) + 80px);
+    margin: 0 auto;
+    padding: 0 16px;
+    width: min(900px, 100%); /* container genişliği */
+    background: white;
+    z-index: 999;
+  }
+  .note-editor-actions,
+  .note-editor-input,
+  .note-editor-toolbar {
+    position: static;
   }
 
   .note-editor-actions {
-    position: fixed;
-    width: 100%;
-    height: var(--editor-action-height);
-    top: 120px;
+    display: flex;
+    align-items: center;
+    border: 1px solid green;
+    width: calc(100% - 32px);
+  }
+  .note-editor-input {
+    display: flex;
+    align-items: center;
+    top: var(--editor-action-height);
+    border: 1px solid green;
+    width: calc(100% - 32px);
+  }
+  .note-editor-toolbar {
+    display: flex;
+    align-items: center;
+    width: calc(100% - 32px);
+    top: var(--title-input-height);
+
     border: 1px solid green;
   }
 
-  .note-editor-input {
-    position: relative;
-    width: 100%;
-    height: var(--title-input-height);
-    top: 0px;
-  }
-
-  .note-editor-toolbar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    top: 0;
-  }
-
   .note-editor-editable {
-    margin: 0;
+    margin-top: calc(var(--app-header-height) + 200px);
+    width: calc(100% - 32px);
+    border: 1px solid pink;
   }
 }
 </style>
