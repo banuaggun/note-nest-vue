@@ -533,7 +533,7 @@ function handleSubmit() {
   .note-editor {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
     border: 1px solid red;
   }
@@ -573,9 +573,16 @@ function handleSubmit() {
   }
 
   .note-editor-editable {
-    margin-top: calc(var(--app-header-height) + 200px);
-    width: calc(100% - 8px);
+    margin: 200px auto 0 auto;
+    width: min(900px, 100%);
+    height: calc(380px + 1rem);
     border: 1px solid pink;
+    padding: 1rem;
+  }
+  .text-area {
+    height: calc(380px - 1rem);
+    border: none;
+    outline: none;
   }
 }
 </style>
