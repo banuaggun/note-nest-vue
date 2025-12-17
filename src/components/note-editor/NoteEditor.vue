@@ -14,7 +14,8 @@
       class="note-editor-input"
       @input="handleTitleInput"
       placeholder="Enter a Title..."
-    ></textarea>
+    >
+    </textarea>
     <div class="note-editor-toolbar">
       <Toolbar
         :isBold="isBold"
@@ -525,5 +526,45 @@ function handleSubmit() {
   height: 400px;
   border: 1px solid #ccc;
   padding: 0.5rem;
+}
+
+@media only screen and (min-width: 1026px) {
+  .note-editor {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    height: auto;
+    border: 1px solid red;
+  }
+
+  .note-editor-actions {
+    position: fixed;
+    width: 100%;
+    height: var(--editor-action-height);
+    top: 120px;
+    border: 1px solid green;
+  }
+
+  .note-editor-input {
+    position: relative;
+    width: 100%;
+    height: var(--title-input-height);
+    top: 0px;
+  }
+
+  .note-editor-toolbar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    top: 0;
+  }
+
+  .note-editor-editable {
+    margin: 0;
+  }
 }
 </style>

@@ -1,10 +1,8 @@
 <template>
   <section class="all-notes">
-    <div class="all-notes-header" v-if="!isEditorOpen">
+    <div class="all-notes-header" v-if="!isMobile || !isEditorOpen">
       <h2>All Notes</h2>
-      <button @click="startCreate" class="create-note">
-        Create a New Note
-      </button>
+      <button @click="startCreate" class="create-note">Create a New Note</button>
     </div>
 
     <div class="all-notes-area">
@@ -34,11 +32,7 @@
 
       <!-- Editor only if editor is open -->
       <div class="editor-panel" v-if="isEditorOpen">
-        <NoteEditor
-          :note="editingNote"
-          @save="handleSave"
-          @cancel="handleCancel"
-        />
+        <NoteEditor :note="editingNote" @save="handleSave" @cancel="handleCancel" />
       </div>
 
       <div v-if="!isEditorOpen && !isMobile" class="placeholder">
@@ -79,10 +73,10 @@ const titleRef = ref(null);
 const contentRef = ref(null);
 
 const editingNote = ref(null);
-const isMobile = ref(window.innerWidth <= 641);
+const isMobile = ref(window.innerWidth <= 1025);
 
 function updateIsMobile() {
-  isMobile.value = window.innerWidth <= 641;
+  isMobile.value = window.innerWidth <= 1025;
 }
 
 onMounted(() => {
@@ -161,16 +155,15 @@ function handleRestore(id) {
 </script>
 
 <style scoped>
-.all-notes { 
-  border:1px solid blue; 
+.all-notes {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .all-notes-header {
-  position: fixed; 
-  left:0;
+  position: fixed;
+  left: 0;
   width: 100%;
   height: 60px;
   background: var(--bg-color);
@@ -196,22 +189,54 @@ function handleRestore(id) {
   background-color: #78a5a3;
 }
 
-.all-notes-area { 
+.all-notes-area {
   width: 100%;
 }
 
-.list-panel{
-  margin-top:60px;
+.list-panel {
+  margin-top: 60px;
 }
 
 .editor-panel {
   width: 100%;
-  height: auto; 
+  height: auto;
 }
 .empty-message {
   text-align: center;
   padding: 40px 0;
   color: #888;
   font-size: 1.1rem;
+}
+
+@media only screen and (min-width: 1026px) {
+  .all-notes-area {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 60px);
+  }
+
+  .list-panel {
+    width: 30%;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    margin-top: 60px;
+  }
+
+  .editor-panel,
+  .placeholder {
+    width: 70%;
+    padding: 20px;
+    overflow-y: auto;
+    margin-top: 60px;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 1.1rem;
+    text-align: center;
+  }
 }
 </style>

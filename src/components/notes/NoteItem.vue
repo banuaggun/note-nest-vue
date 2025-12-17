@@ -61,10 +61,16 @@ const cleanedContent = computed(() => {
 .note-item p {
   margin: 8px 8px;
 }
-/*
-.actions {
-  display: flex;
-  justify-content: flex-end;
+
+@media only screen and (min-width: 767px) and (max-width: 1025px) {
+  .note-item {
+    width: 48%;
+  }
 }
-*/
+
+@media only screen and (min-width: 1026px) and (max-width: 1921px) {
+  .note-item {
+    width: 100%;
+  }
+}
 </style>

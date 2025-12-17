@@ -12,12 +12,11 @@
         @restore="(id) => $emit('restore', id)"
       />
     </div>
-
   </div>
 </template>
 
-<script setup> 
-import NoteItem from "./NoteItem.vue"  
+<script setup>
+import NoteItem from "./NoteItem.vue";
 
 defineProps({
   notes: {
@@ -26,8 +25,7 @@ defineProps({
   },
 });
 
-defineEmits(["edit", "delete", "archive", "unarchive", "restore"]); 
-
+defineEmits(["edit", "delete", "archive", "unarchive", "restore"]);
 </script>
 <style scoped>
 .note-list-card {
@@ -35,5 +33,18 @@ defineEmits(["edit", "delete", "archive", "unarchive", "restore"]);
   flex-direction: column;
   gap: 0.8rem;
   padding: 0.8rem;
+}
+@media only screen and (min-width: 767px) and (max-width: 1025px) {
+  .note-list-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+@media only screen and (min-width: 1026px) and (max-width: 1921px) {
+  .note-list-card {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

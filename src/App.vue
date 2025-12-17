@@ -9,36 +9,36 @@
         <component
           :is="Component"
           :isEditorOpen="isEditorOpen"
-          @update:isEditorOpen="val => isEditorOpen = val"
+          @update:isEditorOpen="(val) => (isEditorOpen = val)"
         />
       </RouterView>
     </main>
 
     <!-- The navbar only works if the editor is closed -->
-    <div class="navbar-panel" v-if="!(!isDesktop && isEditorOpen)">
+    <div class="navbar-panel" v-if="isDesktop || !isEditorOpen">
       <Navbar />
     </div>
-     
+
     <!-- Global Toast -->
     <NotificationModal :message="message" :visible="visible" />
   </div>
 </template>
 
 <script setup>
-import { ref, inject, onMounted } from 'vue';
-import Header from './components/Header.vue';
-import Navbar from './components/navbar/Navbar.vue'; 
-import NotificationModal from './components/note-editor/NotificationModal.vue'; 
-import { RouterView } from 'vue-router';
-import { useToast } from './composables/useToast'; 
+import { ref, inject, onMounted } from "vue";
+import Header from "./components/Header.vue";
+import Navbar from "./components/navbar/Navbar.vue";
+import NotificationModal from "./components/note-editor/NotificationModal.vue";
+import { RouterView } from "vue-router";
+import { useToast } from "./composables/useToast";
 
-const settings = inject('settings');
+const settings = inject("settings");
 const isEditorOpen = ref(false);
 
-const isDesktop = ref(window.innerWidth > 1024);
+const isDesktop = ref(window.innerWidth >= 1025);
 
 window.addEventListener("resize", () => {
-  isDesktop.value = window.innerWidth < 1024;
+  isDesktop.value = window.innerWidth >= 1025;
 });
 
 const headerRef = ref(null);
@@ -55,10 +55,10 @@ const { message, visible } = useToast();
 <style scoped>
 .app-layout {
   display: flex;
-  flex-direction: column; 
-  width:100%; 
-  height:auto;
-  font-family: 'Segoe UI', sans-serif;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .header-panel {
@@ -66,20 +66,20 @@ const { message, visible } = useToast();
   height: 42px;
   padding: 24px 0 12px 12px;
   background-color: var(--bg-color);
-  position: fixed; 
+  position: fixed;
   z-index: 10;
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
-.navbar-panel{
-  width:100%;
+.navbar-panel {
+  width: 100%;
 }
 
 .main-content {
   width: 100%;
-  height: auto;  
-  padding:0;
+  height: auto;
+  padding: 0;
 }
 
 .light {
