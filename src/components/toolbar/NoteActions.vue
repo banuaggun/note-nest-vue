@@ -2,20 +2,36 @@
   <div class="actions-item">
     <template v-if="note.status === 'archived'">
       <div class="item-buttons-2 actions-item-archive-page">
-        <button @click="$emit('unarchive', note.id)">Unarchive</button>
-        <button @click="$emit('delete', note.id)">Move To Trash</button>
+        <button @click="$emit('unarchive', note.id)">
+          <!-- unarchive -->
+          <i class="ph ph-box-arrow-up"></i>
+        </button>
+        <button @click="$emit('delete', note.id)">
+          <!-- move to trash -->
+          <i class="ph ph-trash"></i>
+        </button>
       </div>
     </template>
 
     <template v-else-if="note.status === 'deleted'">
       <div class="item-buttons-2 actions-item-deleted-page">
-        <button @click="$emit('restore', note.id)">Restore</button>
-        <button @click="$emit('delete', note.id)">Delete Permanently</button>
+        <button @click="$emit('restore', note.id)">
+          <!-- restore -->
+          <i class="ph ph-recycle"></i>
+        </button>
+        <button @click="confirmPermanentDelete(note.id)">Delete</button>
       </div>
+
+      <ConfirmModal
+        v-if="showModal"
+        message="Bu notu kalıcı olarak silmek istiyor musunuz?"
+        @confirm="handleConfirm"
+        @close="handleClose"
+      />
     </template>
 
     <template v-else>
-      <div class="item-buttons actions-item-all-page">
+      <div class="item-buttons actions-item-all-notes-page">
         <button @click="$emit('delete', note.id)">
           <i class="ph ph-trash"></i>
         </button>
@@ -31,27 +47,53 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import ConfirmModal from "../note-editor/ConfirmModal.vue";
+
 const props = defineProps({
   note: {
     type: Object,
     required: true,
   },
 });
+
+const emit = defineEmits(["delete"]);
+const showModal = ref(false);
+let selectedId = null;
+
+function confirmPermanentDelete(id) {
+  selectedId = id;
+  showModal.value = true;
+}
+
+function handleConfirm() {
+  emit("delete", selectedId);
+  showModal.value = false;
+}
+
+function handleClose() {
+  showModal.value = false;
+}
 </script>
 
 <style scoped>
 .actions-item {
-  background: lightblue;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
-.item-buttons,
-.item-buttons-2 {
+
+.actions-item-all-notes-page,
+.actions-item-archive-page,
+.actions-item-deleted-page {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  background-color: lightcoral;
 }
-.item-buttons button {
+.actions-item-all-notes-page button,
+.actions-item-archive-page button,
+.actions-item-deleted-page button:nth-child(1) {
   width: 40px;
   height: 40px;
   background-color: transparent;
@@ -63,16 +105,22 @@ const props = defineProps({
   outline: none;
 }
 
-.item-buttons-2 button {
+.actions-item-deleted-page button:nth-child(2) {
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
   outline: none;
-  background-color: #ccc;
+  background: #e74c3c;
+  color: white;
 }
 
-.item-buttons button:nth-child(2):hover,
-.item-buttons button:nth-child(3):hover {
+.actions-item-deleted-page button:nth-child(2):hover {
+  background: #c0392b;
+}
+
+.actions-item-all-notes-page button:hover,
+.actions-item-archive-page button:hover,
+.actions-item-deleted-page button:nth-child(1):hover {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,28 +137,15 @@ const props = defineProps({
   transform: scale(0.98);
 }
 
-.item-buttons button:nth-child(1):hover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: 242424;
-  background: #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 2px 2px 3px rgba(254, 95, 85, 0.2), 3px 5px 18px rgba(254, 95, 85, 0.1),
-    4px 5px 13px rgba(254, 95, 85, 0.1), inset -0.5px -0.5px 5px rgba(254, 95, 85, 0.2),
-    inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
-    inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
-    inset 2px 2px 12px rgba(254, 95, 85, 0.15),
-    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9);
-  transform: scale(0.98);
-}
-
-.item-buttons button i {
+.actions-item-all-notes-page button i,
+.actions-item-archive-page button i,
+.actions-item-deleted-page button:nth-child(1) i {
   font-size: 20px;
 }
 
-.item-buttons button:hover i {
+.actions-item-all-notes-page button:hover i,
+.actions-item-archive-page button:hover i,
+.actions-item-deleted-page button:nth-child(1):hover i {
   font-size: 24px;
 }
 </style>

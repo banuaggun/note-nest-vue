@@ -1,6 +1,5 @@
 <template>
-  
-  <div class="note-item" :class="{ archived: note.status === 'archived' }"> 
+  <div class="note-item" :class="{ archived: note.status === 'archived' }">
     <NoteActions
       class="actions"
       :note="note"
@@ -12,7 +11,6 @@
     />
     <h3>{{ cleanedTitle }}</h3>
     <p>{{ cleanedContent }}...</p>
-    
   </div>
 </template>
 
@@ -55,15 +53,18 @@ const cleanedContent = computed(() => {
 <style scoped>
 .note-item {
   border: 1px solid #ccc;
-  padding:0.5rem;
+  padding: 0.5rem;
   border-radius: 8px;
 }
 
-.note-item h3, .note-item p{
-  margin:8px 8px;
-} 
-.actions  {
-  display:flex;
+.note-item h3,
+.note-item p {
+  margin: 8px 8px;
+}
+/*
+.actions {
+  display: flex;
   justify-content: flex-end;
 }
+*/
 </style>
