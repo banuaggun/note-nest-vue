@@ -541,7 +541,7 @@ function handleSubmit() {
     position: fixed;
     top: calc(var(--app-header-height) + 80px);
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 8px;
     width: min(900px, 100%); /* container genişliği */
     background: white;
     z-index: 999;
@@ -556,27 +556,25 @@ function handleSubmit() {
     display: flex;
     align-items: center;
     border: 1px solid green;
-    width: calc(100% - 32px);
+    width: calc(100% - 8px);
   }
   .note-editor-input {
     display: flex;
     align-items: center;
     top: var(--editor-action-height);
     border: 1px solid green;
-    width: calc(100% - 32px);
+    width: calc(100% - 8px);
   }
   .note-editor-toolbar {
-    display: flex;
-    align-items: center;
-    width: calc(100% - 32px);
+    width: calc(100% - 8px);
     top: var(--title-input-height);
-
     border: 1px solid green;
+    padding: 0;
   }
 
   .note-editor-editable {
     margin-top: calc(var(--app-header-height) + 200px);
-    width: calc(100% - 32px);
+    width: calc(100% - 8px);
     border: 1px solid pink;
   }
 }

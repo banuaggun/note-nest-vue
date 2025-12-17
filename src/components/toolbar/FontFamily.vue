@@ -1,17 +1,21 @@
 <script setup>
-import { fontFamily, availableFonts, setFontFamily } from '../../composables/functions/useFontFamily.js';
-const emit = defineEmits(['applyFont']);
+import {
+  fontFamily,
+  availableFonts,
+  setFontFamily,
+} from "../../composables/functions/useFontFamily.js";
+const emit = defineEmits(["applyFont"]);
 
 function handleChange(event) {
   const selectedFont = event.target.value;
   setFontFamily(selectedFont);
-  emit('applyFont', selectedFont);
+  emit("applyFont", selectedFont);
 }
 </script>
 
 <template>
   <div class="font-family-selector">
-    <label for="font-select">Font Family:</label>
+    <i class="ph ph-text-aa"></i>
     <select id="font-select" v-model="fontFamily" @change="handleChange" selected>
       <option v-for="font in availableFonts" :key="font" :value="font">
         {{ font }}
@@ -29,5 +33,8 @@ function handleChange(event) {
 
 select {
   padding: 4px 8px;
+}
+.font-family-selector i {
+  font-size: 28px;
 }
 </style>
