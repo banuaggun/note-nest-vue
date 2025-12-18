@@ -1,14 +1,15 @@
 <template>
   <div class="note-editor">
     <div class="note-editor-header">
-      <!-- Actions -->
+      <!-- Note Actions -->
       <div class="note-editor-actions">
         <button @click="handleSubmit">
           {{ note?.id ? "Update" : "Create" }}
         </button>
         <button @click="$emit('cancel')">Cancel</button>
       </div>
-      <!-- Header -->
+
+      <!-- Note Header -->
       <textarea
         v-model="noteLocal.title"
         rows="3"
@@ -17,6 +18,8 @@
         placeholder="Enter a Title..."
       >
       </textarea>
+
+      <!-- Toolbar -->
       <div class="note-editor-toolbar">
         <Toolbar
           :isBold="isBold"
@@ -30,6 +33,8 @@
         />
       </div>
     </div>
+    <!-- Note Editor Header End -->
+
     <div class="note-editor-editable">
       <div
         class="text-area"
@@ -75,6 +80,7 @@ const currentFont = ref("Arial"); // default font
 
 const titleCharCount = ref(0);
 const MAX_TITLE_LENGTH = 100;
+const MAX_CONTENT_LENGTH = 4000; // istediğin kadar artır
 
 function handleTitleInput(e) {
   const value = e.target.value;
@@ -364,10 +370,35 @@ function moveCaretToStart() {
   sel.addRange(range);
 }
 
+function scrollToCaret(editable) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const range = sel.getRangeAt(0);
+
+  const caretRect = range.getBoundingClientRect();
+
+  const editableRect = editable.getBoundingClientRect();
+
+  const caretTop = caretRect.top - editableRect.top;
+  const caretBottom = caretRect.bottom - editableRect.top;
+
+  if (caretBottom > editable.clientHeight) {
+    editable.scrollTop += caretBottom - editable.clientHeight + 10;
+  }
+
+  if (caretTop < 0) {
+    editable.scrollTop += caretTop - 10;
+  }
+}
+
 function onInput() {
-  noteLocal.value.content = contentRef.value.innerHTML;
+  const el = contentRef.value;
+  noteLocal.value.content = el.innerHTML;
+
   nextTick(() => {
-    moveCaretToEnd(); // or moveCaretToStart()
+    moveCaretToEnd();
+    scrollToCaret(el);
   });
 }
 
@@ -470,6 +501,51 @@ function handleSubmit() {
   display: inline-block;
 }
 
+.note-editor {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  border: 1px solid red;
+}
+
+.note-editor-header {
+  position: fixed;
+  border: 1px solid blue;
+  width: calc(100% - 16px);
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 8px 8px;
+  background-color: var(--bg-color);
+}
+
+.note-editor-editable {
+  width: calc(100% - 16px);
+  height: 30vh;
+  /border: 1px solid green;
+  /*overflow-y: auto; */
+  position: fixed;
+  box-sizing: border-box;
+  margin: 330px auto 40px auto;
+}
+
+.text-area {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid pink;
+}
+
+/*
+.note-editor {
+  background-color: red;
+}
+
 .note-editor-header {
   position: relative;
   margin: 42px 16px 0 16px;
@@ -478,18 +554,19 @@ function handleSubmit() {
   align-items: center;
   gap: 1rem;
   width: calc(100% - 32px);
-  height: auto;
+  border: 1px solid black;
+  background-color: white;
 }
 .note-editor-actions {
   position: fixed;
   width: calc(100% - 32px);
-  height: var(--editor-action-height);
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 1rem;
   padding: 0;
   top: var(--app-header-height);
+  background-color: pink;
 }
 .note-editor-input {
   position: fixed;
@@ -506,27 +583,32 @@ function handleSubmit() {
   overflow-y: hidden;
   box-sizing: border-box;
   line-height: 20px;
+  border-radius: 8px;
+  background-color: green;
 }
 
 .note-editor-toolbar {
   position: fixed;
-  top: calc(
-    var(--app-header-height) + var(--editor-action-height) + var(--title-input-height) +
-      60px
-  );
-  height: var(--toolbar-height);
-  background: var(--bg-color);
+  top: 160px;
+  height: auto;
+  background: white;
   padding: 0 16px;
   display: flex;
   align-items: center;
 }
 
 .note-editor-editable {
-  margin-top: calc(var(--app-header-height) + 200px);
-  width: 100%;
-  height: 400px;
+  position: fixed;
+  top: 350px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  width: calc(100% - 32px);
+  height: 300px;
   border: 1px solid #ccc;
   padding: 0.5rem;
+  border-radius: 8px;
+  background-color: blue;
 }
 
 @media only screen and (min-width: 1026px) {
@@ -542,7 +624,7 @@ function handleSubmit() {
     top: calc(var(--app-header-height) + 80px);
     margin: 0 auto;
     padding: 0 8px;
-    width: min(900px, 100%); /* container genişliği */
+    width: min(900px, 100%); /* container genişliği *
     background: white;
     z-index: 999;
   }
@@ -585,4 +667,5 @@ function handleSubmit() {
     outline: none;
   }
 }
+*/
 </style>
