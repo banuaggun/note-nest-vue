@@ -9,20 +9,21 @@
       />
     </div>
 
+    <div class="toolbar-header-tags">
+      <HeadingControls @applyHeading="(level) => emit('applyHeading', level)" />
+    </div>
+
     <div class="toolbar-color">
       <i class="ph ph-palette"></i>
       <input type="color" v-model="selectedColor" @input="handleColorChange" />
     </div>
 
-    <div class="toolbar-header-tags">
-      <HeadingControls @applyHeading="(level) => emit('applyHeading', level)" />
-    </div>
-    <div class="toolbar-spellcheck">
-      <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
-    </div>
-
     <div class="toolbar-fontfamily">
       <FontFamily @applyFont="(font) => emit('applyFont', font)" />
+    </div>
+
+    <div class="toolbar-spellcheck">
+      <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
     </div>
   </div>
 </template>
@@ -79,27 +80,21 @@ function handleColorChange() {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
   margin: 0px auto;
   border: 1px solid black;
-  padding: 0 8px 0 8px;
+  padding: 10px 12px;
+
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 .toolbar > button {
   padding: 0.3rem 0.6rem;
   font-size: 1rem;
   cursor: pointer;
-}
-.toolbar > button.active,
-.toolbar button:focus {
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
-}
-:deep(.toolbar button.active) {
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
 }
 
 .toolbar-color {
