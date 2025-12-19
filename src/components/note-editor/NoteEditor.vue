@@ -521,6 +521,59 @@ function handleSubmit() {
   background-color: var(--bg-color);
 }
 
+.note-editor-actions {
+  border: 1px solid blue;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.note-editor-actions button {
+  padding: 8px 16px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background: var(--button-bg);
+  color: var(--button-text);
+}
+
+.note-editor-actions button:nth-child(2) {
+  background: transparent;
+  font-weight: bold;
+}
+
+.note-editor-actions button:nth-child(1):hover {
+  background: var(--confirm-color);
+  cursor: pointer;
+}
+
+.note-editor-actions button:nth-child(2):hover {
+  color: var(--danger-color);
+  cursor: pointer;
+}
+
+.note-editor-input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: var(--bg-color);
+}
+
+.note-editor-input:hover {
+  background: azure;
+  cursor: pointer;
+}
+
+.note-editor-input.active,
+.note-editor-input:focus {
+  background-color: white;
+  outline: 0;
+  border: 1px solid #dcbde4;
+}
+
 .note-editor-editable {
   width: calc(100% - 16px);
   height: 30vh;
@@ -540,132 +593,4 @@ function handleSubmit() {
   box-sizing: border-box;
   border: 1px solid pink;
 }
-
-/*
-.note-editor {
-  background-color: red;
-}
-
-.note-editor-header {
-  position: relative;
-  margin: 42px 16px 0 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  width: calc(100% - 32px);
-  border: 1px solid black;
-  background-color: white;
-}
-.note-editor-actions {
-  position: fixed;
-  width: calc(100% - 32px);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding: 0;
-  top: var(--app-header-height);
-  background-color: pink;
-}
-.note-editor-input {
-  position: fixed;
-  height: var(--title-input-height);
-  background: white;
-  padding: 4px 0px 4px 12px;
-  width: calc(100% - 32px);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  border: 1px solid #ccc;
-  resize: none;
-  outline: none;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  line-height: 20px;
-  border-radius: 8px;
-  background-color: green;
-}
-
-.note-editor-toolbar {
-  position: fixed;
-  top: 160px;
-  height: auto;
-  background: white;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-}
-
-.note-editor-editable {
-  position: fixed;
-  top: 350px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  width: calc(100% - 32px);
-  height: 300px;
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-  border-radius: 8px;
-  background-color: blue;
-}
-
-@media only screen and (min-width: 1026px) {
-  .note-editor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    border: 1px solid red;
-  }
-  .note-editor-header {
-    position: fixed;
-    top: calc(var(--app-header-height) + 80px);
-    margin: 0 auto;
-    padding: 0 8px;
-    width: min(900px, 100%); /* container genişliği *
-    background: white;
-    z-index: 999;
-  }
-  .note-editor-actions,
-  .note-editor-input,
-  .note-editor-toolbar {
-    position: static;
-  }
-
-  .note-editor-actions {
-    display: flex;
-    align-items: center;
-    border: 1px solid green;
-    width: calc(100% - 8px);
-  }
-  .note-editor-input {
-    display: flex;
-    align-items: center;
-    top: var(--editor-action-height);
-    border: 1px solid green;
-    width: calc(100% - 8px);
-  }
-  .note-editor-toolbar {
-    width: calc(100% - 8px);
-    top: var(--title-input-height);
-    border: 1px solid green;
-    padding: 0;
-  }
-
-  .note-editor-editable {
-    margin: 200px auto 0 auto;
-    width: min(900px, 100%);
-    height: calc(380px + 1rem);
-    border: 1px solid pink;
-    padding: 1rem;
-  }
-  .text-area {
-    height: calc(380px - 1rem);
-    border: none;
-    outline: none;
-  }
-}
-*/
 </style>

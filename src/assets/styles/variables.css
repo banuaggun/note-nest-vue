@@ -1,59 +1,50 @@
 .light {
   --bg-color: #f8f8f8;
   --text-color: #242424;
-  --button-bg: #e0e0e0; 
-  --warning-color:#FDCA40; 
-  --danger-color:#C0212E;
-  --button-text: #333; 
-  --nav-bg:#444;
-  --box-shadow-style-hover: 
-    4px 4px 6px rgba(15,139,141,.2),
-    5px 10px 35px rgba(15,139,141,.1),
-    8px 10px 25px rgba(15,139,141,.1),
-    inset -1px -1px 9px rgba(15,139,141,.2),
-    inset -1px -1px 3px rgba(255,255,255,.6),
-    inset 1px 1px 8px rgba(255,255,255,1),
-    inset 4px 4px 24px rgba(15,139,141,.15),
-    -5px -5px 15px rgba(255,255,255,.9);
-    --box-shadow-style-active: 
-			2px 2px 3px rgba(15,139,141,.2), 
-			3px 5px 18px rgba(15,139,141,.1),
-			4px 5px 13px rgba(15,139,141,.1),
-			inset -0.5px -0.5px 5px rgba(15,139,141,.2),
-			inset -0.5px -0.5px 1.5px rgba(255,255,255,.6),
-			inset 0.5px 0.5px 4px rgba(255,255,255,1),
-			inset 2px 2px 12px rgba(15,139,141,.15),
-			-2.5px -2.5px 7.5px rgba(255,255,255,.9);
+  --button-bg: #e0e0e0;
+  --warning-color: #fdca40;
+  --danger-color: #c0212e;
+  --confirm-color: #97a366;
+  --button-text: #333;
+  --nav-bg: #444;
+  --box-shadow-style-hover: 4px 4px 6px rgba(15, 139, 141, 0.2),
+    5px 10px 35px rgba(15, 139, 141, 0.1), 8px 10px 25px rgba(15, 139, 141, 0.1),
+    inset -1px -1px 9px rgba(15, 139, 141, 0.2),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.6), inset 1px 1px 8px rgba(255, 255, 255, 1),
+    inset 4px 4px 24px rgba(15, 139, 141, 0.15), -5px -5px 15px rgba(255, 255, 255, 0.9);
+  --box-shadow-style-active: 2px 2px 3px rgba(15, 139, 141, 0.2),
+    3px 5px 18px rgba(15, 139, 141, 0.1), 4px 5px 13px rgba(15, 139, 141, 0.1),
+    inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
+    inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
+    inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
+    inset 2px 2px 12px rgba(15, 139, 141, 0.15),
+    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9);
 
-  --transform-style: scale(.98);
+  --transform-style: scale(0.98);
 }
 
 .dark {
   --bg-color: #333;
   --text-color: #f9f9f9;
-  --button-bg: #444; 
-  --warning-color:#FFCE5C; 
-  --danger-color:#DB2B39;
-  --button-text: #f9f9f9; 
-  --nav-bg:#fff;
-  --box-shadow-style-hover: 
-    4px 4px 6px rgba(15,139,141,.2),
-    5px 10px 35px rgba(15,139,141,.1),
-    8px 10px 25px rgba(15,139,141,.1),
-    inset -1px -1px 9px rgba(15,139,141,.2),
-    inset -1px -1px 3px rgba(255,255,255,.6),
-    inset 1px 1px 8px rgba(255,255,255,1),
-    inset 4px 4px 24px rgba(15,139,141,.15),
-    -2.5px -2.5px 7.5px rgba(255,255,255,.9);
-    --box-shadow-style-active: 
-			2px 2px 3px rgba(15,139,141,.2), 
-			3px 5px 18px rgba(15,139,141,.1),
-			4px 5px 13px rgba(15,139,141,.1),
-			inset -0.5px -0.5px 5px rgba(15,139,141,.2),
-			inset -0.5px -0.5px 1.5px rgba(255,255,255,.6),
-			inset 0.5px 0.5px 4px rgba(255,255,255,1),
-			inset 2px 2px 12px rgba(15,139,141,.15),
-			-1.25px -1.25px 5px rgba(255,255,255,.9);
+  --button-bg: #444;
+  --warning-color: #ffce5c;
+  --danger-color: #db2b39;
+  --confirm-color: #75804d;
+  --button-text: #f9f9f9;
+  --nav-bg: #fff;
+  --box-shadow-style-hover: 4px 4px 6px rgba(15, 139, 141, 0.2),
+    5px 10px 35px rgba(15, 139, 141, 0.1), 8px 10px 25px rgba(15, 139, 141, 0.1),
+    inset -1px -1px 9px rgba(15, 139, 141, 0.2),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.6), inset 1px 1px 8px rgba(255, 255, 255, 1),
+    inset 4px 4px 24px rgba(15, 139, 141, 0.15),
+    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9);
+  --box-shadow-style-active: 2px 2px 3px rgba(15, 139, 141, 0.2),
+    3px 5px 18px rgba(15, 139, 141, 0.1), 4px 5px 13px rgba(15, 139, 141, 0.1),
+    inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
+    inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
+    inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
+    inset 2px 2px 12px rgba(15, 139, 141, 0.15),
+    -1.25px -1.25px 5px rgba(255, 255, 255, 0.9);
 
-  --transform-style: scale(.98);
+  --transform-style: scale(0.98);
 }
