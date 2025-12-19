@@ -2,8 +2,8 @@
 const props = defineProps({
   isBold: Boolean,
   isItalic: Boolean,
-  isUnderline: Boolean
-})
+  isUnderline: Boolean,
+});
 const emit = defineEmits(["applyStyle"]);
 
 function apply(styleType) {
@@ -13,29 +13,27 @@ function apply(styleType) {
 
 <template>
   <div class="text-style-controls">
-
     <button @click="apply('bold')" :class="['bold-btn', { active: props.isBold }]">
-  <strong>B</strong>
-</button>
+      <strong>B</strong>
+    </button>
 
-<button @click="apply('italic')" :class="['italic-btn', { active: props.isItalic }]">
-  <em>I</em>
-</button>
+    <button @click="apply('italic')" :class="['italic-btn', { active: props.isItalic }]">
+      <em>I</em>
+    </button>
 
-<button @click="apply('underline')" :class="['underline-btn', { active: props.isUnderline }]">
-  <u>U</u>
-</button>
-
+    <button
+      @click="apply('underline')"
+      :class="['underline-btn', { active: props.isUnderline }]"
+    >
+      <u>U</u>
+    </button>
   </div>
 </template>
 
 <style scoped>
-
-.text-style-controls{
-  border:1px solid black;
+.text-style-controls {
   display: flex;
-  width:max-content;
-  gap:8px;
+  gap: 8px;
 }
 
 .text-style-controls button {
@@ -43,26 +41,20 @@ function apply(styleType) {
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
-  font-size:14px;
-  color:#444;
+  font-size: 14px;
+  color: #444;
 }
 
-.text-style-controls button:hover{
-  color:#000;
-  cursor:pointer;
-  background-color: #BDBDEF;
+.text-style-controls button:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: #bdbdef;
 }
 
-.text-style-controls button.bold-btn.active{
+.text-style-controls button.bold-btn.active,
+.text-style-controls button.italic-btn.active,
+.text-style-controls button.underline-btn.active {
   background-color: #9898e7;
-  color:#000;
+  color: #000;
 }
-
-.text-style-controls button.italic-btn.active, 
-.text-style-controls button.underline-btn.active{
-  background-color: #9898e7;
-  font-weight: bold;
-  color:#000;
-}
-
 </style>

@@ -8,6 +8,9 @@
         @applyStyle="handleStyle"
       />
     </div>
+    <div class="toolbar-spellcheck">
+      <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
+    </div>
 
     <div class="toolbar-header-tags">
       <HeadingControls @applyHeading="(level) => emit('applyHeading', level)" />
@@ -20,10 +23,6 @@
 
     <div class="toolbar-fontfamily">
       <FontFamily @applyFont="(font) => emit('applyFont', font)" />
-    </div>
-
-    <div class="toolbar-spellcheck">
-      <SpellcheckToggle @applySpellcheck="(val) => emit('applySpellcheck', val)" />
     </div>
   </div>
 </template>
@@ -82,8 +81,6 @@ function handleColorChange() {
   align-items: center;
   gap: 10px;
   width: 100%;
-  margin: 0px auto;
-  border: 1px solid black;
   padding: 10px 12px;
 
   background: #fff;
@@ -91,6 +88,7 @@ function handleColorChange() {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
 .toolbar > button {
   padding: 0.3rem 0.6rem;
   font-size: 1rem;

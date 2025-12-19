@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-import { useHeadingMode } from '../../composables/functions/useHeadingMode'
+import { ref } from "vue";
+import { useHeadingMode } from "../../composables/functions/useHeadingMode";
 
-const { activeHeading, toggleHeading } = useHeadingMode()  
+const { activeHeading, toggleHeading } = useHeadingMode();
 
-const emit = defineEmits(['applyHeading'])
+const emit = defineEmits(["applyHeading"]);
 </script>
 
 <template>
@@ -14,9 +14,14 @@ const emit = defineEmits(['applyHeading'])
         v-for="level in 6"
         :key="level"
         :class="{ active: activeHeading === `h${level}` }"
-        @click="() => { toggleHeading(level); emit('applyHeading', level) }"
+        @click="
+          () => {
+            toggleHeading(level);
+            emit('applyHeading', level);
+          }
+        "
       >
-      <!-- @click="toggleHeading(level)"-->
+        <!-- @click="toggleHeading(level)"-->
         H{{ level }}
       </button>
     </div>
@@ -24,11 +29,10 @@ const emit = defineEmits(['applyHeading'])
 </template>
 
 <style scoped>
-.text-style-controls{
-  border:1px solid black;
+.text-style-controls {
   display: flex;
-  width:max-content;
-  gap:8px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .text-style-controls button {
@@ -36,20 +40,19 @@ const emit = defineEmits(['applyHeading'])
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
-  font-size:14px;
-  color:#444;
+  font-size: 14px;
+  color: #444;
 }
 
-.text-style-controls button:hover{
-  color:#000;
-  cursor:pointer;
-  background-color: #BDBDEF;
+.text-style-controls button:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: #bdbdef;
 }
 
-.text-style-controls button.active{
+.text-style-controls button.active {
   background-color: #9898e7;
   font-weight: bold;
-  color:#000;
+  color: #000;
 }
-
 </style>
