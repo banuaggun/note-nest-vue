@@ -503,9 +503,11 @@ function handleSubmit() {
 
 .note-editor {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   border: 1px solid red;
 }
 
@@ -519,6 +521,7 @@ function handleSubmit() {
   gap: 1rem;
   padding: 8px 8px;
   background-color: var(--bg-color);
+  z-index: 10;
 }
 
 .note-editor-actions {
@@ -575,13 +578,16 @@ function handleSubmit() {
 }
 
 .note-editor-editable {
-  width: calc(100% - 16px);
-  height: 30vh;
-  /border: 1px solid green;
-  /*overflow-y: auto; */
-  position: fixed;
+  width: calc(100% - 20px);
+  position: relative;
+  height: 40vh;
   box-sizing: border-box;
-  margin: 330px auto 40px auto;
+  margin: 300px auto 40px auto;
+  padding: 0px 8px;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .text-area {
@@ -589,8 +595,33 @@ function handleSubmit() {
   height: 100%;
   overflow-y: auto;
   outline: none;
-  padding: 8px;
   box-sizing: border-box;
-  border: 1px solid pink;
+}
+
+@media only screen and (min-width: 767px) and (max-width: 1025px) {
+  .note-editor-header {
+    width: calc(100% - 100px);
+    padding: 12px 12px;
+    margin: 20px auto;
+  }
+  .note-editor-editable {
+    width: calc(100% - 100px);
+    margin: 300px auto 20px auto;
+  }
+}
+
+@media only screen and (min-width: 1026px) {
+  .note-editor-header {
+    width: calc(100% - 48px);
+    position: relative;
+    padding: 12px 24px;
+    margin: 40px auto 0 auto;
+    border: 1px solid purple;
+  }
+  .note-editor-editable {
+    width: calc(100% - 48px);
+    position: relative;
+    margin: 20px auto;
+  }
 }
 </style>

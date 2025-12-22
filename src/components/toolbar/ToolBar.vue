@@ -89,6 +89,14 @@ function handleColorChange() {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
+@media only screen and (min-width: 767px) and (max-width: 1025px) {
+  .toolbar {
+    padding: 10px 16px;
+    gap: 12px;
+    justify-content: space-between;
+  }
+}
+
 .toolbar > button {
   padding: 0.3rem 0.6rem;
   font-size: 1rem;
