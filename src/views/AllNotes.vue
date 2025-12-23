@@ -6,28 +6,17 @@
     </div>
 
     <div class="all-notes-area">
-      <div
-        v-if="(!isEditorOpen || !isMobile) && activeNotes.length === 0"
-        class="empty-message"
-      >
-        <EmptyState
-          title="No notes yet"
-          description="Create your first note to get started"
-          :image="image"
-        />
+      <div v-if="(!isEditorOpen || !isMobile) && activeNotes.length === 0" class="empty-message">
+        <EmptyState 
+          title="No notes yet" 
+          description="Create your first note to get started" 
+          :image="image" />
       </div>
 
       <!-- The list is only available if the editor is closed. -->
       <div class="list-panel" v-if="!isEditorOpen || !isMobile">
-        <NoteList
-          :notes="activeNotes"
-          @edit="startEdit"
-          @delete="handleDelete"
-          @archive="handleArchive"
-          @unarchive="handleUnarchive"
-          @restore="handleRestore"
-          @delete-permanent="handleDeletePermanent"
-        />
+        <NoteList :notes="activeNotes" @edit="startEdit" @delete="handleDelete" @archive="handleArchive"
+          @unarchive="handleUnarchive" @restore="handleRestore" @delete-permanent="handleDeletePermanent" />
       </div>
 
       <!-- Editor only if editor is open -->
@@ -35,7 +24,7 @@
         <NoteEditor :note="editingNote" @save="handleSave" @cancel="handleCancel" />
       </div>
 
-      <div v-if="!isEditorOpen && !isMobile" class="placeholder">
+      <div v-if="!isEditorOpen && !isMobile && activeNotes.length > 0" class="placeholder">
         <p>Select a note or create a new one. You can edit it here.</p>
       </div>
     </div>
@@ -161,6 +150,7 @@ function handleRestore(id) {
   flex-direction: column;
   align-items: center;
 }
+
 .all-notes-header {
   position: fixed;
   left: 0;
@@ -184,6 +174,7 @@ function handleRestore(id) {
   font-weight: 600;
   letter-spacing: 0.2px;
 }
+
 .create-note:hover,
 .create-note.active {
   background-color: #78a5a3;
@@ -201,6 +192,7 @@ function handleRestore(id) {
   width: 100%;
   height: auto;
 }
+
 .empty-message {
   text-align: center;
   padding: 40px 0;
