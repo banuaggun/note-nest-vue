@@ -533,28 +533,44 @@ function handleSubmit() {
   padding-top: 8px;
 }
 
-.note-editor-actions button {
-  padding: 8px 16px;
+.note-editor-actions button { 
+  width:120px; 
+  height:40px; 
+  display:flex;
+  align-items:center; 
+  justify-content: center; 
+  line-height:35px; 
+  transition: all 0.35s;
+  box-sizing: border-box; 
+  font-size:16px; 
+  font-weight:600;
+  /*padding: 8px 16px; */
   border: none;
   outline: none;
-  border-radius: 4px;
-  background: var(--button-bg);
-  color: var(--button-text);
-}
+  border-radius: 6px;
+  background: var(--bg-color);
+  color: var(--button-text); 
+  
+} 
 
+.note-editor-actions button:nth-child(1) {
+  border:1px solid rgba(255, 198, 138, 1);
+} 
 .note-editor-actions button:nth-child(2) {
-  background: transparent;
-  font-weight: bold;
+  color: rgba(255, 95, 95, 6);
 }
 
 .note-editor-actions button:nth-child(1):hover {
-  background: var(--confirm-color);
+  box-shadow: var(--button-confirm-style-hover);
+  border-color: rgba(255, 198, 138, 0.9); 
   cursor: pointer;
 }
 
 .note-editor-actions button:nth-child(2):hover {
-  color: var(--danger-color);
-  cursor: pointer;
+  box-shadow: var(--button-danger-style-hover);
+  border-color: rgba(255, 95, 95, 0.9);
+  cursor: pointer; 
+  color:rgba(255, 95, 95, 1);
 }
 
 .note-editor-input {
@@ -615,7 +631,7 @@ function handleSubmit() {
     width: calc(100% - 48px);
     position: relative;
     padding: 12px 24px;
-    margin: 40px auto 0 auto;
+    margin: 0 auto;
     border: 1px solid purple;
   }
   .note-editor-editable {
