@@ -496,8 +496,8 @@ function handleSubmit() {
 .note-editor-editable h4,
 .note-editor-editable h5,
 .note-editor-editable h6 {
-  margin: 0; /* varsayılan boşlukları kaldır */
-  line-height: 1.4; /* satır yüksekliğini ayarla */
+  margin: 0; 
+  line-height: 1.4; 
   display: inline-block;
 }
 
@@ -507,25 +507,22 @@ function handleSubmit() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  border: 1px solid red;
+  justify-content: space-between; 
+  background-color: var(--bg-color);
 }
 
 .note-editor-header {
   position: fixed;
-  border: 1px solid blue;
   width: calc(100% - 16px);
   height: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 8px 8px;
-  background-color: var(--bg-color);
   z-index: 10;
 }
 
 .note-editor-actions {
-  border: 1px solid blue;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -554,23 +551,19 @@ function handleSubmit() {
 } 
 
 .note-editor-actions button:nth-child(1) {
-  border:1px solid rgba(255, 198, 138, 1);
+  border:var(--c-u-border);
 } 
-.note-editor-actions button:nth-child(2) {
-  color: rgba(255, 95, 95, 6);
-}
 
 .note-editor-actions button:nth-child(1):hover {
-  box-shadow: var(--button-confirm-style-hover);
-  border-color: rgba(255, 198, 138, 0.9); 
+  box-shadow: var(--c-u-hover);
+  border: var(--c-u-border); 
   cursor: pointer;
 }
 
 .note-editor-actions button:nth-child(2):hover {
-  box-shadow: var(--button-danger-style-hover);
-  border-color: rgba(255, 95, 95, 0.9);
+  box-shadow: var(--d-hover);
+  border:var(--d-border);
   cursor: pointer; 
-  color:rgba(255, 95, 95, 1);
 }
 
 .note-editor-input {

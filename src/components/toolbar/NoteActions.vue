@@ -96,7 +96,8 @@ function handleClose() {
 .actions-item-deleted-page button:nth-child(1) {
   width: 40px;
   height: 40px;
-  background-color: transparent;
+  background-color: transparent; 
+  color:var(--text-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,13 +111,11 @@ function handleClose() {
   border-radius: 4px;
   border: none;
   outline: none;
-  background: #e74c3c;
-  color: white;
+  border:1px solid var(--d-border); 
+  background-color:transparent;
+  color: var(--button-text);
 }
 
-.actions-item-deleted-page button:nth-child(2):hover {
-  background: #c0392b;
-}
 
 .actions-item-all-notes-page button:hover,
 .actions-item-archive-page button:hover,
@@ -127,14 +126,35 @@ function handleClose() {
   color: #242424;
   background: #fff;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: pointer; 
+  /*
   box-shadow: 2px 2px 3px rgba(15, 139, 141, 0.2), 3px 5px 18px rgba(15, 139, 141, 0.1),
     4px 5px 13px rgba(15, 139, 141, 0.1), inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
     inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
     inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
     inset 2px 2px 12px rgba(15, 139, 141, 0.15),
-    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9);
+    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9); 
+    */
   transform: scale(0.98);
+} 
+
+.actions-item-all-notes-page button:nth-child(1):hover, .actions-item-archive-page button:nth-child(2):hover, .actions-item-deleted-page button:nth-child(2):hover{
+  box-shadow: var(--d-shadow); 
+  background-color: var(--bg-color); 
+  color:var(--text-color);
+} 
+
+.actions-item-all-notes-page button:nth-child(2):hover, 
+.actions-item-archive-page button:nth-child(1):hover{
+  box-shadow: var(--a-shadow); 
+  background-color: var(--bg-color); 
+  color:var(--text-color);
+} 
+
+.actions-item-all-notes-page button:nth-child(3):hover{
+  box-shadow: var(--c-u-shadow); 
+  background-color: var(--bg-color); 
+  color:var(--text-color);
 }
 
 .actions-item-all-notes-page button i,

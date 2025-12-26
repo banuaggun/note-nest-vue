@@ -78,7 +78,7 @@
   background: var(--bg-color);
   opacity: 1;
   z-index: 10;
-  border: 0.5px solid #7a9acd;
+  border: 0.5px solid rgba(15, 139, 141, 0.5);
   border-radius: 15px;
   cursor: pointer;
   display: flex;
@@ -87,7 +87,7 @@
   padding: 0 24px;
   overflow: hidden;
   transition: width 300ms linear;
-}
+} 
 .button-s {
   position: absolute;
   content: "";

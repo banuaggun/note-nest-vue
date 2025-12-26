@@ -2,13 +2,29 @@
   --bg-color: #f8f8f8;
   --text-color: #242424;
   --button-bg: #e0e0e0;
-  --warning-color: #fdca40;
-  --danger-color: #c0212e;
-  --confirm-color: #97a366;
   --button-text: #333;
   --nav-bg: #444;
-  --button-confirm-style-hover: inset 0 0 0.85em 0em rgba(255, 198, 138, 1);
-  --button-danger-style-hover: inset 0 0 0.85em 0em rgba(255, 95, 95, 0.6);
+  /* create c -- create u -- update d -- delete a -- archive*/
+
+
+  /* c --create, u -- update */
+  --c-u-border: 1px solid rgba(157, 190, 188, 0.5);
+  --c-u-hover: inset 0 0 0.85em 0em rgba(157, 190, 188, 0.6);
+  --c-u-shadow: inset 0 0 0.85em 0em rgba(157, 190, 188, 0.8);
+  /* c --create, u -- update */
+
+  /* d -- delete */
+  --d-border: rgba(255, 95, 95, 0.5);
+  --d-hover: inset 0 0 0.85em 0em rgba(255, 95, 95, 0.6);
+  --d-shadow: inset 0 0 0.85em 0em rgba(255, 95, 95, 0.7);
+  /* d -- delete */
+
+  /* a -- archive */
+  --a-border: rgba(255, 175, 95, 1);
+  --a-hover: inset 0 0 0.85em 0em rgba(255, 175, 95, 0.6);
+  --a-shadow: inset 0 0 0.85em 0.1em rgba(255, 175, 95, 0.9);
+  /* a -- archive */
+
   --box-shadow-style-hover: 4px 4px 6px rgba(15, 139, 141, 0.2),
     5px 10px 35px rgba(15, 139, 141, 0.1), 8px 10px 25px rgba(15, 139, 141, 0.1),
     inset -1px -1px 9px rgba(15, 139, 141, 0.2),
@@ -28,12 +44,29 @@
 .dark {
   --bg-color: #333;
   --text-color: #f9f9f9;
-  --button-bg: #444;
-  --warning-color: #ffce5c;
-  --danger-color: #db2b39;
-  --confirm-color: #75804d;
+  --button-bg: #e0e0e0;
   --button-text: #f9f9f9;
   --nav-bg: #fff;
+  /* c -- create, u -- update, d -- delete, a -- archive*/
+
+  /* c --create, u -- update */
+  --c-u-border: 1px solid rgba(120, 165, 163, 0.5);
+  --c-u-hover: inset 0 0 0.85em 0em rgba(120, 165, 163, 0.6);
+  --c-u-shadow: inset 0 0 0.85em 0em rgba(120, 165, 163, 0.6);
+  /* c --create, u -- update */
+
+  /* d -- delete */
+  --d-border: rgba(255, 95, 95, 0.5);
+  --d-hover: inset 0 0 0.85em 0em rgba(255, 95, 95, 0.6);
+  --d-shadow: inset 0em 0 0.95em 0em rgba(255, 95, 95, 0.9);
+  /* d -- delete */
+
+  /* a -- archive */
+  --a-border: rgba(255, 175, 95, 1);
+  --a-hover: inset 0 0 0.85em 0em rgba(255, 175, 95, 0.6);
+  --a-shadow: inset 0 0 0.85em 0.1em rgba(255, 175, 95, 0.9);
+  /* a -- archive */
+
   --button-shadow-style-hover: inset 0 0 0.85em 0em rgba(255, 175, 95, 1);
   --button-danger-style-hover: inset 0 0 0.85em 0em rgba(255, 95, 95, 1);
   --box-shadow-style-hover: 4px 4px 6px rgba(15, 139, 141, 0.2),
