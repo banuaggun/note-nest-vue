@@ -72,5 +72,11 @@ function handleMoveToTrash(id) {
 
 .list-panel{
   margin-top:50px;
+} 
+
+@media only screen and (min-width:760px){
+   .archived-notes-header{
+    padding:0 48px;
+  }
 }
 </style>

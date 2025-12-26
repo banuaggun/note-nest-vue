@@ -90,15 +90,10 @@ const fontFamily = computed(() => {
   padding: 1rem; 
   width:100%;
 }
-  /*
-.settings-page-area section {
-  margin-bottom: 20px;
+
+@media only screen and (min-width:760px){
+   .settings-page-header{
+    padding:0 48px;
+  }
 }
-.settings-page-area .about {
-  margin-top: 20px;
-  padding-top: 10px;
-  border-top: 1px solid #ccc;
-  font-size: 14px;
-  color: #555;
-}*/
 </style>

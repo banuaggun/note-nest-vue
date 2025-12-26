@@ -198,14 +198,20 @@ function handleRestore(id) {
   padding: 40px 0;
   color: #888;
   font-size: 1.1rem;
-}
+} 
 
+@media only screen and (min-width:760px){
+   .all-notes-header{
+    padding:0 48px;
+  }
+}
+ 
 @media only screen and (min-width: 1026px) {
   .all-notes-area {
     display: flex;
     flex-direction: row;
     height: calc(100vh - 60px);
-  }
+  } 
 
   .list-panel {
     width: 30%;
