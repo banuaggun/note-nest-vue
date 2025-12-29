@@ -548,12 +548,12 @@ function handleSubmit() {
 } 
 
 .note-editor-actions button:nth-child(1) {
-  border:var(--c-u-border);
+  border:1px solid var(--c-u-border);
 } 
 
 .note-editor-actions button:nth-child(1):hover {
   box-shadow: var(--c-u-hover);
-  border: var(--c-u-border); 
+  border: 1px solid var(--c-u-border); 
   cursor: pointer;
 }
 

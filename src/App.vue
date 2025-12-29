@@ -69,7 +69,8 @@ const { message, visible } = useToast();
   position: fixed;
   z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: center; 
+  background-color: var(--bg-color);
 }
 
 .navbar-panel {

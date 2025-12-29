@@ -164,6 +164,10 @@ function handleRestore(id) {
   padding: 0 12px;
 }
 
+.all-notes-header h2{
+  color:var(--text-color);
+}
+
 .create-note {
   background-color: #9dbebc;
   color: #242424;

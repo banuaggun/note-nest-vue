@@ -1,14 +1,14 @@
 .light {
   --bg-color: #f8f8f8;
   --text-color: #242424;
-  --button-bg: #e0e0e0;
+  --button-bg: #bebdbd;
   --button-text: #333;
   --nav-bg: #444;
   /* create c -- create u -- update d -- delete a -- archive*/
 
 
   /* c --create, u -- update */
-  --c-u-border: 1px solid rgba(157, 190, 188, 0.5);
+  --c-u-border: rgba(157, 190, 188, 0.5);
   --c-u-hover: inset 0 0 0.85em 0em rgba(157, 190, 188, 0.6);
   --c-u-shadow: inset 0 0 0.85em 0em rgba(157, 190, 188, 0.8);
   /* c --create, u -- update */
@@ -79,8 +79,6 @@
   --r-s-shadow: inset 0 0 0.85em 0.1em rgba(138, 255, 140, 0.9);
   /* r -- restore and s -- success */
 
-  --button-shadow-style-hover: inset 0 0 0.85em 0em rgba(255, 175, 95, 1);
-  --button-danger-style-hover: inset 0 0 0.85em 0em rgba(255, 95, 95, 1);
   --box-shadow-style-hover: 4px 4px 6px rgba(15, 139, 141, 0.2),
     5px 10px 35px rgba(15, 139, 141, 0.1), 8px 10px 25px rgba(15, 139, 141, 0.1),
     inset -1px -1px 9px rgba(15, 139, 141, 0.2),
