@@ -6,18 +6,10 @@
 
     <div class="archived-notes-area">
       <div v-if="archivedNotes.length === 0" class="empty-message">
-        <EmptyState
-          title="No archived notes"
-          description="Archived notes will appear here"
-          :image="image"
-        />
+        <EmptyState title="No archived notes" description="Archived notes will appear here" :image="image" />
       </div>
       <div class="list-panel" v-else>
-        <NoteList
-          :notes="archivedNotes"
-          @unarchive="handleUnarchive"
-          @delete="handleMoveToTrash"
-        />
+        <NoteList :notes="archivedNotes" @unarchive="handleUnarchive" @delete="handleMoveToTrash" />
       </div>
     </div>
   </section>
@@ -51,6 +43,7 @@ function handleMoveToTrash(id) {
   flex-direction: column;
   align-items: flex-start;
   height: auto;
+  padding: 0.8rem 4px;
 }
 
 .archived-notes-header {
@@ -60,31 +53,47 @@ function handleMoveToTrash(id) {
   width: 100%;
   height: 60px;
   background: var(--bg-color);
+  color: var(--text-color);
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 20px;
   margin-top: var(--app-header-height);
 }
 
 .archived-notes-area {
-  width:100%;
-} 
+  width: 100%;
+}
 
-.list-panel{
-  margin-top:50px;
-} 
+.list-panel {
+  margin-top: 50px;
+}
 
-@media only screen and (min-width:760px){
-   .archived-notes-header{
-    padding:0 48px;
+@media only screen and (min-width:760px) {
+  .archived-notes-header {
+    padding: 0 24px;
   }
-} 
+}
 
-@media only screen and (min-width:1026px){
-  .archived-notes-area{
-    display:flex; 
-    flex-direction: row; 
-    height:calc(100vh - 60px);
-  } 
+@media only screen and (min-width:1026px) {
+  .archived-notes {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .archived-notes-header {
+    padding: 0 48px;
+  }
+
+  :deep(.note-list-card) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 0.8rem 3rem;
+  }
+
+  :deep(.note-item) {
+    width: 100%;
+  }
+
 }
 </style>

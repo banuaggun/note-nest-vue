@@ -54,7 +54,8 @@ const cleanedContent = computed(() => {
 .note-item {
   border: 1px solid #ccc;
   padding: 0.5rem;
-  border-radius: 8px;
+  border-radius: 8px; 
+  color:var(--text-color);
 }
 
 .note-item h3,
