@@ -127,14 +127,6 @@ function handleClose() {
   background: #fff;
   border-radius: 50%;
   cursor: pointer; 
-  /*
-  box-shadow: 2px 2px 3px rgba(15, 139, 141, 0.2), 3px 5px 18px rgba(15, 139, 141, 0.1),
-    4px 5px 13px rgba(15, 139, 141, 0.1), inset -0.5px -0.5px 5px rgba(15, 139, 141, 0.2),
-    inset -0.5px -0.5px 1.5px rgba(255, 255, 255, 0.6),
-    inset 0.5px 0.5px 4px rgba(255, 255, 255, 1),
-    inset 2px 2px 12px rgba(15, 139, 141, 0.15),
-    -2.5px -2.5px 7.5px rgba(255, 255, 255, 0.9); 
-    */
   transform: scale(0.98);
 } 
 
@@ -155,6 +147,12 @@ function handleClose() {
   box-shadow: var(--c-u-shadow); 
   background-color: var(--bg-color); 
   color:var(--text-color);
+} 
+
+.actions-item-deleted-page button:nth-child(1):hover {
+  box-shadow: var(--r-s-shadow); 
+  background-color: var(--bg-color); 
+  color:var(--text-color)
 }
 
 .actions-item-all-notes-page button i,

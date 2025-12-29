@@ -57,7 +57,7 @@
   bottom: 40px;
   left: 15px;
   right: 0;
-  z-index:1000;
+  z-index:1000; 
 }
 
 @media only screen and (min-width:641px) {
@@ -75,10 +75,11 @@
   z-index: 999;
   width: 280px;
   height: 65px;
-  background: var(--bg-color);
+  background: var(--bg-color); 
   opacity: 1;
   z-index: 10;
-  border: 0.5px solid rgba(15, 139, 141, 0.5);
+  border: 1px solid var(--c-u-border); 
+  box-shadow: var(--c-u-shadow);
   border-radius: 15px;
   cursor: pointer;
   display: flex;
@@ -125,11 +126,11 @@
   border-radius: 5px;
   transform: translateX(10%);
   padding: 10px 0;
-  background: var(--bg-color);
+  background: transparent; 
 }
 .nav ul {
   margin: 0;
-  padding: 0;
+  padding: 0; 
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -137,7 +138,7 @@
 }
 .nav li {
   opacity: 0;
-  list-style: none;
+  list-style: none; 
 }
 .nav li:nth-child(1) {
   transform-origin: bottom;
@@ -174,7 +175,7 @@
   color: var(--text-color);
   border-radius: 50%;
   box-shadow: var(--box-shadow-style-hover);
-  transform: var(-transform-style);
+  transform: var(--transform-style);
   font-size: 24px;
 }
 
@@ -191,17 +192,17 @@
 #toggle:checked ~ label .nav {
   display: none;
   opacity: 0;
-  transform: translateX(0);
+  transform: translateX(0); 
 }
 
 #toggle:checked ~ .button:before {
   transform: rotate(0deg);
-  top: 20px;
+  top: 20px; 
 }
 
 #toggle:checked ~ .button:after {
   transform: rotate(0deg);
-  bottom: 20px;
+  bottom: 20px; 
 }
 
 #toggle:checked ~ label span.button-s {
@@ -216,7 +217,7 @@
 
 #toggle:checked ~ .button {
   width: 70px;
-  transition: all 0.1s linear;
+  transition: all 0.1s linear; 
 }
 
 @media (max-width: 640px) {
@@ -227,7 +228,7 @@
 @keyframes itop {
   0% {
     opacity: 0;
-    transform: translateY(60px);
+    transform: translateY(60px); 
   }
   100% {
     opacity: 1;

@@ -52,20 +52,20 @@ onMounted(() => {
 const { message, visible } = useToast();
 </script>
 
-<style scoped>
+<style scoped> 
 .app-layout {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: auto;
-  font-family: "Segoe UI", sans-serif;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif; 
+  background-color: var(--bg-color);
 }
 
 .header-panel {
   width: 100%;
   height: 42px;
   padding: 24px 0 12px 12px;
-  background-color: var(--bg-color);
   position: fixed;
   z-index: 10;
   display: flex;
@@ -78,18 +78,10 @@ const { message, visible } = useToast();
 
 .main-content {
   width: 100%;
-  height: auto;
+  height: 100%;
   padding: 0;
 }
 
-.light {
-  background: #f9f9f9;
-  color: #333;
-}
-.dark {
-  background: #333;
-  color: #f8f8f8;
-}
 .sans {
   font-family: Arial, sans-serif;
 }
