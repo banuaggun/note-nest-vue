@@ -531,17 +531,14 @@ function handleSubmit() {
 }
 
 .note-editor-actions button { 
-  width:120px; 
-  height:40px; 
   display:flex;
   align-items:center; 
   justify-content: center; 
-  line-height:35px; 
   transition: all 0.35s;
   box-sizing: border-box; 
   font-size:16px; 
   font-weight:600;
-  /*padding: 8px 16px; */
+  padding: 8px 16px; 
   border: none;
   outline: none;
   border-radius: 6px;

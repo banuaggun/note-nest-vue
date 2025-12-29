@@ -78,5 +78,13 @@ function handleMoveToTrash(id) {
    .archived-notes-header{
     padding:0 48px;
   }
+} 
+
+@media only screen and (min-width:1026px){
+  .archived-notes-area{
+    display:flex; 
+    flex-direction: row; 
+    height:calc(100vh - 60px);
+  } 
 }
 </style>
