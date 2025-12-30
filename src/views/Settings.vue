@@ -8,8 +8,8 @@
       <section>
         <h3>Theme</h3>
 
-        <label v-for="opt in themeOptions.themes" :key="opt.value">
-          <input type="radio" :value="opt.value" v-model="settings.theme" />
+        <label v-for="opt in themeOptions.themes" :key="opt.value" for="box-shadow">
+          <input type="radio" :value="opt.value" v-model="settings.theme" id="box-shadow" class="custom-radio" />
           {{ opt.label }}
         </label>
       </section>
@@ -17,8 +17,8 @@
       <section>
         <h3>Font</h3>
 
-        <label v-for="opt in themeOptions.fonts" :key="opt.value">
-          <input type="radio" :value="opt.value" v-model="settings.font" />
+        <label v-for="opt in themeOptions.fonts" :key="opt.value" for="box-shadow">
+          <input type="radio" :value="opt.value" v-model="settings.font" id="box-shadow" class="custom-radio" />
           {{ opt.label }}
         </label>
       </section>
@@ -110,53 +110,55 @@ const fontFamily = computed(() => {
 
 .settings-page-area label {
   display: flex;
-  align-items: center;
+  align-items: center; 
+  flex-direction: row;
   margin-bottom: 1rem;
   cursor: pointer;
   font-size: 1rem;
-  gap: 0.5rem;
+  gap: 0.5rem;  
+} 
+
+.settings-page-area input[type=radio] {
+  width: 1.4em;
+  height: 1.4em; 
 }
 
-.settings-page-area input[type="radio"] {
+.custom-radio {
   appearance: none;
-  width: 18px;
-  height: 18px; 
-  padding:4px;
-  border: 2px solid var(--r-s-border);
+  -webkit-appearance: none;
+  border: 1px solid var(--button-bg);
+  background-color: transparent;
   border-radius: 50%;
-  outline: none;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
+  position: relative;  
+  display:inline-block;
 }
 
-.settings-page-area input[type="radio"]::after {
+.custom-radio:focus-visible {
+  outline-offset: 0;
+}
+
+#box-shadow:checked::after { 
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
+input[type=radio]:checked::after {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 8px;
-  height: 8px;
-  background-color: var(--r-s-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+  width: 0.7em;
+  height: 0.7em;
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.2s ease;
-}
-
-
-.settings-page-area input[type="radio"]:checked::after {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.settings-page-area input[type="radio"]:checked {
   background-color: var(--r-s-border);
-  border:2px solid red;
-  padding: 4px;
+  transition: transform 200ms ease;
 }
 
-.settings-page-area input[type="radio"]:hover {
-  border-color: #357ab8;
-}
 
 @media only screen and (min-width:760px) {
   .settings-page-header {
