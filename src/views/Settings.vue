@@ -4,17 +4,16 @@
       <h2>Settings</h2>
     </div>
 
-    
-
     <div class="settings-page-area">
- 
-      <!-- Sekme butonları -->
-    <div class="tabs">
-      <button v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
-        @click="activeTab = tab.value">
-        {{ tab.label }}
-      </button>
-    </div>
+
+      <div class="tab-area">
+      <div class="tabs">
+        <button v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
+          @click="activeTab = tab.value">
+          {{ tab.label }}
+        </button>
+      </div>
+</div>
       <div v-if="activeTab === 'themeFont'" class="section-group">
         <section>
           <h3>Theme</h3>
@@ -42,42 +41,54 @@
       </div>
       <div class="section-group">
         <section v-if="activeTab === 'project'" class="project">
-          <h3>Project Details</h3>
+          <div>
+          <h3>Note Nest Vue Project Details</h3>
+          
           <p>
-
-            📝 Note Nest Vue
             Note Nest Vue is a sleek, customizable note‑taking app built with Vue 3 & Vite.
+          </p> 
 
-            It’s designed to make capturing ideas effortless while letting you style your workspace to match your vibe.
-
-            ✨ <b>Features</b>
-            Create, edit, delete, and archive notes — keep your thoughts organized and accessible.
-            Custom themes — switch between color palettes to personalize your experience.
-
-            Font options — choose between serif, monospace, or sans‑serif to match your style.
-
-            Responsive design — optimized layouts for mobile, tablet, and desktop.
-
-            Keyboard navigation — perform all actions without touching the mouse.
-
-            Validation messages — clear feedback when required fields are missing.
-
-            Hover & focus states — polished UI interactions for a smooth experience.
-          </p>
-          <p>
-            Curious to see more of my work? Check out my
-            <a href="https://portfolio-banuaggun.vercel.app" target="_blank">Portfolio</a>.
-          </p>
-
-        </section>
-        <section v-if="activeTab === 'about'" class="about">
-          <h3>About</h3>
           <p>
             Crafted with Vue.js, this app is designed to make note‑taking effortless and
             highly personal. My goal was to build a space where ideas can be captured,
             organized, and styled to match your vibe. With customizable themes and fonts,
             your notes don’t just stay functional—they become part of your creative flow.
           </p>
+
+          <p>
+            It’s designed to make capturing ideas effortless while letting you style your workspace to match your vibe.
+          </p>
+        </div>
+        <div>
+          <h4>Features</h4>
+
+          <ul>
+            <li>
+              <b><i>Create</i></b>, <b><i>edit</i></b>, <b><i>delete</i></b>, and <b><i>archive</i></b> notes — keep
+              your thoughts organized and accessible.
+            </li>
+            <li>
+              <b><i>Custom themes</i></b> — switch between color palettes to personalize your experience.
+            </li>
+            <li>
+              <b><i>Font options</i></b> — choose between serif, monospace, or sans‑serif to match your style.
+            </li>
+            <li>
+              <b><i>Responsive design</i></b> — optimized layouts for mobile, tablet, and desktop.
+            </li>
+            <li>
+            <b><i>Validation messages</i></b> — clear feedback when required fields are missing.
+            </li> 
+            <li>
+            <b><i>Hover & focus states</i></b> — polished UI interactions for a smooth experience. 
+            </li>
+          </ul>
+        </div>
+        </section>
+
+        <section v-if="activeTab === 'about'" class="about">
+          <h3>About</h3>
+          
           <p>
             Curious to see more of my work? Check out my
             <a href="https://portfolio-banuaggun.vercel.app" target="_blank">Portfolio</a>.
@@ -98,7 +109,6 @@ import { themeOptions } from "../constants/themeOptions";
 
 const settings = inject("settings");
 
-// Sekme tanımları
 const tabs = [
   { value: "themeFont", label: "Theme & Font" },
   { value: "project", label: "Project Details" },
@@ -107,7 +117,6 @@ const tabs = [
 
 const activeTab = ref("themeFont");
 
-// Font family mapping
 const fontFamily = computed(() => {
   switch (settings.font) {
     case "serif":
@@ -120,17 +129,17 @@ const fontFamily = computed(() => {
 });
 </script>
 
-<style scoped> 
+<style scoped>
 .settings-page {
-  max-width:1200px;
-  margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto 120px auto; 
   display: flex;
   flex-direction: column;
   align-items: center;
   height: auto;
   color: var(--text-color);
   background-color: var(--bg-color);
-} 
+}
 
 .settings-page-header {
   position: fixed;
@@ -138,27 +147,25 @@ const fontFamily = computed(() => {
   left: 0;
   width: 100%;
   height: 60px;
-  border-bottom: 1px solid yellowgreen;
   display: flex;
   align-items: center;
   padding: 0 12px;
   background-color: var(--bg-color);
   color: var(--text-color);
-  margin-top: var(--app-header-height); 
-  z-index:2;
-} 
+  margin-top: var(--app-header-height);
+  z-index: 2;
+}
 
 .settings-page-area {
-  margin-top: 0px;
-  padding: 0 16px; 
-  border:1px solid red;
+  padding: 0 16px 80px 16px;
+  background-color: var(--bg-color);
   width: 100%;
+  min-height:100vh; 
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
-}  
-
+}
 
 .settings-page-area h3 {
   margin-bottom: 1rem;
@@ -177,7 +184,7 @@ const fontFamily = computed(() => {
 .settings-page-area input[type=radio] {
   width: 1.4em;
   height: 1.4em;
-} 
+}
 
 .custom-radio {
   appearance: none;
@@ -195,7 +202,7 @@ const fontFamily = computed(() => {
 
 #box-shadow:checked::after {
   transform: translate(-50%, -50%) scale(1);
-} 
+}
 
 input[type=radio]:checked::after {
   content: "";
@@ -212,34 +219,71 @@ input[type=radio]:checked::after {
   border-radius: 50%;
   background-color: var(--r-s-border);
   transition: transform 200ms ease;
+} 
+
+section.project{
+  line-height:30px; 
+  text-indent: 12px;
+} 
+
+section.project ul li{
+  list-style: none;
 }
 
-.tabs {
-  display: flex; 
-  flex-direction: row; 
-  align-items: flex-start;
-  gap: 0.2rem; 
-  margin-top: 70px; 
+.tab-area{ 
+  position: fixed;
+  width:100%; 
+  height:auto; 
+  top: 100px; 
+  left: 50%; 
+  padding:20px;
+  transform: translateX(-50%); 
+  z-index:3; 
+  background-color: var(--bg-color); 
+  border-bottom: 1px solid var(--button-bg);
 }
+
+.tabs { 
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem; 
+  }
 
 .tabs button {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--button-bg);
+  border: 1px solid var(--c-u-border);
   background: var(--bg-color);
   color: var(--text-color);
-  cursor: pointer;
-  border-radius: 6px;  
+  cursor: pointer; 
+  outline:none;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  line-height: 18px;
+  border-radius: 6px;
 }
 
 .tabs button.active {
-  background: var(--c-u-border);
-  color: var(--text-color);
+  box-shadow: var(--c-u-shadow);
+  color: var(--text-color); 
+  outline:none;
+} 
+
+.section-group{
+  margin-top:180px;
 }
 
 
 @media only screen and (min-width:760px) {
-  .settings-page-header {
+  .settings-page {
+    margin: 30px auto 40px auto;
     padding: 0 36px; 
+    height:100vh;
+  }
+
+  .settings-page-header {
+    padding: 0 36px;
   }
 
   .section-group {
@@ -249,5 +293,17 @@ input[type=radio]:checked::after {
   .section-group section {
     flex: 1;
   }
+
+  .tabs button {
+    padding: 0.8rem 2rem;
+  } 
+
+  section.project{
+  line-height:30px; 
+  display:flex; 
+  justify-content: space-between;
 } 
+}
+
+
 </style>
