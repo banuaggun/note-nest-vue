@@ -7,17 +7,17 @@
     <div class="settings-page-area">
 
       <div class="tab-area">
-      <div class="tabs">
-        <button v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
-          @click="activeTab = tab.value">
-          {{ tab.label }}
-        </button>
+        <div class="tabs">
+          <button v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
+            @click="activeTab = tab.value">
+            {{ tab.label }}
+          </button>
+        </div>
       </div>
-</div>
-      <div v-if="activeTab === 'themeFont'" class="section-group">
+
+      <div v-if="activeTab === 'themeFont'" class="tab-content">
         <section>
           <h3>Theme</h3>
-
           <label v-for="opt in themeOptions.themes" :key="opt.value" for="box-shadow">
 
             <input type="radio" :value="opt.value" v-model="settings.theme" id="box-shadow" class="custom-radio" />
@@ -39,61 +39,78 @@
           </label>
         </section>
       </div>
-      <div class="section-group">
-        <section v-if="activeTab === 'project'" class="project">
-          <div>
-          <h3>Note Nest Vue Project Details</h3>
-          
-          <p>
-            Note Nest Vue is a sleek, customizable note‑taking app built with Vue 3 & Vite.
-          </p> 
 
-          <p>
-            Crafted with Vue.js, this app is designed to make note‑taking effortless and
-            highly personal. My goal was to build a space where ideas can be captured,
-            organized, and styled to match your vibe. With customizable themes and fonts,
-            your notes don’t just stay functional—they become part of your creative flow.
-          </p>
+      <div v-if="activeTab === 'project'" class="tab-content">
+        <section class="project">
+          <div class="project-content">
+            <h2>Note Nest Vue Project Details</h2>
+            <p>
+              Note Nest Vue is a sleek, customizable note‑taking app built with Vue 3 & Vite.
+            </p>
 
-          <p>
-            It’s designed to make capturing ideas effortless while letting you style your workspace to match your vibe.
-          </p>
-        </div>
-        <div>
-          <h4>Features</h4>
+            <p>
+              Crafted with Vue.js, this app is designed to make note‑taking effortless and
+              highly personal. My goal was to build a space where ideas can be captured,
+              organized, and styled to match your vibe. With customizable themes and fonts,
+              your notes don’t just stay functional—they become part of your creative flow.
+            </p>
 
-          <ul>
-            <li>
-              <b><i>Create</i></b>, <b><i>edit</i></b>, <b><i>delete</i></b>, and <b><i>archive</i></b> notes — keep
-              your thoughts organized and accessible.
-            </li>
-            <li>
-              <b><i>Custom themes</i></b> — switch between color palettes to personalize your experience.
-            </li>
-            <li>
-              <b><i>Font options</i></b> — choose between serif, monospace, or sans‑serif to match your style.
-            </li>
-            <li>
-              <b><i>Responsive design</i></b> — optimized layouts for mobile, tablet, and desktop.
-            </li>
-            <li>
-            <b><i>Validation messages</i></b> — clear feedback when required fields are missing.
-            </li> 
-            <li>
-            <b><i>Hover & focus states</i></b> — polished UI interactions for a smooth experience. 
-            </li>
-          </ul>
-        </div>
+            <p>
+              It’s designed to make capturing ideas effortless while letting you style your workspace to match your
+              vibe.
+            </p>
+          </div>
+          <div class="project-features">
+            <h3>Features</h3>
+
+            <ul>
+              <li>
+                <b><i>Create</i></b>, <b><i>edit</i></b>, <b><i>delete</i></b>, and <b><i>archive</i></b> notes — keep
+                your thoughts organized and accessible.
+              </li>
+              <li>
+                <span class="sub-head">Custom themes</span> — switch between color palettes to personalize your
+                experience.
+              </li>
+              <li>
+                <span class="sub-head">Font options</span> — choose between serif, monospace, or sans‑serif to match
+                your style.
+              </li>
+              <li>
+                <span class="sub-head">Responsive design</span> — optimized layouts for mobile, tablet, and desktop.
+              </li>
+              <li>
+                <span class="sub-head">Validation messages</span> — clear feedback when required fields are missing.
+              </li>
+              <li>
+                <span class="sub-head">Hover & focus states</span> — polished UI interactions for a smooth experience.
+              </li>
+            </ul>
+          </div>
         </section>
+      </div>
 
-        <section v-if="activeTab === 'about'" class="about">
-          <h3>About</h3>
-          
+      <div v-if="activeTab === 'about'" class="tab-content">
+        <section class="about">
+          <h3>About Me</h3>
           <p>
-            Curious to see more of my work? Check out my
-            <a href="https://portfolio-banuaggun.vercel.app" target="_blank">Portfolio</a>.
+            Hi, I'm <b>Banu AĞGÜN</b> — a UX & UI Designer and Frontend Developer passionate about crafting beautiful, functional digital experiences.
           </p>
-
+          <p>
+            I love designing intuitive user interfaces, coding responsive layouts, and continuously learning new skills to stay ahead in the ever‑evolving tech world.
+          </p>
+          <p>
+            My focus is on building visually stunning and highly customizable web applications that make everyday tasks effortless and enjoyable.
+            Whether it’s designing smooth interactions, implementing responsive designs, or experimenting with creative
+            themes and fonts, I aim to blend aesthetics with usability.
+          </p>
+          <p>
+            Beyond coding and design, I enjoy exploring new ideas, pushing creative boundaries, and turning concepts into engaging products.
+          </p>
+          <p>
+            Curious to see more of my work? Visit my <a href="https://portfolio-banuaggun.vercel.app"
+              target="_blank">Portfolio</a>.
+          </p>
         </section>
 
 
@@ -132,7 +149,7 @@ const fontFamily = computed(() => {
 <style scoped>
 .settings-page {
   max-width: 1200px;
-  margin: 0 auto 120px auto; 
+  margin: 0 auto 120px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -157,14 +174,16 @@ const fontFamily = computed(() => {
 }
 
 .settings-page-area {
-  padding: 0 16px 80px 16px;
+  padding: 40px 16px 80px 16px;
   background-color: var(--bg-color);
   width: 100%;
-  min-height:100vh; 
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .settings-page-area h3 {
@@ -219,45 +238,58 @@ input[type=radio]:checked::after {
   border-radius: 50%;
   background-color: var(--r-s-border);
   transition: transform 200ms ease;
-} 
+}
 
-section.project{
-  line-height:30px; 
+section.project, section.about {
+  line-height: 1.6;
+}
+
+.project-content,
+.project-features, .about {
   text-indent: 12px;
-} 
+  margin-bottom: 20px;
+}
 
-section.project ul li{
+.sub-head {
+  font-weight: bold;
+  font-style: italic;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+section.project ul li {
   list-style: none;
 }
 
-.tab-area{ 
+.tab-area {
   position: fixed;
-  width:100%; 
-  height:auto; 
-  top: 100px; 
-  left: 50%; 
-  padding:20px;
-  transform: translateX(-50%); 
-  z-index:3; 
-  background-color: var(--bg-color); 
-  border-bottom: 1px solid var(--button-bg);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: auto;
+  top: 100px;
+  left: 50%;
+  padding: 20px;
+  transform: translateX(-50%);
+  z-index: 3;
+  background-color: var(--bg-color);
 }
 
-.tabs { 
+.tabs {
   background-color: var(--bg-color);
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 1rem; 
-  }
+  gap: 1rem;
+}
 
 .tabs button {
   padding: 0.5rem 1rem;
   border: 1px solid var(--c-u-border);
   background: var(--bg-color);
   color: var(--text-color);
-  cursor: pointer; 
-  outline:none;
+  cursor: pointer;
+  outline: none;
   font-weight: 600;
   letter-spacing: 0.4px;
   line-height: 18px;
@@ -266,44 +298,39 @@ section.project ul li{
 
 .tabs button.active {
   box-shadow: var(--c-u-shadow);
-  color: var(--text-color); 
-  outline:none;
-} 
+  color: var(--text-color);
+  outline: none;
+}
 
-.section-group{
-  margin-top:180px;
+.tab-content {
+  flex: 1;
+  width: 100%;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  margin-top: 160px;
 }
 
 
 @media only screen and (min-width:760px) {
-  .settings-page {
-    margin: 30px auto 40px auto;
-    padding: 0 36px; 
-    height:100vh;
-  }
-
   .settings-page-header {
     padding: 0 36px;
   }
 
-  .section-group {
-    flex-direction: row;
-  }
-
-  .section-group section {
-    flex: 1;
-  }
-
   .tabs button {
     padding: 0.8rem 2rem;
-  } 
+  }
 
-  section.project{
-  line-height:30px; 
-  display:flex; 
-  justify-content: space-between;
-} 
+  .tab-content {
+    padding: 0 24px;
+  } 
+  section.project, section.about {
+  line-height: 1.6;
+  max-width: 1100px;
+  margin: 0 0 40px 0;
+  text-align: left;
 }
+
+} 
 
 
 </style>
