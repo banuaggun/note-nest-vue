@@ -59,6 +59,14 @@
               It’s designed to make capturing ideas effortless while letting you style your workspace to match your
               vibe.
             </p>
+
+            <p>
+              You can check out the source code of the project on
+              <a href="https://github.com/banuaggun/note-nest-vue" target="_blank">
+                GitHub
+              </a>.
+            </p>
+
           </div>
           <div class="project-features">
             <h3>Features</h3>
@@ -94,18 +102,22 @@
         <section class="about">
           <h3>About Me</h3>
           <p>
-            Hi, I'm <b>Banu AĞGÜN</b> — a UX & UI Designer and Frontend Developer passionate about crafting beautiful, functional digital experiences.
+            Hi, I'm <b>Banu AĞGÜN</b> — a UX & UI Designer and Frontend Developer passionate about crafting beautiful,
+            functional digital experiences.
           </p>
           <p>
-            I love designing intuitive user interfaces, coding responsive layouts, and continuously learning new skills to stay ahead in the ever‑evolving tech world.
+            I love designing intuitive user interfaces, coding responsive layouts, and continuously learning new skills
+            to stay ahead in the ever‑evolving tech world.
           </p>
           <p>
-            My focus is on building visually stunning and highly customizable web applications that make everyday tasks effortless and enjoyable.
+            My focus is on building visually stunning and highly customizable web applications that make everyday tasks
+            effortless and enjoyable.
             Whether it’s designing smooth interactions, implementing responsive designs, or experimenting with creative
             themes and fonts, I aim to blend aesthetics with usability.
           </p>
           <p>
-            Beyond coding and design, I enjoy exploring new ideas, pushing creative boundaries, and turning concepts into engaging products.
+            Beyond coding and design, I enjoy exploring new ideas, pushing creative boundaries, and turning concepts
+            into engaging products.
           </p>
           <p>
             Curious to see more of my work? Visit my <a href="https://portfolio-banuaggun.vercel.app"
@@ -121,7 +133,7 @@
 </template>
 
 <script setup>
-import { inject, computed, ref } from "vue";
+import { inject, computed, ref, watch, nextTick} from "vue";
 import { themeOptions } from "../constants/themeOptions";
 
 const settings = inject("settings");
@@ -134,6 +146,10 @@ const tabs = [
 
 const activeTab = ref("themeFont");
 
+const themeFontRef = ref(null);
+const projectRef = ref(null);
+const aboutRef = ref(null);
+
 const fontFamily = computed(() => {
   switch (settings.font) {
     case "serif":
@@ -143,6 +159,15 @@ const fontFamily = computed(() => {
     default:
       return "Arial, sans-serif";
   }
+}); 
+
+watch(activeTab, async (newTab) => {
+  await nextTick();
+  let el = null;
+  if (newTab === "themeFont") el = themeFontRef.value;
+  if (newTab === "project") el = projectRef.value;
+  if (newTab === "about") el = aboutRef.value;
+  if (el) el.scrollTop = 0;
 });
 </script>
 
@@ -153,7 +178,7 @@ const fontFamily = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: auto;
+  height: 100%;
   color: var(--text-color);
   background-color: var(--bg-color);
 }
@@ -240,12 +265,14 @@ input[type=radio]:checked::after {
   transition: transform 200ms ease;
 }
 
-section.project, section.about {
+section.project,
+section.about {
   line-height: 1.6;
 }
 
 .project-content,
-.project-features, .about {
+.project-features,
+.about {
   text-indent: 12px;
   margin-bottom: 20px;
 }
@@ -259,6 +286,18 @@ section.project, section.about {
 
 section.project ul li {
   list-style: none;
+}
+
+section.project p>a, section.about p>a {
+  color: var(--text-color);
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 3px solid var(--a-border);
+  padding: 4px 16px 0 16px;
+}
+
+section.project p>a:hover, section.about p>a:hover {
+  box-shadow: var(--a-shadow);
 }
 
 .tab-area {
@@ -305,7 +344,7 @@ section.project ul li {
 .tab-content {
   flex: 1;
   width: 100%;
-  max-height: calc(100vh - 200px);
+  /*max-height: calc(100vh - 200px);*/
   overflow-y: auto;
   margin-top: 160px;
 }
@@ -321,16 +360,16 @@ section.project ul li {
   }
 
   .tab-content {
-    padding: 0 24px;
-  } 
-  section.project, section.about {
-  line-height: 1.6;
-  max-width: 1100px;
-  margin: 0 0 40px 0;
-  text-align: left;
+    padding: 0 12px;
+  }
+
+  section.project,
+  section.about {
+    line-height: 1.6;
+    max-width: 1000px;
+    margin: 0 0 40px 0;
+    text-align: left;
+  }
+
 }
-
-} 
-
-
 </style>
