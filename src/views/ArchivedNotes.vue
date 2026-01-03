@@ -6,7 +6,7 @@
 
     <div class="archived-notes-area">
       <div v-if="archivedNotes.length === 0" class="empty-message">
-        <EmptyState title="No archived notes" description="Archived notes will appear here" :image="image" />
+        <EmptyState title="No archived notes" description="Archived notes will appear here"  :image="archivesNote" />
       </div>
       <div class="list-panel" v-else>
         <NoteList :notes="archivedNotes" @unarchive="handleUnarchive" @delete="handleMoveToTrash" />
@@ -20,7 +20,7 @@ import { useNotes } from "../composables/useNotes";
 import { useToast } from "../composables/useToast";
 import NoteList from "../components/notes/NoteList.vue";
 import EmptyState from "../components/empty-states/EmptyState.vue";
-import image from "../assets/image/logo-icon.svg";
+import archivesNote from "../assets/image/archiveNote.svg";
 
 const { archivedNotes, archiveNote, deleteNote } = useNotes();
 const { showToast } = useToast();

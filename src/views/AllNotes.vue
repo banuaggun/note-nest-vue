@@ -10,7 +10,7 @@
         <EmptyState 
           title="No notes yet" 
           description="Create your first note to get started" 
-          :image="image" />
+          :image="createsNote" />
       </div>
 
       <!-- The list is only available if the editor is closed. -->
@@ -24,15 +24,15 @@
         <NoteEditor :note="editingNote" @save="handleSave" @cancel="handleCancel" />
       </div>
 
-      <div v-if="!isEditorOpen && !isMobile && activeNotes.length > 0" class="placeholder">
-        <p>Select a note or create a new one. You can edit it here.</p>
+      <div v-if="!isEditorOpen && !isMobile && activeNotes.length > 0" class="placeholder"> 
+        <EmptyState title="Select a note or create a new note." description="You can edit it here." :image="createsNote" />
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import image from "../assets/image/logo-icon.svg";
+import createsNote from "../assets/image/createNote.svg"; 
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useNotes } from "../composables/useNotes";
 import { useToast } from "../composables/useToast";
@@ -148,7 +148,18 @@ function handleRestore(id) {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; 
+  background-color: var(--bg-color);
+} 
+
+.all-notes-area > .empty-message{
+  min-width:100%; 
+  overflow-x: hidden !important;
+  height:100%; 
+  display:flex; 
+  flex-direction:column;
+  align-items: center; 
+  justify-content:  center;
 }
 
 .all-notes-header {
