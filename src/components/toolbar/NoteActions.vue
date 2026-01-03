@@ -24,7 +24,7 @@
 
       <ConfirmModal
         v-if="showModal"
-        message="Bu notu kalıcı olarak silmek istiyor musunuz?"
+        message="Do you want to permanently delete this note?"
         @confirm="handleConfirm"
         @close="handleClose"
       />
