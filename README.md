@@ -12,10 +12,10 @@ It’s designed to make capturing ideas effortless while letting you style your 
 
 -  ***Create***, ***edit***, ***delete***, and ***archive*** notes — keep your thoughts organized and accessible.
 - **Custom themes** — switch between color palettes to personalize your experience.
-- ***Font options*** — choose between serif, monospace, or sans‑serif to match your style.
-- ***Responsive design*** — optimized layouts for mobile, tablet, and desktop.
-- ***Validation messages*** — clear feedback when required fields are missing.
-- ***Hover & focus states*** — polished UI interactions for a smooth experience.
+- **Font options** — choose between serif, monospace, or sans‑serif to match your style.
+- **Responsive design** — optimized layouts for mobile, tablet, and desktop.
+- **Validation messages** — clear feedback when required fields are missing.
+- **Hover & focus states** — polished UI interactions for a smooth experience.
 
 
 > <h2>Author</h2> <p> Crafted with ❤️ by <a href="https://portfolio-banuaggun.vercel.app/" target="_blank" rel="noopener noreferrer" > Banu Ağgun </a>. Check out the portfolio for more projects and experiments. </p>
