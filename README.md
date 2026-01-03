@@ -17,5 +17,5 @@ It’s designed to make capturing ideas effortless while letting you style your 
 - ***Validation messages*** — clear feedback when required fields are missing.
 - ***Hover & focus states*** — polished UI interactions for a smooth experience.
 
-> 👨‍💻 Author
-Crafted with ❤️ by [Banu Ağgun](https://portfolio-banuaggun.vercel.app/). Check out the portfolio for more projects and experiments.
+
+> <h2>Author</h2> <p> Crafted with ❤️ by <a href="https://portfolio-banuaggun.vercel.app/" target="_blank" rel="noopener noreferrer" > Banu Ağgun </a>. Check out the portfolio for more projects and experiments. </p>
