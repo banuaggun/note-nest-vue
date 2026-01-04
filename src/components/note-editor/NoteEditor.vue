@@ -129,56 +129,58 @@ function applySpellcheck(val) {
 
 function applyFont(font) {
   currentFont.value = font;
-
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return;
+
   const range = sel.getRangeAt(0);
 
-  // If no selection: apply to nearest style container
   if (sel.isCollapsed) {
-    const container =
-      range.startContainer.nodeType === Node.TEXT_NODE
-        ? range.startContainer.parentNode
-        : range.startContainer;
+    const container = range.startContainer.nodeType === Node.TEXT_NODE
+      ? range.startContainer.parentNode
+      : range.startContainer;
 
-    // Nearest <span> or styled element
-    const spanAncestor = findStylableAncestor(container);
-
-    if (spanAncestor) {
-      spanAncestor.style.fontFamily = font;
+    // Önce heading içinde miyiz?
+    const headingAncestor = findHeadingAncestor(container);
+    if (headingAncestor) {
+      headingAncestor.style.fontFamily = font; // tüm heading satırına uygula
     } else {
-      // If no suitable style container is available: minimal wrap
-      const span = document.createElement("span");
-      span.style.fontFamily = font;
-      span.appendChild(document.createTextNode("\u200B"));
-      range.insertNode(span);
-
-      // put caret back into span
-      const newRange = document.createRange();
-      newRange.setStart(span.firstChild, 1);
-      newRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(newRange);
+      const spanAncestor = findStylableAncestor(container);
+      if (spanAncestor) {
+        spanAncestor.style.fontFamily = font;
+      } else {
+        const span = document.createElement("span");
+        span.style.fontFamily = font;
+        span.appendChild(document.createTextNode("\u200B"));
+        range.insertNode(span);
+        const newRange = document.createRange();
+        newRange.setStart(span.firstChild, 1);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
     }
 
     noteLocal.value.content = contentRef.value.innerHTML;
     return;
   }
 
-  // If selected: non-destructive wrap
+  // Seçim var: wrap
   try {
     const span = document.createElement("span");
     span.style.fontFamily = font;
     range.surroundContents(span);
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
   } catch {
-    // if surroundContents fails (fragmented DOM):
     const span = document.createElement("span");
     span.style.fontFamily = font;
-    const frag = range.cloneContents(); // copy the content (do not extract!)
-    range.deleteContents(); // then delete
+    const frag = range.cloneContents();
+    range.deleteContents();
     span.appendChild(frag);
     range.insertNode(span);
-    // move caret to end of span
     const newRange = document.createRange();
     newRange.selectNodeContents(span);
     newRange.collapse(false);
@@ -189,40 +191,56 @@ function applyFont(font) {
   noteLocal.value.content = contentRef.value.innerHTML;
 }
 
-function applyHeading(level) {
-  const tag = `h${level}`;
-  currentHeadingElement.value = tag;
 
+function applyHeading(level) {
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return;
+
+  const tag = `h${level}`;
   const range = sel.getRangeAt(0);
 
-  // If the caret is empty, open the heading.
+  let heading;
   if (sel.isCollapsed) {
-    const heading = document.createElement(tag);
-    heading.appendChild(document.createTextNode("\u200B"));
+    // Caret varsa ama seçim yoksa → boş heading oluştur
+    heading = document.createElement(tag);
+    const zwsp = document.createTextNode("\u200B"); // zero-width space
+    heading.appendChild(zwsp);
     range.insertNode(heading);
 
-    // Move caret into heading
+    // Caret'i heading'in içine taşı
     const newRange = document.createRange();
-    newRange.setStart(heading.firstChild, 1);
+    newRange.setStart(zwsp, 1);
     newRange.collapse(true);
     sel.removeAllRanges();
     sel.addRange(newRange);
-
-    // Keep heading in state
-    currentHeadingElement.value = heading;
   } else {
-    // Wrap selected text with heading
+    // Seçili metin varsa → heading içine al
     const frag = range.extractContents();
-    const heading = document.createElement(tag);
+    heading = document.createElement(tag);
     heading.appendChild(frag);
     range.insertNode(heading);
-    currentHeadingElement.value = heading;
+
+    // Caret'i heading'in sonuna taşı
+    const newRange = document.createRange();
+    if (heading.lastChild.nodeType === Node.TEXT_NODE) {
+      newRange.setStart(heading.lastChild, heading.lastChild.length);
+    } else {
+      newRange.selectNodeContents(heading);
+    }
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
   }
 
-  noteLocal.value.content = contentRef.value.innerHTML;
+  // Aktif heading state güncelle
+  activeHeading.value = tag;
+  currentHeadingElement.value = heading;
+
+  // İçeriği senkronize et
+  noteLocal.content = contentRef.value.innerHTML;
 }
+
+
 
 // Helper: find the nearest inertia where the style is applicable
 function findStylableAncestor(node) {
@@ -452,50 +470,50 @@ function handleSubmit() {
 }
 .underline {
   text-decoration: underline;
+} 
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: unset;
+  font-weight: inherit;
 }
 
-.text-area h1 {
-  font-size: 2em;
+
+.note-editor-editable .text-area h1 {
+  font-size: 32px;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.text-area h2 {
-  font-size: 1.5em;
+.note-editor-editable .text-area h2 {
+  font-size: var(--h2-font-size) !important;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.text-area h3 {
-  font-size: 1.17em;
+.note-editor-editable .text-area h3 {
+  font-size: 20px;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.text-area h4 {
-  font-size: 1em;
+.note-editor-editable .text-area h4 {
+  font-size: 18px;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.text-area h5 {
-  font-size: 0.83em;
+.note-editor-editable .text-area h5 {
+  font-size: 16px;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.text-area h6 {
-  font-size: 0.67em;
+.note-editor-editable .text-area h6 {
+  font-size: 14px;
   font-weight: bold;
-  margin: 0.5em 0;
 }
 
-.note-editor-editable h1,
-.note-editor-editable h2,
-.note-editor-editable h3,
-.note-editor-editable h4,
-.note-editor-editable h5,
-.note-editor-editable h6 {
+.note-editor-editable .text-area h1,
+.note-editor-editable .text-area h2,
+.note-editor-editable .text-area h3,
+.note-editor-editable .text-area h4,
+.note-editor-editable .text-area h5,
+.note-editor-editable .text-area h6 {
   margin: 0; 
   line-height: 1.4; 
   display: inline-block;
@@ -509,6 +527,7 @@ function handleSubmit() {
   align-items: center;
   justify-content: space-between; 
   background-color: var(--bg-color); 
+  color:var(--text-color);
 }
 
 .note-editor-header {
