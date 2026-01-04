@@ -18,8 +18,8 @@ function handleChange(event) {
     <i class="ph ph-text-aa"></i>
     <select id="font-select" v-model="fontFamily" @change="handleChange" selected>
       <option v-for="font in availableFonts" :key="font" :value="font">
-        {{ font }}
-      </option>
+        {{ font }} 
+      </option> 
     </select>
   </div>
 </template>
@@ -28,13 +28,22 @@ function handleChange(event) {
 .font-family-selector {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 8px;  
+  background-color: var(--bg-color);
 }
 
 select {
-  padding: 4px 8px;
+  padding: 6px 10px 6px 10px;  
+  background-color:var(--bg-color); 
+  color:var(--text-color); 
+  border:1px solid var(--c-u-border); 
+  outline:none; 
 }
 .font-family-selector i {
-  font-size: 28px;
+  font-size: 28px; 
+  color:var(--text-color);
+} 
+select:hover, select.active{
+  box-shadow:var(--a-shadow);
 }
 </style>

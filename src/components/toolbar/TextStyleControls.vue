@@ -37,24 +37,26 @@ function apply(styleType) {
 }
 
 .text-style-controls button {
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  padding: 6px 10px;
+  border: 1px solid var(--c-u-border);
+  background-color: var(--bg-color);
   cursor: pointer;
   font-size: 14px;
-  color: #444;
+  color: var(--text-color);
 }
 
 .text-style-controls button:hover {
-  color: #000;
-  cursor: pointer;
-  background-color: #bdbdef;
+  color: var(--text-color);
+  cursor: pointer; 
+  box-shadow:var(--a-shadow); 
+  background-color: var(--bg-color);
 }
 
 .text-style-controls button.bold-btn.active,
 .text-style-controls button.italic-btn.active,
-.text-style-controls button.underline-btn.active {
-  background-color: #9898e7;
-  color: #000;
+.text-style-controls button.underline-btn.active { 
+  box-shadow:var(--a-shadow);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 </style>

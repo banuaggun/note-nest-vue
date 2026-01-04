@@ -508,7 +508,7 @@ function handleSubmit() {
   flex-direction: column;
   align-items: center;
   justify-content: space-between; 
-  background-color: var(--bg-color);
+  background-color: var(--bg-color); 
 }
 
 .note-editor-header {
@@ -518,7 +518,7 @@ function handleSubmit() {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 8px 8px;
+  padding: 8px 8px; 
   z-index: 10;
 }
 
@@ -526,7 +526,7 @@ function handleSubmit() {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 16px;
   padding-top: 8px;
 }
 
@@ -539,7 +539,7 @@ function handleSubmit() {
   font-size:16px; 
   font-weight:600;
   padding: 8px 16px; 
-  border: none;
+  border:none;
   outline: none;
   border-radius: 6px;
   background: var(--bg-color);
@@ -555,6 +555,10 @@ function handleSubmit() {
   box-shadow: var(--c-u-hover);
   border: 1px solid var(--c-u-border); 
   cursor: pointer;
+} 
+
+.note-editor-actions button:nth-child(2){
+  border:1px solid var(--d-border); 
 }
 
 .note-editor-actions button:nth-child(2):hover {
@@ -566,21 +570,24 @@ function handleSubmit() {
 .note-editor-input {
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-  background: var(--bg-color);
+  border: 1px solid var(--c-u-border);
+  outline: none; 
+  resize:none;
+  background: var(--bg-color); 
+  color:var(--text-color);
 }
 
 .note-editor-input:hover {
-  background: azure;
+  background: var(--bg-color); 
+  box-shadow:var(--a-shadow);
   cursor: pointer;
 }
 
 .note-editor-input.active,
 .note-editor-input:focus {
-  background-color: white;
+  background-color: var(--bg-color);
   outline: 0;
-  border: 1px solid #dcbde4;
+  border: 1px solid var(--a-border);
 }
 
 .note-editor-editable {
@@ -590,11 +597,16 @@ function handleSubmit() {
   box-sizing: border-box;
   margin: 300px auto 40px auto;
   padding: 0px 8px;
-  background: #fff;
-  border: 1px solid #dcdcdc;
+  background: var(--bg-color);
+  border: 1px solid var(--c-u-border);
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+} 
+
+.note-editor-editable:hover, .note-editor-editable.active{
+  background-color: var(--bg-color); 
+  border:1px solid var(--a-border); 
+} 
 
 .text-area {
   width: 100%;
@@ -607,12 +619,12 @@ function handleSubmit() {
 @media only screen and (min-width: 767px) and (max-width: 1025px) {
   .note-editor-header {
     width: calc(100% - 100px);
-    padding: 12px 12px;
-    margin: 20px auto;
+    padding: 0;
+    margin: 0px auto;
   }
   .note-editor-editable {
     width: calc(100% - 100px);
-    margin: 300px auto 20px auto;
+    margin: 250px auto 20px auto;
   }
 }
 
@@ -620,9 +632,8 @@ function handleSubmit() {
   .note-editor-header {
     width: calc(100% - 48px);
     position: relative;
-    padding: 12px 24px;
+    padding: 0;
     margin: 0 auto;
-    border: 1px solid purple;
   }
   .note-editor-editable {
     width: calc(100% - 48px);

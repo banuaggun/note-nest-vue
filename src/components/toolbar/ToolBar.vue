@@ -78,22 +78,27 @@ function handleColorChange() {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: center; 
   gap: 10px;
   width: 100%;
-  padding: 10px 12px;
-
-  background: #fff;
-  border: 1px solid #dcdcdc;
+  padding: 8px 4px; 
+  background-color: var(--bg-color);
+  border: 1px solid var(--c-u-border);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-@media only screen and (min-width: 767px) and (max-width: 1025px) {
-  .toolbar {
+@media only screen and (min-width: 767px) and (max-width: 1026px) {
+  .toolbar { 
     padding: 10px 16px;
-    gap: 12px;
+    gap: 10px; 
+    display: flex; 
     justify-content: space-between;
+  }
+} 
+
+@media only screen and (min-width:1027px){
+  .toolbar{
+    padding:10px 12px;
   }
 }
 
@@ -108,24 +113,17 @@ function handleColorChange() {
   align-items: center;
 }
 .toolbar-color i {
-  font-size: 28px;
+  font-size: 28px; 
+  color:var(--text-color);
 }
 .toolbar input[type="color"] {
   width: 32px;
   height: 32px;
-  border: none;
-  cursor: pointer;
+  cursor: pointer; 
+  border:none; 
+  outline: none;
   background-color: transparent;
 }
 
-@media only screen and (min-width: 1026px) {
-  .toolbar {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0px;
-    gap: initial;
-  }
-}
+
 </style>

@@ -31,28 +31,29 @@ const emit = defineEmits(["applyHeading"]);
 <style scoped>
 .text-style-controls {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
 }
 
 .text-style-controls button {
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  padding: 6px 8px; 
+  border: 1px solid var(--c-u-border);
+  background-color: var(--bg-color);
   cursor: pointer;
   font-size: 14px;
-  color: #444;
+  color: var(--text-color);
 }
 
 .text-style-controls button:hover {
-  color: #000;
+  color: var(--text-color);
   cursor: pointer;
-  background-color: #bdbdef;
+  background-color: var(--bg-color); 
+  box-shadow: var(--a-shadow);
 }
 
-.text-style-controls button.active {
-  background-color: #9898e7;
+.text-style-controls button.active { 
+  background-color: var(--bg-color);
+  box-shadow:var(--a-shadow);
   font-weight: bold;
-  color: #000;
+  color: var(--text-color);
 }
 </style>

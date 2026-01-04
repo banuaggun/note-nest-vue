@@ -21,24 +21,26 @@ function handleToggle() {
 
 <style scoped>
 .spellcheck-toggle button {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  padding: 8px 14px;
+  border: 1px solid var(--c-u-border);
+  background-color: var(--bg-color);
   cursor: pointer;
   font-size:14px;
-  color:#444;
+  color:var(--text-color);
   text-align: center;
 }
 
 .spellcheck-toggle button:hover{
-  color:#000;
+  color:var(--text-color);
   cursor:pointer;
-  background-color: #BDBDEF;
+  background-color: var(--bg-color); 
+  box-shadow:var(--a-shadow);
 }
 
 .spellcheck-toggle button.active{
-  background-color: #9898e7;
+  background-color: var(--bg-color); 
+  box-shadow: var(--a-shadow);
   font-weight: bold;
-  color:#000;
+  color:var(--text-color);
 }
 </style>
