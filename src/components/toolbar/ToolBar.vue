@@ -81,24 +81,26 @@ function handleColorChange() {
   align-items: center; 
   gap: 10px;
   width: 100%;
-  padding: 8px 4px; 
   background-color: var(--bg-color);
   border: 1px solid var(--c-u-border);
   border-radius: 8px;
 }
 
-@media only screen and (min-width: 767px) and (max-width: 1026px) {
+@media only screen and (min-width: 767px){
   .toolbar { 
     padding: 10px 16px;
-    gap: 10px; 
-    display: flex; 
-    justify-content: space-between;
   }
 } 
 
-@media only screen and (min-width:1027px){
+@media only screen and (min-width:300px) and (max-width:400px){
   .toolbar{
-    padding:10px 12px;
+    padding:10px 8px;
+  }
+} 
+
+@media only screen and (min-width:401px) and (max-width:700px){
+  .toolbar{ 
+    padding:10px 16px;
   }
 }
 

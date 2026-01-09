@@ -1,6 +1,6 @@
 <template>
   <div class="note-editor">
-    <div class="note-editor-header">
+    <div class="note-editor-content">
 
       <div class="note-editor-actions">
         <button @click="handleSubmit">
@@ -10,26 +10,19 @@
       </div>
 
       <div class="note-editor-header">
-        <textarea v-model="noteLocal.title" rows="3" class="note-editor-title-input" placeholder="Enter a Title..."
-          @input="handleTitleInput"></textarea>
+        <textarea v-model="noteLocal.title" rows="3" class="note-editor-header-title-input"
+          placeholder="Enter a Title..." @input="handleTitleInput"></textarea>
       </div>
 
       <div class="note-editor-toolbar">
         <Toolbar :isBold="isBold" :isItalic="isItalic" :isUnderline="isUnderline" :activeColor="activeColor"
-          :fontFamily="fontFamily"  
-          @applyStyle="applyStyle" @applyColor="applyColor" @applyFont="applyFont" @applyHeading="applyHeading"
-          @applySpellcheck="applySpellcheck" />
+          :fontFamily="fontFamily" @applyStyle="applyStyle" @applyColor="applyColor" @applyFont="applyFont"
+          @applyHeading="applyHeading" @applySpellcheck="applySpellcheck" />
       </div>
 
       <div class="note-editor-editable">
-        <div 
-          class="text-area" 
-          contenteditable="true" 
-          ref="contentRef" 
-          v-html="noteLocal.content" 
-          @input="onInput"
-          @beforeinput="(e) => {onBeforeInput(e)}"
-        >
+        <div class="text-area" contenteditable="true" ref="contentRef" v-html="noteLocal.content" @input="onInput"
+          @beforeinput="(e) => { onBeforeInput(e) }">
         </div>
       </div>
     </div>
@@ -42,9 +35,7 @@ import { useNotes } from '../../composables/useNotes';
 import Toolbar from '../toolbar/Toolbar.vue';
 import { useTextFormatting } from '../../composables/functions/useTextFormatting';
 import { useTextColor } from '../../composables/functions/useTextColor';
-import { useSpellcheck } from '../../composables/functions/useSpellcheck';
 import { useHeadingMode } from '../../composables/functions/useHeadingMode';
-import { useFontFamily } from '../../composables/functions/useFontFamily';
 import { useEditorContent } from '../../composables/based/useEditorContent';
 import { useEditorFormatting } from '../../composables/based/useEditorFormatting';
 import { editable, currentHeadingElement } from '../../composables/based/useEditorState';
@@ -58,9 +49,11 @@ const noteLocal = ref({ title: "", content: "" });
 const contentRef = ref(null);
 
 // composables
-const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting(); 
+const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
 
-const currentColor = ref("#000000"); // default black
+//const currentColor = ref("#000000"); // default black 
+
+const currentColor = ref("var(--text-color)");
 
 const currentFont = ref("Arial"); // default font
 
@@ -105,7 +98,7 @@ function findHeadingAncestor(node) {
   return null;
 }
 
-function applyStyle(styleType) { 
+function applyStyle(styleType) {
   //toggleStyle(styleType); 
 
   const selection = window.getSelection();
@@ -126,7 +119,7 @@ function applyStyle(styleType) {
     span.style.textDecoration = "underline";
   }
 
- // Enclose the selected text in spans
+  // Enclose the selected text in spans
   try {
     range.surroundContents(span);
   } catch (err) {
@@ -136,8 +129,8 @@ function applyStyle(styleType) {
   }
 
   // Update content
-  noteLocal.value.content = contentRef.value.innerHTML; 
-} 
+  noteLocal.value.content = contentRef.value.innerHTML;
+}
 
 function applySpellcheck(val) {
   isSpellcheckEnabled.value = val;
@@ -156,11 +149,11 @@ function applyHeading(level) {
   //if (!sel || sel.rangeCount === 0) return;
 
   if (sel.rangeCount === 0) {
-  const range = document.createRange();
-  range.selectNodeContents(contentRef.value);
-  range.collapse(false);
-  sel.addRange(range);
-}
+    const range = document.createRange();
+    range.selectNodeContents(contentRef.value);
+    range.collapse(false);
+    sel.addRange(range);
+  }
 
   const tag = `h${level}`;
   const range = sel.getRangeAt(0);
@@ -170,8 +163,8 @@ function applyHeading(level) {
     //activeHeading.value = null;
     currentHeadingElement.value = null;
     return;
-  } else{
-    activeHeading.value= null; 
+  } else {
+    activeHeading.value = null;
     return;
   }
 
@@ -204,7 +197,7 @@ function applyHeading(level) {
   activeHeading.value = tag;
   currentHeadingElement.value = heading;
   noteLocal.value.content = contentRef.value.innerHTML;
-} 
+}
 
 function applyColor(color) {
   currentColor.value = color;
@@ -275,13 +268,6 @@ function applyColor(color) {
   noteLocal.value.content = contentRef.value.innerHTML;
 }
 
-
-/*
-function applyColor(color) {
-  currentColor.value = color; // just update state
-} 
-*/
-
 function applyFont(font) {
   currentFont.value = font;
   const sel = window.getSelection();
@@ -345,56 +331,6 @@ function applyFont(font) {
 
   noteLocal.value.content = contentRef.value.innerHTML;
 }
-
-/*
-function applyHeading(level) {
-  const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
-
-  const tag = `h${level}`;
-  const range = sel.getRangeAt(0);
-
-  let heading;
-  if (sel.isCollapsed) {
-    // Caret varsa ama seçim yoksa → boş heading oluştur
-    heading = document.createElement(tag);
-    const zwsp = document.createTextNode("\u200B"); // zero-width space
-    heading.appendChild(zwsp);
-    range.insertNode(heading);
-
-    // Caret'i heading'in içine taşı
-    const newRange = document.createRange();
-    newRange.setStart(zwsp, 1);
-    newRange.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(newRange);
-  } else {
-    // Seçili metin varsa → heading içine al
-    const frag = range.extractContents();
-    heading = document.createElement(tag);
-    heading.appendChild(frag);
-    range.insertNode(heading);
-
-    // Caret'i heading'in sonuna taşı
-    const newRange = document.createRange();
-    if (heading.lastChild.nodeType === Node.TEXT_NODE) {
-      newRange.setStart(heading.lastChild, heading.lastChild.length);
-    } else {
-      newRange.selectNodeContents(heading);
-    }
-    newRange.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(newRange);
-  }
-
-  // Aktif heading state güncelle
-  activeHeading.value = tag;
-  currentHeadingElement.value = heading;
-
-  // İçeriği senkronize et
-  noteLocal.content = contentRef.value.innerHTML;
-}
-*/
 
 function onBeforeInput(e) {
   if (e.inputType !== "insertText") return;
@@ -478,13 +414,36 @@ function moveCaretToEnd() {
   sel.addRange(range);
 }
 
+function scrollToCaret(editable) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const range = sel.getRangeAt(0);
+
+  const caretRect = range.getBoundingClientRect();
+
+  const editableRect = editable.getBoundingClientRect();
+
+  const caretTop = caretRect.top - editableRect.top;
+  const caretBottom = caretRect.bottom - editableRect.top;
+
+  if (caretBottom > editable.clientHeight) {
+    editable.scrollTop += caretBottom - editable.clientHeight + 10;
+  }
+
+  if (caretTop < 0) {
+    editable.scrollTop += caretTop - 10;
+  }
+}
+
+
 function onInput() {
   const el = contentRef.value;
   noteLocal.value.content = el.innerHTML;
 
   nextTick(() => {
     moveCaretToEnd();
-    //scrollToCaret(el);
+    scrollToCaret(el);
   });
 }
 
@@ -526,12 +485,6 @@ function handleSubmit() {
 .underline {
   text-decoration: underline;
 }
-/*
-h1, h2, h3, h4, h5, h6 {
-  font-size: unset;
-  font-weight: inherit;
-}
-*/ 
 
 :deep(.note-editor-editable .text-area h1) {
   font-size: 32px;
@@ -546,7 +499,7 @@ h1, h2, h3, h4, h5, h6 {
 :deep(.note-editor-editable .text-area h3) {
   font-size: 24px;
   font-weight: bold;
-} 
+}
 
 :deep(.note-editor-editable .text-area h4) {
   font-size: 20px;
@@ -562,37 +515,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 16px;
   font-weight: bold;
 }
-/*
-.note-editor-editable .text-area h1 {
-  font-size: 32px;
-  font-weight: bold;
-}
 
-.note-editor-editable .text-area h2 {
-  font-size: var(--h2-font-size) !important;
-  font-weight: bold;
-}
-
-.note-editor-editable .text-area h3 {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.note-editor-editable .text-area h4 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.note-editor-editable .text-area h5 {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.note-editor-editable .text-area h6 {
-  font-size: 14px;
-  font-weight: bold;
-}
-*/
 .note-editor-editable .text-area h1,
 .note-editor-editable .text-area h2,
 .note-editor-editable .text-area h3,
@@ -604,36 +527,202 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
+/* actions buttons area */
 .note-editor-actions {
-  width: 100;
+  width: 100%;
   padding: 8px 16px;
-  border: 1px solid red;
   display: flex;
-  gap: 20px;
+  gap: 16px;
   justify-content: flex-end;
+}  
+
+.note-editor-actions button { 
+  display:flex;
+  align-items:center; 
+  justify-content: center; 
+  transition: all 0.35s;
+  box-sizing: border-box; 
+  font-size:16px; 
+  font-weight:600;
+  padding: 8px 16px; 
+  border:none;
+  outline: none;
+  border-radius: 6px;
+  background: var(--bg-color);
+  color: var(--button-text); 
+  
+}  
+
+.note-editor-actions button:nth-child(1) {
+  border:1px solid var(--c-u-border);
+} 
+
+.note-editor-actions button:nth-child(1):hover {
+  box-shadow: var(--c-u-hover);
+  border: 1px solid var(--c-u-border); 
+  cursor: pointer;
+} 
+
+.note-editor-actions button:nth-child(2){
+  border:1px solid var(--d-border); 
+} 
+
+.note-editor-actions button:nth-child(2):hover {
+  box-shadow: var(--d-hover);
+  border:var(--d-border);
+  cursor: pointer; 
 }
+
+/* actions buttons area */
+
+/* title area */
 
 .note-editor-header {
   resize: none;
   width: 100%;
-  height: 100px;
+  height: auto;
   display: flex;
   flex-direction: column;
-  padding: 8px;
-  gap: 16px;
+  padding: 8px 16px;
 }
+
+.note-editor-header>.note-editor-header-title-input {
+  resize: none;
+  outline: none; 
+} 
+
+.note-editor-header>.note-editor-header-title-input:hover{
+  background-color: var(--bg-color); 
+  box-shadow: var(--a-shadow); 
+  cursor:pointer;
+} 
+
+.note-editor-header>.note-editor-header-title-input.active, 
+.note-editor-header>.note-editor-header-title-input:focus{
+  background-color: var(--bg-color);
+  outline: 0;
+  border: 1px solid var(--a-border);
+}
+/* title area */ 
+
+/* common features */
+
+.note-editor-header>.note-editor-header-title-input,
+.note-editor-editable>.text-area {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--c-u-border); 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* toolbar area */ 
 
 .note-editor-toolbar {
   width: 100%;
   padding: 8px 16px;
-  border: 1px solid palegreen;
+}
+
+/* editable and text area */
+
+.note-editor-editable {
+  padding: 8px 16px;
 }
 
 .note-editor-editable>.text-area {
   width: 100%;
   height: 40vh;
-  box-sizing: border-box;
-  border: 1px solid salmon;
-  padding: 8px;
+} 
+
+.note-editor-editable>.text-area:hover, 
+.note-editor-editable>.text-area.active{
+  background-color: var(--bg-color); 
+  border:1px solid var(--a-border); 
 }
+
+.text-area {
+  /* Ensure scrollbars appear */
+  overflow-y: auto;
+}
+
+/* Scrollbar width */
+.text-area::-webkit-scrollbar {
+  width: 8px;
+  /* vertical */
+  height: 8px;
+  /* horizontal */
+}
+
+/* Track (background) */
+.text-area::-webkit-scrollbar-track {
+  background: var(--button-bg);
+  /* track color */
+  border-radius: 8px;
+}
+
+/* Thumb (draggable handle) */
+.text-area::-webkit-scrollbar-thumb {
+  background: var(--a-border);
+  /* thumb color */
+  border-radius: 8px;
+  border: 2px solid transparent;
+  /* creates padding effect */
+}
+
+/* Hover state for better feedback */
+.text-area::-webkit-scrollbar-thumb:hover {
+  background: var(--a-border);
+} 
+
+@media only screen and (min-width:300px) and (max-width:600px){
+  .note-editor-actions {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    background: var(--bg-color);
+    z-index: 100;
+  }
+
+  .note-editor-header {
+    position: fixed;
+    top: 110px;
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    z-index: 100;
+  }
+
+  .note-editor-toolbar {
+    position: fixed;
+    top: 190px;
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    z-index: 100;
+  }
+
+  .note-editor-editable {
+    position: fixed; 
+    top: 270px; 
+    left: 0;
+    right: 0;
+    bottom: 40px; 
+    overflow-y: auto;             
+    background: var(--bg-color);  
+    padding: 10px;
+  }
+
+  .note-editor-editable > .text-area {
+    margin: 80px auto 20px auto;
+    max-width: 95%;               
+  }
+}
+
+
 </style>
