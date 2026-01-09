@@ -16,7 +16,7 @@
 
       <div class="note-editor-toolbar">
         <Toolbar :isBold="isBold" :isItalic="isItalic" :isUnderline="isUnderline" :activeColor="activeColor"
-          :fontFamily="fontFamily" :activeHeading="activeHeading" :isSpellcheckEnabled="isSpellcheckEnabled"
+          :fontFamily="fontFamily"  :isSpellcheckEnabled="isSpellcheckEnabled"
           @applyStyle="applyStyle" @applyColor="applyColor" @applyFont="applyFont" @applyHeading="applyHeading"
           @applySpellcheck="applySpellcheck" />
       </div>
@@ -91,23 +91,35 @@ function handleTitleInput(e) {
   titleCharCount.value = noteLocal.value.title.length;
 }
 
-// toolbar event handler’ları
-function applyStyle(styleType) {
+// toolbar event handler’ları 
+function findHeadingAncestor(node) {
+  let cur = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+  while (cur) {
+    if (/^H[1-6]$/.test(cur.tagName)) return cur;
+    cur = cur.parentNode;
+  }
+  return null;
+}
+
+function applyStyle(styleType) { 
+  toggleStyle(styleType); 
+
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
 
   const range = selection.getRangeAt(0);
+
   const span = document.createElement("span");
 
   // Apply style toggles
   if (styleType === "bold") {
-    span.style.fontWeight = isBold.value ? "bold" : "normal";
+    span.style.fontWeight = "bold";
   }
   if (styleType === "italic") {
-    span.style.fontStyle = isItalic.value ? "italic" : "normal";
+    span.style.fontStyle = "italic";
   }
   if (styleType === "underline") {
-    span.style.textDecoration = isUnderline.value ? "underline" : "none";
+    span.style.textDecoration = "underline";
   }
 
   // Enclose the selected text in spans
@@ -120,19 +132,102 @@ function applyStyle(styleType) {
   }
 
   // Update content
+  noteLocal.value.content = contentRef.value.innerHTML; 
+}
+
+function applyHeading(level) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const tag = `h${level}`;
+  const range = sel.getRangeAt(0);
+
+  // Eğer toggleHeading ile zaten aktif heading aynıysa → sadece state kapatılmıştır, DOM'u değiştirme
+  if (activeHeading.value !== tag) {
+    let heading;
+    if (sel.isCollapsed) {
+      heading = document.createElement(tag);
+      const zwsp = document.createTextNode("\u200B");
+      heading.appendChild(zwsp);
+      range.insertNode(heading);
+
+      const newRange = document.createRange();
+      newRange.setStart(zwsp, 1);
+      newRange.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+    } else {
+      const frag = range.extractContents();
+      heading = document.createElement(tag);
+      heading.appendChild(frag);
+      range.insertNode(heading);
+
+      const newRange = document.createRange();
+      newRange.selectNodeContents(heading);
+      newRange.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+    }
+
+    currentHeadingElement.value = heading;
+  } else {
+    // toggleHeading state kapatıldı → yeni yazılar normal text olacak 
+    currentHeadingElement.value = null; 
+  }
+
   noteLocal.value.content = contentRef.value.innerHTML;
 }
- 
-function findHeadingAncestor(node) {
-  let cur = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
-  while (cur) {
-    if (/^H[1-6]$/.test(cur.tagName)) return cur;
-    cur = cur.parentNode;
+
+
+/*
+function applyHeading(level) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const tag = `h${level}`;
+  const range = sel.getRangeAt(0);
+
+  let heading;
+  if (sel.isCollapsed) {
+    // Caret varsa ama seçim yoksa → boş heading oluştur
+    heading = document.createElement(tag);
+    const zwsp = document.createTextNode("\u200B"); // zero-width space
+    heading.appendChild(zwsp);
+    range.insertNode(heading);
+
+    // Caret'i heading'in içine taşı
+    const newRange = document.createRange();
+    newRange.setStart(zwsp, 1);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  } else {
+    // Seçili metin varsa → heading içine al
+    const frag = range.extractContents();
+    heading = document.createElement(tag);
+    heading.appendChild(frag);
+    range.insertNode(heading);
+
+    // Caret'i heading'in sonuna taşı
+    const newRange = document.createRange();
+    if (heading.lastChild.nodeType === Node.TEXT_NODE) {
+      newRange.setStart(heading.lastChild, heading.lastChild.length);
+    } else {
+      newRange.selectNodeContents(heading);
+    }
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
   }
-  return null;
+
+  // Aktif heading state güncelle
+  activeHeading.value = tag;
+  currentHeadingElement.value = heading;
+
+  // İçeriği senkronize et
+  noteLocal.content = contentRef.value.innerHTML;
 }
-
-
+*/
 function onBeforeInput(e) {
   if (e.inputType !== "insertText") return;
 
@@ -184,7 +279,8 @@ function onBeforeInput(e) {
     span.style.textDecoration = isUnderline.value ? "underline" : "none";
     span.style.color = currentColor.value;
     span.style.fontFamily = currentFont.value;
-
+    //span.style.color = activeColor.value;
+    //span.style.fontFamily = fontFamily.value;
     span.textContent = text;
     range.insertNode(span);
 
@@ -206,9 +302,6 @@ function applyColor(color) {
 }
 function applyFont(font) {
   setFontFamily(font);
-}
-function applyHeading(level) {
-  toggleHeading(level);
 }
 function applySpellcheck() {
   toggleSpellcheck();
@@ -233,7 +326,7 @@ function onInput() {
 
   nextTick(() => {
     moveCaretToEnd();
-    scrollToCaret(el);
+    //scrollToCaret(el);
   });
 }
 
@@ -275,18 +368,43 @@ function handleSubmit() {
 .underline {
   text-decoration: underline;
 }
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/*
+h1, h2, h3, h4, h5, h6 {
   font-size: unset;
   font-weight: inherit;
 }
+*/ 
 
+:deep(.note-editor-editable .text-area h1) {
+  font-size: 32px;
+  font-weight: bold;
+}
 
+:deep(.note-editor-editable .text-area h2) {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+:deep(.note-editor-editable .text-area h3) {
+  font-size: 24px;
+  font-weight: bold;
+} 
+
+:deep(.note-editor-editable .text-area h4) {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+:deep(.note-editor-editable .text-area h5) {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+:deep(.note-editor-editable .text-area h6) {
+  font-size: 16px;
+  font-weight: bold;
+}
+/*
 .note-editor-editable .text-area h1 {
   font-size: 32px;
   font-weight: bold;
@@ -316,7 +434,7 @@ h6 {
   font-size: 14px;
   font-weight: bold;
 }
-
+*/
 .note-editor-editable .text-area h1,
 .note-editor-editable .text-area h2,
 .note-editor-editable .text-area h3,
@@ -325,7 +443,7 @@ h6 {
 .note-editor-editable .text-area h6 {
   margin: 0;
   line-height: 1.4;
-  display: inline-block;
+  display: block;
 }
 
 .note-editor-actions {
