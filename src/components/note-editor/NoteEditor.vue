@@ -105,7 +105,6 @@ function findHeadingAncestor(node) {
   return null;
 }
 
-
 function applyStyle(styleType) { 
   //toggleStyle(styleType); 
 
@@ -151,7 +150,6 @@ function applySpellcheck(val) {
     }
   });
 }
-
 
 function applyHeading(level) {
   const sel = window.getSelection();
@@ -209,8 +207,80 @@ function applyHeading(level) {
 } 
 
 function applyColor(color) {
+  currentColor.value = color;
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const range = sel.getRangeAt(0);
+
+  if (sel.isCollapsed) {
+    const container = range.startContainer.nodeType === Node.TEXT_NODE
+      ? range.startContainer.parentNode
+      : range.startContainer;
+
+    // Heading içinde miyiz?
+    const headingAncestor = findHeadingAncestor(container);
+    if (headingAncestor) {
+      // Eğer heading boşsa veya caret içindeyse → heading'e doğrudan uygula
+      headingAncestor.style.color = color;
+    } else {
+      const spanAncestor = findStylableAncestor(container);
+      if (spanAncestor) {
+        spanAncestor.style.color = color;
+      } else {
+        // caret boşsa → yeni span aç
+        const span = document.createElement("span");
+        span.style.color = color;
+        span.appendChild(document.createTextNode("\u200B"));
+        range.insertNode(span);
+
+        const newRange = document.createRange();
+        newRange.setStart(span.firstChild, 1);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
+    }
+
+    noteLocal.value.content = contentRef.value.innerHTML;
+    return;
+  }
+
+  // Seçim var: wrap
+  try {
+    const span = document.createElement("span");
+    span.style.color = color;
+    range.surroundContents(span);
+
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  } catch {
+    const span = document.createElement("span");
+    span.style.color = color;
+    const frag = range.cloneContents();
+    range.deleteContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  }
+
+  noteLocal.value.content = contentRef.value.innerHTML;
+}
+
+
+/*
+function applyColor(color) {
   currentColor.value = color; // just update state
 } 
+*/
 
 function applyFont(font) {
   currentFont.value = font;
