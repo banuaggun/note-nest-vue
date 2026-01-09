@@ -137,47 +137,58 @@ function applyStyle(styleType) {
 
 function applyHeading(level) {
   const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
+  //if (!sel || sel.rangeCount === 0) return;
+
+  if (sel.rangeCount === 0) {
+  const range = document.createRange();
+  range.selectNodeContents(contentRef.value);
+  range.collapse(false);
+  sel.addRange(range);
+}
 
   const tag = `h${level}`;
   const range = sel.getRangeAt(0);
 
-  // Eğer toggleHeading ile zaten aktif heading aynıysa → sadece state kapatılmıştır, DOM'u değiştirme
-  if (activeHeading.value !== tag) {
-    let heading;
-    if (sel.isCollapsed) {
-      heading = document.createElement(tag);
-      const zwsp = document.createTextNode("\u200B");
-      heading.appendChild(zwsp);
-      range.insertNode(heading);
-
-      const newRange = document.createRange();
-      newRange.setStart(zwsp, 1);
-      newRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(newRange);
-    } else {
-      const frag = range.extractContents();
-      heading = document.createElement(tag);
-      heading.appendChild(frag);
-      range.insertNode(heading);
-
-      const newRange = document.createRange();
-      newRange.selectNodeContents(heading);
-      newRange.collapse(false);
-      sel.removeAllRanges();
-      sel.addRange(newRange);
-    }
-
-    currentHeadingElement.value = heading;
-  } else {
-    // toggleHeading state kapatıldı → yeni yazılar normal text olacak 
-    currentHeadingElement.value = null; 
+  // Toggle off: aynı heading aktifse sadece state kapat
+  if (activeHeading.value === tag) {
+    //activeHeading.value = null;
+    currentHeadingElement.value = null;
+    return;
+  } else{
+    activeHeading.value= null; 
+    return;
   }
 
+  // Toggle on: heading ekle
+  let heading;
+  if (sel.isCollapsed) {
+    heading = document.createElement(tag);
+    const zwsp = document.createTextNode("\u200B");
+    heading.appendChild(zwsp);
+    range.insertNode(heading);
+
+    const newRange = document.createRange();
+    newRange.setStart(zwsp, 1);
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  } else {
+    const frag = range.extractContents();
+    heading = document.createElement(tag);
+    heading.appendChild(frag);
+    range.insertNode(heading);
+
+    const newRange = document.createRange();
+    newRange.selectNodeContents(heading);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  }
+
+  activeHeading.value = tag;
+  currentHeadingElement.value = heading;
   noteLocal.value.content = contentRef.value.innerHTML;
 }
-
 
 /*
 function applyHeading(level) {
@@ -228,6 +239,7 @@ function applyHeading(level) {
   noteLocal.content = contentRef.value.innerHTML;
 }
 */
+
 function onBeforeInput(e) {
   if (e.inputType !== "insertText") return;
 
