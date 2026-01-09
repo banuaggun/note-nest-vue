@@ -7,10 +7,7 @@
 
     <div class="all-notes-area">
       <div v-if="(!isEditorOpen || !isMobile) && activeNotes.length === 0" class="empty-message">
-        <EmptyState 
-          title="No notes yet" 
-          description="Create your first note to get started" 
-          :image="createsNote" />
+        <EmptyState title="No notes yet" description="Create your first note to get started" :image="createsNote" />
       </div>
 
       <!-- The list is only available if the editor is closed. -->
@@ -24,15 +21,16 @@
         <NoteEditor :note="editingNote" @save="handleSave" @cancel="handleCancel" />
       </div>
 
-      <div v-if="!isEditorOpen && !isMobile && activeNotes.length > 0" class="placeholder"> 
-        <EmptyState title="Select a note or create a new note." description="You can edit it here." :image="createsNote" />
+      <div v-if="!isEditorOpen && !isMobile && activeNotes.length > 0" class="placeholder">
+        <EmptyState title="Select a note or create a new note." description="You can edit it here."
+          :image="createsNote" />
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import createsNote from "../assets/image/createNote.svg"; 
+import createsNote from "../assets/image/createNote.svg";
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useNotes } from "../composables/useNotes";
 import { useToast } from "../composables/useToast";
@@ -148,18 +146,18 @@ function handleRestore(id) {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   background-color: var(--bg-color);
-} 
+}
 
-.all-notes-area > .empty-message{
-  min-width:100%; 
+.all-notes-area>.empty-message {
+  min-width: 100%;
   overflow-x: hidden !important;
-  height:100%; 
-  display:flex; 
-  flex-direction:column;
-  align-items: center; 
-  justify-content:  center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .all-notes-header {
@@ -175,8 +173,8 @@ function handleRestore(id) {
   padding: 0 12px;
 }
 
-.all-notes-header h2{
-  color:var(--text-color);
+.all-notes-header h2 {
+  color: var(--text-color);
 }
 
 .create-note {
@@ -213,20 +211,20 @@ function handleRestore(id) {
   padding: 40px 0;
   color: #888;
   font-size: 1.1rem;
-} 
+}
 
-@media only screen and (min-width:760px){
-   .all-notes-header{
-    padding:0 48px;
+@media only screen and (min-width:760px) {
+  .all-notes-header {
+    padding: 0 48px;
   }
 }
- 
+
 @media only screen and (min-width: 1026px) {
   .all-notes-area {
     display: flex;
     flex-direction: row;
     height: calc(100vh - 60px);
-  } 
+  }
 
   .list-panel {
     width: 30%;
@@ -239,8 +237,12 @@ function handleRestore(id) {
   .placeholder {
     width: 70%;
     padding: 20px;
-    overflow-y: auto;
     margin-top: 60px;
+  }
+
+  .list-panel,
+  .editor-panel {
+    overflow-y: auto;
   }
 
   .placeholder {

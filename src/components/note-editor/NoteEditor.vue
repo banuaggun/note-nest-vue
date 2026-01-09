@@ -724,5 +724,13 @@ function handleSubmit() {
   }
 }
 
+@media only screen and (min-width:601px) and (max-width:1026px){ 
+  .note-editor-actions, 
+  .note-editor-header, 
+  .note-editor-toolbar, 
+  .note-editor-editable{ 
+    padding:8px 24px;
+  }
+}
 
 </style>
