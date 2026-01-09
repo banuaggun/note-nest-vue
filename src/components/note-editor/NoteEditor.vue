@@ -16,7 +16,7 @@
 
       <div class="note-editor-toolbar">
         <Toolbar :isBold="isBold" :isItalic="isItalic" :isUnderline="isUnderline" :activeColor="activeColor"
-          :fontFamily="fontFamily"  :isSpellcheckEnabled="isSpellcheckEnabled"
+          :fontFamily="fontFamily"  
           @applyStyle="applyStyle" @applyColor="applyColor" @applyFont="applyFont" @applyHeading="applyHeading"
           @applySpellcheck="applySpellcheck" />
       </div>
@@ -58,11 +58,15 @@ const noteLocal = ref({ title: "", content: "" });
 const contentRef = ref(null);
 
 // composables
-const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting();
+const { isBold, isItalic, isUnderline, toggleStyle } = useTextFormatting(); 
+
+const currentColor = ref("#000000"); // default black
+
+const currentFont = ref("Arial"); // default font
+
+
 const { activeColor, setColor } = useTextColor();
-const { isSpellcheckEnabled, toggleSpellcheck } = useSpellcheck();
 const { activeHeading, toggleHeading } = useHeadingMode();
-const { fontFamily, setFontFamily } = useFontFamily();
 
 // editor content + formatting
 const { formatContent, updateFromHTML, onContentInput } = useEditorContent(contentRef, noteLocal);
@@ -101,8 +105,9 @@ function findHeadingAncestor(node) {
   return null;
 }
 
+
 function applyStyle(styleType) { 
-  toggleStyle(styleType); 
+  //toggleStyle(styleType); 
 
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
@@ -113,16 +118,16 @@ function applyStyle(styleType) {
 
   // Apply style toggles
   if (styleType === "bold") {
-    span.style.fontWeight = "bold";
+    span.style.fontWeight = isBold.value ? "bold" : "normal";
   }
   if (styleType === "italic") {
-    span.style.fontStyle = "italic";
+    span.style.fontStyle = isItalic.value ? "italic" : "normal";
   }
   if (styleType === "underline") {
     span.style.textDecoration = "underline";
   }
 
-  // Enclose the selected text in spans
+ // Enclose the selected text in spans
   try {
     range.surroundContents(span);
   } catch (err) {
@@ -133,7 +138,20 @@ function applyStyle(styleType) {
 
   // Update content
   noteLocal.value.content = contentRef.value.innerHTML; 
+} 
+
+function applySpellcheck(val) {
+  isSpellcheckEnabled.value = val;
+  nextTick(() => {
+    if (contentRef.value) {
+      const html = contentRef.value.innerHTML;
+      contentRef.value.innerHTML = ""; // empty
+      contentRef.value.innerHTML = html; // write again
+      contentRef.value.focus(); // auto focus
+    }
+  });
 }
+
 
 function applyHeading(level) {
   const sel = window.getSelection();
@@ -187,6 +205,74 @@ function applyHeading(level) {
 
   activeHeading.value = tag;
   currentHeadingElement.value = heading;
+  noteLocal.value.content = contentRef.value.innerHTML;
+} 
+
+function applyColor(color) {
+  currentColor.value = color; // just update state
+} 
+
+function applyFont(font) {
+  currentFont.value = font;
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+
+  const range = sel.getRangeAt(0);
+
+  if (sel.isCollapsed) {
+    const container = range.startContainer.nodeType === Node.TEXT_NODE
+      ? range.startContainer.parentNode
+      : range.startContainer;
+
+    // Önce heading içinde miyiz?
+    const headingAncestor = findHeadingAncestor(container);
+    if (headingAncestor) {
+      headingAncestor.style.fontFamily = font; // tüm heading satırına uygula
+    } else {
+      const spanAncestor = findStylableAncestor(container);
+      if (spanAncestor) {
+        spanAncestor.style.fontFamily = font;
+      } else {
+        const span = document.createElement("span");
+        span.style.fontFamily = font;
+        span.appendChild(document.createTextNode("\u200B"));
+        range.insertNode(span);
+        const newRange = document.createRange();
+        newRange.setStart(span.firstChild, 1);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+      }
+    }
+
+    noteLocal.value.content = contentRef.value.innerHTML;
+    return;
+  }
+
+  // Seçim var: wrap
+  try {
+    const span = document.createElement("span");
+    span.style.fontFamily = font;
+    range.surroundContents(span);
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  } catch {
+    const span = document.createElement("span");
+    span.style.fontFamily = font;
+    const frag = range.cloneContents();
+    range.deleteContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+    const newRange = document.createRange();
+    newRange.selectNodeContents(span);
+    newRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  }
+
   noteLocal.value.content = contentRef.value.innerHTML;
 }
 
@@ -307,16 +393,6 @@ function onBeforeInput(e) {
   }
 
   noteLocal.value.content = contentRef.value.innerHTML;
-}
-
-function applyColor(color) {
-  setColor(color);
-}
-function applyFont(font) {
-  setFontFamily(font);
-}
-function applySpellcheck() {
-  toggleSpellcheck();
 }
 
 
