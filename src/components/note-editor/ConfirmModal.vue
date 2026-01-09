@@ -31,7 +31,8 @@ function close() {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.45); 
+  color:var(--text-color); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,7 +42,8 @@ function close() {
 }
 
 .modal {
-  background: var(--bg-color);
+  background: var(--bg-color); 
+  color:var(--text-color);
   padding: 24px;
   border-radius: 12px;
   width: 100%;
@@ -70,24 +72,31 @@ function close() {
   border: none;
   cursor: pointer;
   font-size: 15px;
-  transition: 0.2s;
+  transition: 0.2s; 
+  color: var(--text-color);
 }
 
 .modal-actions button:first-child {
-  border:1px solid var(--d-border);
+  border:1px solid var(--d-border); 
+  background-color: var(--bg-color);
   color: var(--text-color);
 }
 
 .modal-actions button:first-child:hover {
-  box-shadow:var(--d-hover);
+  box-shadow:var(--d-hover); 
+  color: var(--text-color); 
 }
 
 .modal-actions button:last-child {
-  background: #ddd;
+  background: var(--bg-color);  
+  border:1px solid var(--c-u-border);
+  color: var(--text-color);
 }
 
 .modal-actions button:last-child:hover {
-  background: #cfcfcf;
+  background: var(--bg-color);  
+  box-shadow: var(--c-u-shadow);
+  color: var(--text-color);
 }
 
 /* Animasyonlar */
