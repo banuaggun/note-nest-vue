@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import logo from '@/assets/image/logo.svg'
+//import logo from '@/assets/image/logo.svg'
 </script>
 
 <style scoped>

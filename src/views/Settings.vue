@@ -346,20 +346,28 @@ section.project p>a:hover, section.about p>a:hover {
   width: 100%;
   /*max-height: calc(100vh - 200px);*/
   overflow-y: auto;
-  margin-top: 160px;
+  margin-top: 110px; 
+  padding:0 8px 0 12px;
 }
 
 
-@media only screen and (min-width:760px) {
+@media only screen and (min-width:760px) { 
+  .settings-page{
+    margin: 0 auto 40px auto;
+  }
   .settings-page-header {
     padding: 0 36px;
   }
 
+  .tab-area{
+    padding: 8px 20px 8px 20px;
+  }
   .tabs button {
     padding: 0.8rem 2rem;
   }
 
-  .tab-content {
+  .tab-content { 
+    margin-top:90px;
     padding: 0 12px;
   }
 

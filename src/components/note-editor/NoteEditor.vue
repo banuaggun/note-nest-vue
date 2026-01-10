@@ -690,7 +690,8 @@ function handleSubmit() {
 .text-area::-webkit-scrollbar-track {
   background: var(--button-bg);
   /* track color */
-  border-radius: 8px;
+  border-radius: 8px; 
+  cursor:pointer;
 }
 
 /* Thumb (draggable handle) */
@@ -699,12 +700,14 @@ function handleSubmit() {
   /* thumb color */
   border-radius: 8px;
   border: 2px solid transparent;
-  /* creates padding effect */
+  /* creates padding effect */ 
+  cursor:pointer;
 }
 
 /* Hover state for better feedback */
 .text-area::-webkit-scrollbar-thumb:hover {
-  background: var(--a-border);
+  background: var(--a-border); 
+  cursor:pointer;
 } 
 
 @media only screen and (min-width:300px) and (max-width:600px){

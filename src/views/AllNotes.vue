@@ -166,7 +166,6 @@ function handleRestore(id) {
   width: 100%;
   height: 60px;
   background: var(--bg-color);
-  border-bottom: 1px solid yellowgreen;
   display: flex;
   align-items: center;
   justify-content: space-between;

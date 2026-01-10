@@ -193,7 +193,6 @@ function formatDate(dateString) {
 } 
 
 .actions-item-time{
-  border:1px solid red; 
   padding:0 0 0 8px; 
   color:var(--text-color);
 }

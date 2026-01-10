@@ -18,4 +18,4 @@ It’s designed to make capturing ideas effortless while letting you style your 
 - **Hover & focus states** — polished UI interactions for a smooth experience.
 
 
-> <h2>Author</h2> <p> Crafted with ❤️ by <a href="https://portfolio-banuaggun.vercel.app/" target="_blank" rel="noopener noreferrer" > Banu Ağgun </a>. Check out the portfolio for more projects and experiments. </p>
+> <h2>Author</h2> <p> Developed with ❤️ by <a href="https://portfolio-banuaggun.vercel.app/" target="_blank" rel="noopener noreferrer" > Banu Ağgun </a>. Check out the portfolio for more projects and experiments. </p>
