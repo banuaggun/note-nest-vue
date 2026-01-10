@@ -30,9 +30,9 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue';
-import { useNotes } from '../../composables/useNotes';
-import Toolbar from '../toolbar/Toolbar.vue';
+import { nextTick, ref, watch } from 'vue'; 
+import Toolbar from '../toolbar/Toolbar.vue'; 
+import { useNotes } from '../../composables/useNotes'; 
 import { useTextFormatting } from '../../composables/functions/useTextFormatting';
 import { useTextColor } from '../../composables/functions/useTextColor';
 import { useHeadingMode } from '../../composables/functions/useHeadingMode';
