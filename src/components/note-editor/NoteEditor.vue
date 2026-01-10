@@ -31,7 +31,7 @@
 
 <script setup>
 import { nextTick, ref, watch } from 'vue'; 
-import Toolbar from '../toolbar/Toolbar.vue'; 
+import Toolbar from '../toolbar/ToolBar.vue';  
 import { useNotes } from '../../composables/useNotes'; 
 import { useTextFormatting } from '../../composables/functions/useTextFormatting';
 import { useTextColor } from '../../composables/functions/useTextColor';
