@@ -1,5 +1,19 @@
 <template>
   <div class="actions-item">
+
+    <div class="actions-item-time">
+      <div class="note-time">
+        <small>
+          <span v-if="note.updatedTime">
+            {{ formatDate(note.updatedTime) }}
+          </span>
+          <span v-else>
+            {{ formatDate(note.createdTime) }}
+          </span>
+        </small>
+      </div>
+    </div>
+
     <template v-if="note.status === 'archived'">
       <div class="item-buttons-2 actions-item-archive-page">
         <button @click="$emit('unarchive', note.id)">
@@ -22,12 +36,8 @@
         <button @click="confirmPermanentDelete(note.id)">Delete</button>
       </div>
 
-      <ConfirmModal
-        v-if="showModal"
-        message="Do you want to permanently delete this note?"
-        @confirm="handleConfirm"
-        @close="handleClose"
-      />
+      <ConfirmModal v-if="showModal" message="Do you want to permanently delete this note?" @confirm="handleConfirm"
+        @close="handleClose" />
     </template>
 
     <template v-else>
@@ -74,12 +84,24 @@ function handleConfirm() {
 function handleClose() {
   showModal.value = false;
 }
+
+function formatDate(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
 </script>
 
 <style scoped>
 .actions-item {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -91,13 +113,14 @@ function handleClose() {
   align-items: center;
   gap: 8px;
 }
+
 .actions-item-all-notes-page button,
 .actions-item-archive-page button,
 .actions-item-deleted-page button:nth-child(1) {
   width: 40px;
   height: 40px;
-  background-color: transparent; 
-  color:var(--text-color);
+  background-color: transparent;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,8 +134,8 @@ function handleClose() {
   border-radius: 4px;
   border: none;
   outline: none;
-  border:1px solid var(--d-border); 
-  background-color:transparent;
+  border: 1px solid var(--d-border);
+  background-color: transparent;
   color: var(--button-text);
 }
 
@@ -126,33 +149,35 @@ function handleClose() {
   color: #242424;
   background: #fff;
   border-radius: 50%;
-  cursor: pointer; 
+  cursor: pointer;
   transform: scale(0.98);
-} 
+}
 
-.actions-item-all-notes-page button:nth-child(1):hover, .actions-item-archive-page button:nth-child(2):hover, .actions-item-deleted-page button:nth-child(2):hover{
-  box-shadow: var(--d-shadow); 
-  background-color: var(--bg-color); 
-  color:var(--text-color);
-} 
+.actions-item-all-notes-page button:nth-child(1):hover,
+.actions-item-archive-page button:nth-child(2):hover,
+.actions-item-deleted-page button:nth-child(2):hover {
+  box-shadow: var(--d-shadow);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 
-.actions-item-all-notes-page button:nth-child(2):hover, 
-.actions-item-archive-page button:nth-child(1):hover{
-  box-shadow: var(--a-shadow); 
-  background-color: var(--bg-color); 
-  color:var(--text-color);
-} 
+.actions-item-all-notes-page button:nth-child(2):hover,
+.actions-item-archive-page button:nth-child(1):hover {
+  box-shadow: var(--a-shadow);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 
-.actions-item-all-notes-page button:nth-child(3):hover{
-  box-shadow: var(--c-u-shadow); 
-  background-color: var(--bg-color); 
-  color:var(--text-color);
-} 
+.actions-item-all-notes-page button:nth-child(3):hover {
+  box-shadow: var(--c-u-shadow);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 
 .actions-item-deleted-page button:nth-child(1):hover {
-  box-shadow: var(--r-s-shadow); 
-  background-color: var(--bg-color); 
-  color:var(--text-color)
+  box-shadow: var(--r-s-shadow);
+  background-color: var(--bg-color);
+  color: var(--text-color)
 }
 
 .actions-item-all-notes-page button i,
@@ -165,5 +190,11 @@ function handleClose() {
 .actions-item-archive-page button:hover i,
 .actions-item-deleted-page button:nth-child(1):hover i {
   font-size: 24px;
+} 
+
+.actions-item-time{
+  border:1px solid red; 
+  padding:0 0 0 8px; 
+  color:var(--text-color);
 }
 </style>

@@ -55,22 +55,29 @@ export function useNotes() {
 
   // Yeni not oluştur
   function createNote({ title, content, tags = [] }) {
+    const now = new Date().toISOString()
     const newNote = {
       id: Date.now(),
       title,
       content,
       tags,
-      status: 'active'
+      status: 'active',
+      createdTime: now,
+      updatedTime: now
     }
-    notes.value.push(newNote) 
-    return newNote; 
+    notes.value.push(newNote)
+    return newNote;
   }
 
   // Var olan notu güncelle
   function updateNote(updatedNote) {
     const index = notes.value.findIndex(n => n.id === updatedNote.id)
     if (index !== -1) {
-      notes.value[index] = { ...notes.value[index], ...updatedNote }
+      notes.value[index] = {
+        ...notes.value[index],
+        ...updatedNote,
+        updatedTime: new Date().toISOString() // her güncellemede otomatik değişir
+      }
     }
   }
 
@@ -79,6 +86,7 @@ export function useNotes() {
     const note = notes.value.find(n => n.id === id)
     if (note) {
       note.status = note.status === 'archived' ? 'active' : 'archived'
+      note.updatedTime = new Date().toISOString()
     }
   }
 
@@ -87,6 +95,7 @@ export function useNotes() {
     const note = notes.value.find(n => n.id === id)
     if (note) {
       note.status = 'deleted'
+      note.updatedTime = new Date().toISOString()
     }
   }
 
@@ -96,12 +105,12 @@ export function useNotes() {
   }
 
   function restoreNote(id) {
-  const note = notes.value.find(n => n.id === id)
-  if (note && note.status === 'deleted') {
-    note.status = 'active'
+    const note = notes.value.find(n => n.id === id)
+    if (note && note.status === 'deleted') {
+      note.status = 'active'
+      note.updatedTime = new Date().toISOString()
+    }
   }
-}
-
 
   return {
     notes,
@@ -112,7 +121,7 @@ export function useNotes() {
     updateNote,
     archiveNote,
     deleteNote,
-    deleteNotePermanently, 
+    deleteNotePermanently,
     restoreNote
   }
 }
