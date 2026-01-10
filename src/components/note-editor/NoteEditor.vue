@@ -437,16 +437,28 @@ function scrollToCaret(editable) {
 }
 
 
-function onInput() {
-  const el = contentRef.value;
-  noteLocal.value.content = el.innerHTML;
+function onInput(e) {
+  //const el = contentRef.value;
+  //noteLocal.value.content = el.innerHTML; 
+  noteLocal.value.content = e.target.innerHTML;
 
   nextTick(() => {
     moveCaretToEnd();
-    scrollToCaret(el);
+    scrollToCaret();
   });
 }
 
+
+watch(() => props.note, (note) => {
+  if(note){
+    noteLocal.value = { ...note} 
+    if(contentRef.value){
+      contentRef.value.innerHTML = note.content || ""
+    }
+  }
+}, {immediate:true})
+
+/*
 watch(() => props.note, (note) => {
   noteLocal.value.title = note?.title || "";
   noteLocal.value.content = note?.content || "";
@@ -456,7 +468,25 @@ watch(() => props.note, (note) => {
   }
 }, { immediate: true });
 
+*/
 
+function handleSubmit() {
+  const payload = {
+    ...noteLocal.value,
+    content: contentRef.value?.innerHTML || ""
+  }
+
+  if (props.note?.id) {
+    updateNote(payload)
+  } else {
+    createNote(payload)
+  }
+
+  emit("save", payload)
+}
+
+
+/*
 function handleSubmit() {
   const noteData = {
     id: props.note?.id,
@@ -470,7 +500,7 @@ function handleSubmit() {
   }
   emit("save", noteData);
 };
-
+*/
 </script>
 
 <style scoped>

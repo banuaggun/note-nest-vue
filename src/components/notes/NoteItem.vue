@@ -10,7 +10,7 @@
       @restore="$emit('restore', $event)"
     />
     <h3>{{ cleanedTitle }}</h3>
-    <p>{{ cleanedContent }}...</p>
+    <p>{{ cleanedContent }} </p>
   </div>
 </template>
 
